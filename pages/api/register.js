@@ -1,0 +1,40 @@
+import bcrypt from 'bcryptjs';
+import httpStatus from 'http-status';
+import { MongoClient } from "mongodb"
+import { withIronSessionApiRoute } from "iron-session/next";
+
+export default withIronSessionApiRoute(async (req, res) => {
+  const { name, email, password } = await req.body;
+  const client = new MongoClient(process.env.MONGODB_URI);
+  try {
+    const users = client.db("cs495").collection("users");
+
+    if (req.method === 'POST') {
+      const userCheck = await users.findOne({ email: email.toLowerCase() });
+      if (userCheck) {
+        return res.status(httpStatus.BAD_REQUEST).json({ message: 'User already exists' });
+      }
+      // create user
+      const hashPassword = await bcrypt.hash(password.toLowerCase(), 10);
+      const user = await users.insertOne({
+        name,
+        email,
+        password: hashPassword,
+      });
+
+      return res.status(httpStatus.OK).end();
+    }
+
+    return res.status(httpStatus.BAD_REQUEST).end();
+    
+  } catch (error) {
+    console.log(error, error.message);
+    res.status(fetchResponse?.status || 500).json(error.message);
+  }
+}, {
+    cookieName: process.env.SITE_COOKIE,
+    password: process.env.APPLICATION_SECRET,
+    cookieOptions: {
+        secure: process.env.NODE_ENV === "production",
+    },
+});

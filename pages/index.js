@@ -1,6 +1,7 @@
 import Head from "next/head"
 import clientPromise from "../lib/mongodb"
 import styles from "@/styles/Home.module.css"
+import Link from 'next/link'
 
 export async function getServerSideProps(context) {
   try {
@@ -47,53 +48,22 @@ export default function Home({ isConnected }) {
           </h2>
         )}
 
-        <p className="description">
-          Get started by editing <code className={styles.code}>pages/index.js</code>
-        </p>
-
         <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+          <div className="card">
+          <Link href="/login">
+            <h3>Sign In &rarr;</h3>
+            <p>Sign in to an account</p>
+          </Link>
+          </div>
 
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+          <div className="card">
+          <Link href="/register">
+            <h3>Register &rarr;</h3>
+            <p>Register an account</p>
+          </Link>
+          </div>
         </div>
       </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{" "}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
-      </footer>
 
       <style jsx>{`
         .container {
