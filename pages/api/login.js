@@ -1,13 +1,13 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import httpStatus from 'http-status';
-import { MongoClient } from "mongodb";
+import clientPromise from 'lib/mongodb';
 import bcrypt from "bcryptjs";
 
 export default withIronSessionApiRoute(async (req, res) => {
     if (req.method === "POST") {
         const { email, password } = req.body;
 
-        const client = new MongoClient(process.env.MONGODB_URI);
+        const client = await clientPromise;
         const users = client.db("cs495").collection("users");
         const user = await users.findOne({ email: email.toLowerCase() });
 
