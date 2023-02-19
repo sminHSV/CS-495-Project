@@ -1,21 +1,20 @@
 import { useRouter } from 'next/router';
 import {useState } from 'react';
-import { useRef } from 'react';
 import Link from 'next/link'
 
 export default function Register() {
     const router = useRouter();
-    const emailInput = useRef();
-    const nameInput = useRef();
-    const passwordInput = useRef();
 
-    const [errorMsg, setErrorMsg] = useState();
+    const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
+    const [password, setPassword] = useState('');
+
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [status, setStatus] = useState('typing');
   
     const handleSubmit = async (e) => {
       e.preventDefault();
-      const email = emailInput.current.value;
-      const password = passwordInput.current.value;
-      const name = nameInput.current.value;
+      setStatus('submitting');
   
         const response = await fetch('/api/register', {
           method: 'POST',
@@ -28,6 +27,7 @@ export default function Register() {
         } else {
             let message = (await response.json()).message;
             setErrorMsg(message);
+            setStatus('typing');
         }
     };
 
@@ -36,21 +36,39 @@ export default function Register() {
         <form onSubmit={handleSubmit}>
         <div>
             <label>
-            Email: <input type="text" ref={emailInput} />
+            Email: <input 
+                type="text" 
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                disabled={status === 'submitting'}
+            />
             </label>
         </div>
         <div>
             <label>
-            Name: <input type="text" ref={nameInput} />
+            Name: <input 
+                type="text" 
+                onChange={e => setName(e.target.value)}
+                disabled={status === 'submitting'}
+            />
             </label>
         </div>
         <div>
             <label>
-            Password: <input type="password" ref={passwordInput} />
+            Password: <input 
+                type="password" 
+                onChange={e => setPassword(e.target.value)}
+                disabled={status === 'submitting'} 
+            />
             </label>
         </div>
         <div>
-            <button type="submit">Register</button>
+            <button disabled={
+                email.length === 0 ||
+                name.length === 0 ||
+                password.length === 0 ||
+                status === 'submitting'
+            } type="submit">Register</button>
         </div>
         {errorMsg && <p className="error">{errorMsg}</p>}
         </form>
