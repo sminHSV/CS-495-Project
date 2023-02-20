@@ -1,9 +1,9 @@
 import bcrypt from 'bcryptjs';
 import httpStatus from 'http-status';
 import clientPromise from 'lib/mongodb';
-import { withIronSessionApiRoute } from "iron-session/next";
+import { withSessionRoute } from 'lib/withSession';
 
-export default withIronSessionApiRoute(async (req, res) => {
+export default withSessionRoute(async (req, res) => {
   const { name, email, password } = await req.body;
   const client = await clientPromise;
   try {
@@ -31,10 +31,4 @@ export default withIronSessionApiRoute(async (req, res) => {
     console.log(error, error.message);
     res.status(fetchResponse?.status || 500).json(error.message);
   }
-}, {
-    cookieName: process.env.SITE_COOKIE,
-    password: process.env.APPLICATION_SECRET,
-    cookieOptions: {
-        secure: process.env.NODE_ENV === "production",
-    },
 });

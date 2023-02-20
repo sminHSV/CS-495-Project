@@ -21,7 +21,7 @@ export default function SignInPage() {
         });
 
         if (response.ok) {
-            return router.push("/profile");
+            return router.push("/");
         } else {
             let message = (await response.json()).message;
             setErrorMsg(message);
@@ -57,10 +57,14 @@ export default function SignInPage() {
                     status === 'submitting'
                 } type="submit">Sign in</button>
             </div>
-            {errorMsg && <p className="error">{errorMsg}</p>}
+            {errorMsg && <p style={{color: 'red'}}>{errorMsg}</p>}
         </form>
         <br />
-        <Link href="/">Go Back</Link>
+        <Link href="/register" className='link'>Register an account</Link>
+        <br /><br />
+        <Link href="/guestLogin" className='link'>Sign in as a guest</Link>
+        <br /><br />
+        <Link href="/" className='link'>Go Back</Link>
         </>
     );
 }

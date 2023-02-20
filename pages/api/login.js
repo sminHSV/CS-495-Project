@@ -1,9 +1,9 @@
-import { withIronSessionApiRoute } from "iron-session/next";
+import { withSessionRoute } from 'lib/withSession';
 import httpStatus from 'http-status';
 import clientPromise from 'lib/mongodb';
 import bcrypt from "bcryptjs";
 
-export default withIronSessionApiRoute(async (req, res) => {
+export default withSessionRoute(async (req, res) => {
     if (req.method === "POST") {
         const { email, password } = req.body;
 
@@ -25,10 +25,4 @@ export default withIronSessionApiRoute(async (req, res) => {
             return res.status(httpStatus.UNAUTHORIZED).json({ message: 'Inavlid Password'});
         }
     }
-}, {
-    cookieName: process.env.SITE_COOKIE,
-    password: process.env.APPLICATION_SECRET,
-    cookieOptions: {
-        secure: process.env.NODE_ENV === "production",
-    },
 });

@@ -1,11 +1,5 @@
-import { withIronSessionApiRoute } from "iron-session/next";
+import { withSessionRoute } from 'lib/withSession';
 
-export default withIronSessionApiRoute((req, res) => {
-    res.send({ user: req.session.user });
-}, {
-    cookieName: env.process.SITE_COOKIE,
-    password: env.process.APPLICATION_SECRET,
-    cookieOptions: {
-        secure: process.env.NODE_ENV === "production",
-    },
+export default withSessionRoute((req, res) => {
+    res.send(req.session.user);
 });
