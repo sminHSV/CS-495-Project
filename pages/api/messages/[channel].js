@@ -2,6 +2,8 @@ import Pusher from "pusher"
 import clientPromise from '@/lib/mongodb'
 import httpStatus from 'http-status'
 
+var ObjectId = require('mongodb').ObjectId;
+
 const channels = new Pusher({
     appId: process.env.APP_ID,
     key: process.env.KEY,
@@ -22,9 +24,9 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
         const message = await req.body;
 
-        await room.insert(message);
+        await room.insertOne(message);
 
-        await channels.trigger(channel, 'message-sent', message)
+        await channels.trigger(channel, 'message-update', message);
 
         return res.status(httpStatus.OK).end();
     } 
@@ -40,9 +42,12 @@ export default async function handler(req, res) {
 
     else if (req.method === 'PUT') {
         const message = await req.body;
-        room.replaceOne({_id: message._id}, message);
 
-        await channels.trigger(channel, 'message-edit', message);
+        const {_id: _, ...withoutId} = message;
+
+        await room.replaceOne({"_id" : new ObjectId(message._id)}, withoutId);
+
+        await channels.trigger(channel, 'message-update', message);
 
         return res.status(httpStatus.OK).end();
     }

@@ -1,11 +1,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import Pusher from 'pusher-js';
+import { usePusher } from '@/lib/PusherContext';
 import useUser from '@/lib/useUser'
-
-const channels = new Pusher(process.env.NEXT_PUBLIC_KEY, {
-    cluster: 'us2',
-});
 
 export default function Room({ roomId }) {
     const [messages, setMessages] = useState({});
@@ -13,51 +9,40 @@ export default function Room({ roomId }) {
     const [anonymous, setAnonymous] = useState(false);
 
     const {data: user} = useUser();
+    const channels = usePusher();
 
-    const name = user ? user.name : 'guest';
+    useEffect(() => {
+        const channel = channels.subscribe(roomId);
 
-    const channel = channels.subscribe(roomId);
+        channel.bind('pusher:subscription_succeeded', async () => {
+            const result = await fetch("/api/messages/" + roomId);
 
-    channel.unbind();
+            if (!result.ok) {
+                console.log('failed to load messages');
+                return;
+            }
 
-    channel.bind('pusher:subscription_succeeded', async () => {
-        const result = await fetch("/api/messages/" + roomId);
+            const messages = await result.json();
 
-        if (!result.ok) {
-            console.log('failed to load messages');
-            return;
-        }
+            messages.forEach(message => updateMessage(message));
+        });
 
-        const messages = await result.json();
-        messages.forEach(message => {
+        channel.bind('message-update', function(message) {
             updateMessage(message);
         });
-    });
-
-    channel.bind('message-sent', function(message) {
-        setMessages(messages => ({
-            ...messages,
-            [message._id] : message
-        }));
-        channel.unbind();
-    });
-
-    channel.bind('message-edit', function(message) {
-        setMessages(messages => ({
-            ...messages,
-            [message._id] : message
-        }));
-        channel.unbind();
     });
     
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        setToSend('');
+
         const result = await fetch("/api/messages/" + roomId, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
                 body: toSend, 
-                sender: name, 
+                sender: user,
                 anonymous: anonymous,
                 time: Date.now(),
                 upvotes: 0,
@@ -72,12 +57,14 @@ export default function Room({ roomId }) {
     const handleUpvote = async (e, message) => {
         e.preventDefault();
 
-        message.upvotes++;
+        e.target.disabled = true;
 
         const result = await fetch("/api/messages/" + roomId, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(message),
+            body: JSON.stringify({
+                ...message, upvotes: message.upvotes + 1
+            }),
         });
         if (!result.ok) {
             console.error('faied to update message');
@@ -89,27 +76,40 @@ export default function Room({ roomId }) {
             ...messages,
             [message._id] : message
         }));
-
-        console.log(messages);
     }
 
     return (
     <div style={{margin: '10px'}}>
        <h1>Welcome to room #{roomId}</h1>
        <Link href="/" className='link'>Leave room</Link>
-       <br />
+       <br /><br />
        <div className='grid'>
             <div className='terminal'>
-                <ul className="queue">
-                    {Object.values(messages).map(message => (
-                        <li key={message._id} className='message'>
-                            <p>{message.body}</p>
-                            <small>Sent by {message.anonymous ? 'anonymous' : message.sender}</small>
-                            <button id='reply'>reply</button>
-                            <button id='upvote' onClick={e => {handleUpvote(e, message)}}>
-                                {message.upvotes} &#9757;
-                            </button>
-                        </li>
+                <ul>
+                    {Object.values(messages)
+                        .sort((a, b) => (Number(a._id) - Number(b._id)))
+                        .map(message => (
+                            <li key={message._id}>
+                                <div className='message'>
+                                    <div>
+                                        <button id='reply'>reply</button>
+                                        <button id='upvote' onClick={e => {handleUpvote(e, message)}}>
+                                            {message.upvotes} &#9757;
+                                        </button>
+                                        <p>{message.body}</p>
+                                        <small>
+                                            Sent by {
+                                                message.anonymous ? 'anonymous' : message.sender?.name
+                                            } at {
+                                                new Date(message.time).toLocaleTimeString()
+                                            }
+                                        </small>
+                                    </div>
+                                    <details>
+                                        <summary>{message.replies.length} replies</summary>
+                                    </details>
+                                </div>
+                            </li>
                     ))}
                 </ul>
             </div>
@@ -140,28 +140,52 @@ export default function Room({ roomId }) {
 
         .message {
             position: relative;
-            height: 60px;
             padding: 5px;
-            font: 0.7em system-ui;
+            min-height: 60px;
+            font: 1.5em system-ui;
             border: 1px solid #eaeaea;
+            inline-size: 100% - 80px;
+            overflow-wrap: break-word;
+            line-height: 20px;
+            border-radius: 5px;
+            display: grid;
+            grid-template-rows: 1fr auto;
+            gap: 5px;
+        }
+
+        .message > details > summary {
+            display: flex;
+            justify-content: center;
+            font-size: 0.5em;
+            list-style: none;
+            cursor: pointer;
+            background-color: dimgray;
+        }
+
+        .message > details > summary:hover {
+            background-color: gray;
+            text-decoration: underline;
+        }
+
+        .message p{
+            margin-right: 90px;
+            margin-bottom: 20px;
         }
 
         .message small {
-            position: absolute;
-            font-size: 0.8em;
-            bottom: 0;
+            font-size: 0.5em;
         }
 
         .message #reply {
             position: absolute;
-            font-size: 1.1em;
+            font-size: 0.7em;
             margin: 3px;
-            right: 40px;
+            right: 45px;
         }
 
         .message #upvote {
             position: absolute;
-            font-size: 1.1em;
+            font-size: 0.6em;
             margin: 3px;
             right: 10px;
         }
@@ -174,6 +198,12 @@ export default function Room({ roomId }) {
             grid-row: 1 / 4;
             overflow: hidden;
             overflow-y: scroll;
+        }
+
+        .terminal ul {
+            margin: 5px;
+            display: grid;
+            gap: 5px;
         }
 
         .subTerminal {
