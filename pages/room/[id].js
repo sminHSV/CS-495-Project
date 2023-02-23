@@ -45,7 +45,7 @@ export default function Room({ roomId }) {
                 sender: user,
                 anonymous: anonymous,
                 time: Date.now(),
-                upvotes: 0,
+                upvotes: [],
                 replies: [],
             }),
         });
@@ -63,7 +63,8 @@ export default function Room({ roomId }) {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                ...message, upvotes: message.upvotes + 1
+                ...message, 
+                upvotes: [...message.upvotes, user] 
             }),
         });
         if (!result.ok) {
@@ -93,8 +94,11 @@ export default function Room({ roomId }) {
                                 <div className='message'>
                                     <div>
                                         <button id='reply'>reply</button>
-                                        <button id='upvote' onClick={e => {handleUpvote(e, message)}}>
-                                            {message.upvotes} &#9757;
+                                        <button id='upvote' 
+                                            onClick={e => {handleUpvote(e, message)}}
+                                            disabled={message.upvotes.find(a => a.id === user.id)}
+                                        >
+                                            {message.upvotes.length} &#9757;
                                         </button>
                                         <p>{message.body}</p>
                                         <small>
