@@ -39,7 +39,7 @@ export default function Home() {
 
       <main>
         <h1 className="title">
-          Welcome, {user ? user.name : '???'}
+          Welcome to unMute {user ? user.name : ''}
         </h1>
 
         <div className="grid">
