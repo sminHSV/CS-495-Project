@@ -24,7 +24,11 @@ export default function Register() {
     });
 
     if (response.ok) {
-      return router.push('/login');
+      if (accountType === 'teacher') {
+        return router.push('/teacher');
+      } else {
+        return router.push('/login');
+      }
     } else {
       let message = (await response.json()).message;
       setErrorMsg(message);
