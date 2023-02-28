@@ -22,7 +22,7 @@ export default function ResetPassword(){
   
           if (response.ok) {
             //FIXME: make page succseful login 
-              return router.push('/login');
+              return router.push('/resetSuccessful');
           } else {
               let message = (await response.json()).message;
               setErrorMsg(message);
@@ -50,7 +50,7 @@ export default function ResetPassword(){
             <button disabled={
                 email.length === 0 ||
                 status === 'submitting'
-            } type="submit">Register</button>
+            } type="submit">Reset Password</button>
         </div>
         {errorMsg && <p className="error">{errorMsg}</p>}
         </form>
