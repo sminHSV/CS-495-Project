@@ -1,5 +1,4 @@
 import Head from "next/head"
-import clientPromise from "../lib/mongodb"
 import styles from "@/styles/Home.module.css"
 import Link from 'next/link'
 import useUser from "@/lib/useUser"
@@ -43,26 +42,32 @@ export default function Home() {
         </h1>
 
         <div className="grid">
-          <div className="card">
           {user ? <>
-            <Link href="/api/logout">
-              <h3>Logout &rarr;</h3>
-              <p>Sign out of your account</p>
-            </Link>
-          </> : <>
-            <Link href="/login">
-              <h3>Login &rarr;</h3>
-              <p>Sign in to an account</p>
-            </Link>
-          </>}
-          </div>
-
-          <div className="card">
-          <Link href={user ? "/join" : "/login"}>
-            <h3>Join &rarr;</h3>
-            <p>Join a room</p>
-          </Link>
-          </div>
+              <div className="card">
+                <Link href="/api/logout">
+                  <h3>Logout &rarr;</h3>
+                  <p>Sign out of your account</p>
+                </Link>
+              </div>
+              <div className="card">
+                <Link href="/join">
+                  <h3>Join &rarr;</h3>
+                  <p>Join a room</p>
+                </Link>
+              </div>
+              <div className="card">
+                <Link href="/dashboard">
+                  <h3>Dashboard &rarr;</h3>
+                  <p>Visit your dashboard</p>
+                </Link>
+              </div>
+            </> : <div>
+              <Link href="/login">
+                <h3>Login &rarr;</h3>
+                <p>Sign in to an account</p>
+              </Link>
+            </div>
+          }
         </div>
       </main>
 

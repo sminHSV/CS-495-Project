@@ -20,6 +20,7 @@ export default withSessionRoute(async (req, res) => {
         name,
         email,
         password: hashPassword,
+        rooms: [],
       });
 
       return res.status(httpStatus.OK).end();
