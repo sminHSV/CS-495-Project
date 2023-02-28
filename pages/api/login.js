@@ -18,7 +18,7 @@ export default withSessionRoute(async (req, res) => {
         const valid = await bcrypt.compare(password, user.password);
 
         if (valid === true) {
-            req.session.user = { id: user._id, email: user.email, name: user.name };
+            req.session.user = user;
             await req.session.save();
             return res.status(httpStatus.OK).send("");
         } else {

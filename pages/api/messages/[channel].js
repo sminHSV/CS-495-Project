@@ -15,16 +15,32 @@ export default async function handler(req, res) {
     const { channel } = await req.query;
 
     const client = await clientPromise;
-    let room = await client.db('cs495').collection('room' + channel);
+    const rooms = await client.db('cs495').collection('rooms');
+    let room = await rooms.findOne({ _id: channel });
     
     if (!room) {
-        room = client.db('cs495').createCollection('room' + channel);
+        await rooms.insertOne({
+            _id: channel,
+            name: "",
+            owner: null,
+            members: [],
+            messages: [],
+        });
+
+        room = await rooms.findOne({_id: channel});
     }
 
     if (req.method === 'POST') {
-        const message = await req.body;
+        let message = await req.body;
+        message = {
+            _id: new ObjectId(),
+            ...message
+        }
 
-        await room.insertOne(message);
+        await rooms.updateOne(
+            { _id: channel },
+            { $push: { messages: message } }
+        );
 
         await channels.trigger(channel, 'message-update', message);
 
@@ -33,8 +49,7 @@ export default async function handler(req, res) {
 
     else if (req.method === 'GET') {
         if (room) {
-            const messages = await room.find().toArray();
-            res.send(messages);
+            res.send(room.messages);
             return res.status(httpStatus.OK).end();
         }
         return res.status(httpStatus.BAD_REQUEST).end();
@@ -42,10 +57,12 @@ export default async function handler(req, res) {
 
     else if (req.method === 'PUT') {
         const message = await req.body;
+        const id = new ObjectId(message._id);
 
-        const {_id: _, ...withoutId} = message;
-
-        await room.replaceOne({"_id" : new ObjectId(message._id)}, withoutId);
+        await rooms.updateOne(
+            { _id : channel, 'messages._id': id},
+            { $set: { 'messages.$': { _id: id, ...message } } }
+        );
 
         await channels.trigger(channel, 'message-update', message);
 
