@@ -24,6 +24,8 @@ export default function Room({ roomId }) {
 
             const messages = await result.json();
 
+            console.log(messages);
+
             messages.forEach(message => updateMessage(message));
         });
 
@@ -64,7 +66,7 @@ export default function Room({ roomId }) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 ...message, 
-                upvotes: [...message.upvotes, user] 
+                upvotes: [...message.upvotes, user._id] 
             }),
         });
         if (!result.ok) {
@@ -96,7 +98,7 @@ export default function Room({ roomId }) {
                                         <button id='reply'>reply</button>
                                         <button id='upvote' 
                                             onClick={e => {handleUpvote(e, message)}}
-                                            disabled={message.upvotes.find(a => a.id === user.id)}
+                                            disabled={message.upvotes.find(id => id === user._id)}
                                         >
                                             {message.upvotes.length} &#9757;
                                         </button>
