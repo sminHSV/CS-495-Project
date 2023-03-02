@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import {useState } from 'react';
 import Link from 'next/link'
+ 
 
 
 export default function ResetPassword(){
@@ -22,11 +23,18 @@ export default function ResetPassword(){
   
           if (response.ok) {
             //FIXME: make page succseful login 
-              return router.push('/resetSuccessful');
+       
+         
+            return router.push('/resetSuccessful');
+      
+         
+        
+
           } else {
               let message = (await response.json()).message;
               setErrorMsg(message);
               setStatus('typing');
+              return router.push('/resetUnsuccesful');
           }
     };
 
