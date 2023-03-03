@@ -2,11 +2,9 @@ import { useRouter } from 'next/router';
 import {useState } from 'react';
 import Link from 'next/link'
 
-export default function ResetSuccessful(){
+export default function ResetEmailSuccessful(){
     const router = useRouter();
 
-    const [errorMsg, setErrorMsg] = useState(null);
-    const [status, setStatus] = useState('typing');
     return(
         <>
         <div>

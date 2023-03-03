@@ -1,12 +1,10 @@
 import { useRouter } from 'next/router';
 import {useState } from 'react';
 import Link from 'next/link'
- 
 
-
-export default function ResetPassword(){
+export default function Reset_Password(){
     const router = useRouter();
-    const [email, setEmail] = useState('');
+    const [email, setPassword] = useState('');
 
     const [errorMsg, setErrorMsg] = useState(null);
     const [status, setStatus] = useState('typing');
@@ -15,27 +13,21 @@ export default function ResetPassword(){
         e.preventDefault();
         setStatus('submitting');
     
-          const response = await fetch('/api/resetPassword?email='+email, {
-            method: 'GET',
+          const response = await fetch('/api/resetPassword', {
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             
-          });
-  
-          if (response.ok) {
-            //FIXME: make page succseful login 
-       
-         
-            return router.push('/resetEmailSuccessful');
-      
-         
-        
+        });
 
-          } else {
-              let message = (await response.json()).message;
-              setErrorMsg(message);
-              setStatus('typing');
-              return router.push('/resetEmailUnsuccesful');
-          }
+        if (response.ok) {
+            return router.push('/resetSuccesful');
+        }
+        else {
+            let message = (await response.json()).message;
+            setErrorMsg(message);
+            setStatus('typing');
+            return router.push('/resetUnsuccesful');
+        }
     };
 
     return(
@@ -46,10 +38,10 @@ export default function ResetPassword(){
         </div>
         <div>
             <label>
-            Email: <input 
+            New Passowrd: <input 
                 type="text" 
-                value={email}
-                onChange={e => setEmail(e.target.value)}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
                 disabled={status === 'submitting'}
             />
             </label>
@@ -58,12 +50,11 @@ export default function ResetPassword(){
             <button disabled={
                 email.length === 0 ||
                 status === 'submitting'
-            } type="submit">Reset Password</button>
+            } type="submit">Set New Password</button>
         </div>
         {errorMsg && <p className="error">{errorMsg}</p>}
         </form>
         <br />
-        <Link href="/login" className='link'>Go Back</Link>
         </>
     );
 }
