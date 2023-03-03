@@ -117,7 +117,7 @@ export default function Room({ roomId }) {
                                         <button id='reply'>reply</button>
                                         <button id='upvote' 
                                             onClick={e => {handleUpvote(e, message)}}
-                                            disabled={user.guest || message.upvotes.find(email => email === user.email)}
+                                            disabled={message.upvotes.find(email => email === user.email)}
                                         >
                                             {message.upvotes.length} &#9757;
                                         </button>
