@@ -2,14 +2,20 @@ import Link from 'next/link'
 import React, { useEffect, useState, useRef } from 'react'
 import emailjs from '@emailjs/browser'
 import useUser from "@/lib/useUser"
-import useSWR from 'swr'
-import { hex2a } from '@/lib/string'
+import { useRouter } from "next/router"
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Dashboard() {
-    const {data: user} = useUser();
-    const { data: myRooms } = useSWR('/api/myRooms', fetcher);
+    const { user } = useUser();
+    const [myRooms, setMyRooms] = useState([]);
+    const router = useRouter();
+
+    useEffect(() => {
+        fetch('/api/myRooms')
+            .then(response => response.json())
+            .then(rooms => setMyRooms(rooms));
+    }, []);
 
     function sendEmails(e) {
 
@@ -21,25 +27,68 @@ export default function Dashboard() {
             <Link href="/" className='link'>Go back</Link>
             <br /><br />
 
-            <label htmlFor='myrooms'>My Rooms:</label>
-            <div id='myrooms'>
-                <ul>
-                    {myRooms?.forEach(room => (
-                        <li key={room._id}>
-                            {room.name}, Id: {hex2a(room._id)}
-                            <button>&#128394; edit</button>
-                        </li>
-                    ))}
-                </ul>
+            <div className='myRooms'>
+                <label><h2>My Rooms:</h2><br/>
+                    <ul>
+                        {myRooms?.map(room => (
+                            <li key={room._id}>
+                                <div><h3>{room.name}</h3>
+                                    <small>Id: {room._id}</small>
+                                </div>
+                                <div className='actions'>
+                                    <button onClick={() => {
+                                        router.push('/room/' + room._id)
+                                    }}>join</button>
+                                    <button>&#x1F6C8; info</button>
+                                    <button>&#x274C;</button>
+                                </div>
+                                <br/>
+                            </li>
+                        ))}
+                    </ul>
+                </label>
             </div>
             <br/>
-            <RoomForm user/>
+            <RoomForm setMyRooms={setMyRooms}/>
+            <button>+ add room</button>
+            <style jsx>{`
+                .myRooms ul {
+                    overflow: hidden;
+                    overflow-y: scroll;
+                    height: 600px;
+                    width: 300px;
+                }
+
+                .myRooms li {
+                    width: auto;
+                    display: grid;
+                    grid-template-columns: 150px auto;
+                }
+
+                .myRooms li > .actions {
+                    visibility: hidden;
+                }
+
+                .myRooms li > .actions > button + button {
+                    margin-left: 10px
+                }
+
+                .myRooms li:hover > .actions {
+                    visibility: visible;
+                }
+
+                .myRooms small {
+                    font-size: 12px;
+                }
+            `}</style>
         </div>
     );
 }
 
-function RoomForm() {
-    const [openForm, setOpenForm] = useState(false);
+function RoomForm({setMyRooms}) {
+    const { user } = useUser();
+    const dialog = useRef();
+
     const [schedule, setSchedule] = useState({
         mon: { start: '', end: '' },
         tue: { start: '', end: '' },
@@ -50,23 +99,48 @@ function RoomForm() {
         sun: { start: '', end: '' }
     });
     const roomName = useRef('');
-    const emails = useRef([]);
+    const participants = useRef('');
 
     function handleScheduleChange(time, day, bound) {
-        setSchedule(schedule => {return ({
+        setSchedule(schedule => ({
             ...schedule,
             [day]: {
                 ...schedule[day],
                 [bound]: time
             },
-        })});
-
-        console.log(schedule);
+        }));
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
-        setOpenForm(false);
+        const emails = participants.current.value.split(/[,\s]+/).pop();
+
+        let response = await fetch('/api/getUsers', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ emails }),
+        });
+
+        const members = await response.json();
+
+        let room = {
+            name: roomName.current.value,
+            owner: { email: user.email, name: user.name },
+            members: members,
+            schedule: schedule,
+            messages: []
+        }
+
+        response = await fetch('/api/createRoom', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(room),
+        });
+
+        room = await response.json();
+        setMyRooms(rooms => [...rooms, room]);
+
+        dialog.current.close();
     }
 
     function ignoreEnter(e) {
@@ -77,11 +151,11 @@ function RoomForm() {
     }
 
     return (
-        <div>
-            <button onClick={e => setOpenForm(true)}>
+        <>
+            <button onClick={e => dialog.current.showModal()}>
                 + create room
             </button>
-            <dialog open={openForm}>
+            <dialog ref={dialog}>
                 <form method='dialog' onSubmit={e => handleSubmit(e)}>
                     <label>
                         <span style={{color: 'red'}}>*</span> Room Name: 
@@ -92,6 +166,7 @@ function RoomForm() {
                                 marginLeft: '10px'
                             }}
                             onKeyDown={ignoreEnter}
+                            ref={roomName}
                             required
                         >
                         </input>
@@ -197,12 +272,12 @@ function RoomForm() {
                         <div>
                             <h2>Participants:</h2>
                             <br/>
-                            <textarea 
+                            <textarea ref={participants}
                                 placeholder='Enter email addresses separated by commas'
                             ></textarea>
                         </div>
                     </div>
-                    <button onClick={e => setOpenForm(false)}>
+                    <button type='button' onClick={e => dialog.current.close()}>
                         cancel
                     </button>
                     <button type='submit'>
@@ -248,9 +323,10 @@ function RoomForm() {
                 }
 
                 dialog {
-                    position: absolute;
+                    position: fixed;
                     left: 50%;
                     margin-left: -250px;
+                    top: 20%;
                     width: 600px;
                 }
 
@@ -260,6 +336,6 @@ function RoomForm() {
                     grid-template-columns: 1fr 1fr;
                 }
             `}</style>
-        </div>
+        </>
     )
 }

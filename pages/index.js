@@ -27,7 +27,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function Home() {
-  const {data: user} = useUser();
+  const { user } = useUser();
 
   return (
     <div className="container">
@@ -38,7 +38,7 @@ export default function Home() {
 
       <main>
         <h1 className="title">
-          Welcome, {user ? user.name : '???'}
+          Welcome to unMute, {user ? user.name : '???'}
         </h1>
 
         <div className="grid">
@@ -55,13 +55,15 @@ export default function Home() {
                   <p>Join a room</p>
                 </Link>
               </div>
-              <div className="card">
+
+              { user.guest || <div className="card">
                 <Link href="/dashboard">
                   <h3>Dashboard &rarr;</h3>
                   <p>Visit your dashboard</p>
                 </Link>
-              </div>
-            </> : <div>
+              </div>}
+            </> : 
+            <div className="card">
               <Link href="/login">
                 <h3>Login &rarr;</h3>
                 <p>Sign in to an account</p>

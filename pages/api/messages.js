@@ -12,23 +12,11 @@ const channels = new Pusher({
 });
 
 export default async function handler(req, res) {
-    const { channel } = await req.query;
-
+    const { roomId } = await req.query;
+    const channel = Buffer.from(roomId, 'base64').toString('hex');
+    
     const client = await clientPromise;
     const rooms = await client.db('cs495').collection('rooms');
-    let room = await rooms.findOne({ _id: channel });
-    
-    if (!room) {
-        await rooms.insertOne({
-            _id: channel,
-            name: "",
-            owner: null,
-            members: [],
-            messages: [],
-        });
-
-        room = await rooms.findOne({_id: channel});
-    }
 
     if (req.method === 'POST') {
         let message = await req.body;
@@ -37,36 +25,46 @@ export default async function handler(req, res) {
             ...message
         }
 
-        await rooms.updateOne(
-            { _id: channel },
+        const response = await rooms.updateOne(
+            { _id: roomId },
             { $push: { messages: message } }
         );
 
+        if (!response.acknowledged) {
+            return res.status(httpStatus.NOT_MODIFIED).end();
+        }
         await channels.trigger(channel, 'message-update', message);
-
         return res.status(httpStatus.OK).end();
     } 
 
     else if (req.method === 'GET') {
-        if (room) {
-            res.send(room.messages);
+        const { messages } = await rooms.findOne(
+            { _id: roomId },
+            {_id: 0, messages: 1 }
+        );
+
+        if (messages) {
+            res.send(messages);
             return res.status(httpStatus.OK).end();
         }
-        return res.status(httpStatus.BAD_REQUEST).end();
+        return res.status(httpStatus.NOT_FOUND).end();
     }
 
     else if (req.method === 'PUT') {
         const message = await req.body;
         const id = new ObjectId(message._id);
 
-        await rooms.updateOne(
-            { _id : channel, 'messages._id': id},
+        const response = await rooms.updateOne(
+            { _id : roomId, 'messages._id': id},
             { $set: { 'messages.$': { _id: id, ...message } } }
         );
 
+        if (!response.acknowledged) {
+            return res.status(httpStatus.NOT_MODIFIED).end();
+        }
         await channels.trigger(channel, 'message-update', message);
-
         return res.status(httpStatus.OK).end();
     }
-    
+
+    return res.status(httpStatus.BAD_REQUEST).end();
 }

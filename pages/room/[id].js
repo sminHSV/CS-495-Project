@@ -1,21 +1,34 @@
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { usePusher } from '@/lib/PusherContext';
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { usePusher } from '@/lib/PusherContext'
 import useUser from '@/lib/useUser'
+import useSWR from 'swr'
 
 export default function Room({ roomId }) {
     const [messages, setMessages] = useState({});
     const [toSend, setToSend] = useState('');
     const [anonymous, setAnonymous] = useState(false);
 
-    const {data: user} = useUser();
+    const { user } = useUser();
     const channels = usePusher();
 
+    const { data: room, error } = useSWR('/api/room?' + new URLSearchParams({ roomId }), 
+    async arg => {
+        const response = await fetch(arg);
+
+        if (response.ok) {
+            const room = await response.json();
+            return room;
+        } else {
+            throw new Error();
+        }
+    });
+
     useEffect(() => {
-        const channel = channels.subscribe(roomId);
+        const channel = channels.subscribe(Buffer.from(roomId, 'base64').toString('hex'));
 
         channel.bind('pusher:subscription_succeeded', async () => {
-            const result = await fetch("/api/messages/" + roomId);
+            const result = await fetch("/api/messages?" + new URLSearchParams({ roomId }));
 
             if (!result.ok) {
                 console.log('failed to load messages');
@@ -23,8 +36,6 @@ export default function Room({ roomId }) {
             }
 
             const messages = await result.json();
-
-            console.log(messages);
 
             messages.forEach(message => updateMessage(message));
         });
@@ -39,7 +50,7 @@ export default function Room({ roomId }) {
 
         setToSend('');
 
-        const result = await fetch("/api/messages/" + roomId, {
+        const result = await fetch("/api/messages?" + new URLSearchParams({ roomId }), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
@@ -61,16 +72,16 @@ export default function Room({ roomId }) {
 
         e.target.disabled = true;
 
-        const result = await fetch("/api/messages/" + roomId, {
+        const result = await fetch("/api/messages?" + new URLSearchParams({ roomId }), {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 ...message, 
-                upvotes: [...message.upvotes, user._id] 
+                upvotes: [...message.upvotes, user.email] 
             }),
         });
         if (!result.ok) {
-            console.error('faied to update message');
+            console.error('failed to update message');
         }
     }
 
@@ -81,9 +92,17 @@ export default function Room({ roomId }) {
         }));
     }
 
+    if (error) {
+        return <p>Couldn&apos;t load room</p>
+    }
+
+    if (!room) {
+        return <p>Loading room...</p>
+    }
+
     return (
     <div style={{margin: '10px'}}>
-       <h1>Welcome to room #{roomId}</h1>
+       <h1>Welcome to {room.name}</h1>
        <Link href="/" className='link'>Leave room</Link>
        <br /><br />
        <div className='grid'>
@@ -98,7 +117,7 @@ export default function Room({ roomId }) {
                                         <button id='reply'>reply</button>
                                         <button id='upvote' 
                                             onClick={e => {handleUpvote(e, message)}}
-                                            disabled={message.upvotes.find(id => id === user._id)}
+                                            disabled={user.guest || message.upvotes.find(email => email === user.email)}
                                         >
                                             {message.upvotes.length} &#9757;
                                         </button>

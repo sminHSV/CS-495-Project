@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import {useState } from 'react';
 import Link from 'next/link'
+import httpStatus from 'http-status';
 
 export default function Register() {
     const router = useRouter();
@@ -17,12 +18,12 @@ export default function Register() {
       setStatus('submitting');
   
         const response = await fetch('/api/register', {
-          method: 'POST',
+          method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password, name }),
         });
 
-        if (response.ok) {
+        if (response.status === httpStatus.CREATED) {
             return router.push('/login');
         } else {
             let message = (await response.json()).message;

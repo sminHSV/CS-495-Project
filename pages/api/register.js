@@ -9,21 +9,21 @@ export default withSessionRoute(async (req, res) => {
   try {
     const users = client.db("cs495").collection("users");
 
-    if (req.method === 'POST') {
+    if (req.method === 'PUT') {
       const userCheck = await users.findOne({ email: email.toLowerCase() });
       if (userCheck) {
-        return res.status(httpStatus.BAD_REQUEST).json({ message: 'User already exists' });
+        return res.status(httpStatus.OK).json({ message: 'User already exists' });
       }
       // create user
       const hashPassword = await bcrypt.hash(password.toLowerCase(), 10);
-      const user = await users.insertOne({
+      await users.insertOne({
         name,
         email,
         password: hashPassword,
         rooms: [],
       });
 
-      return res.status(httpStatus.OK).end();
+      return res.status(httpStatus.CREATED).end();
     }
 
     return res.status(httpStatus.BAD_REQUEST).end();
