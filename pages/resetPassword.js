@@ -23,12 +23,7 @@ export default function ResetPassword(){
   
           if (response.ok) {
             //FIXME: make page succseful login 
-       
-         
             return router.push('/resetEmailSuccessful');
-      
-         
-        
 
           } else {
               let message = (await response.json()).message;

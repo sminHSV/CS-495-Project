@@ -5,7 +5,7 @@ import { withSessionRoute } from 'lib/withSession';
 import { nanoid } from "nanoid"
 
 export default withSessionRoute(async (req, res) => {
-    const email = await req.query.email;
+   
     const client = await clientPromise;
     const nodemailer = require("nodemailer");
 
@@ -13,6 +13,7 @@ export default withSessionRoute(async (req, res) => {
         const users = client.db("cs495").collection("users");
 
         if(req.method == 'GET'){
+            const email = await req.query.email;
             const userCheck = await users.findOne({ email: email.toLowerCase() });
             if (!userCheck) {
                 return res.status(httpStatus.BAD_REQUEST).json({ message: 'User with that email does not exist' });
@@ -53,7 +54,26 @@ export default withSessionRoute(async (req, res) => {
             console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
             return res.status(httpStatus.OK).end();
         }
-    
+        
+        else if(req.method == 'PUT'){
+            const { token, password } = req.body;
+            async (req, res) => {
+                const deletedToken = await db
+                  .collection("tokens")
+                  .findOneAndDelete({ _id: id, type });
+            
+                if (!deletedToken) {
+                  res.status(403).end();
+                  return;
+                }
+            
+                const password = await bcrypt.hash(password.toLowerCase(), 10);
+                await client.db('cs495').collection("tokens").updateOne({ _id: deletedToken.creatorId }, { $set: { password } });
+
+                return res.status(httpStatus.OK).end();
+            }
+        }
+
         return res.status(httpStatus.BAD_REQUEST).end();
 
     } catch (error) {

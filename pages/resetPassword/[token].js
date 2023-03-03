@@ -4,11 +4,12 @@ import Link from 'next/link'
 
 export default function Reset_Password(){
     const router = useRouter();
-    const [email, setPassword] = useState('');
+    const [password, setPassword] = useState('');
 
     const [errorMsg, setErrorMsg] = useState(null);
     const [status, setStatus] = useState('typing');
-
+    const {token} = router.query;
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus('submitting');
@@ -16,7 +17,7 @@ export default function Reset_Password(){
           const response = await fetch('/api/resetPassword', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            
+            body: JSON.stringify({token, password }),
         });
 
         if (response.ok) {
@@ -34,7 +35,7 @@ export default function Reset_Password(){
         <>
         <form onSubmit={handleSubmit}>
          <div>
-            <p>Please enter your email to reset your password</p>
+            <p>Please enter your new password</p>
         </div>
         <div>
             <label>
