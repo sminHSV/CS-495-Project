@@ -1,8 +1,12 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
+Donwload Node JS if not already installed on device: https://nodejs.org/en/download/
+If using Visual Studio Code, you may have to type "npm i next".
+Note: You will need ".env.local" file to run server. 
 
-First, run the development server:
+
+Next, run the development server:
 
 ```bash
 npm run dev
