@@ -28,25 +28,24 @@ export default function Dashboard() {
             <br /><br />
 
             <div className='myRooms'>
-                <label><h2>My Rooms:</h2><br/>
-                    <ul>
-                        {myRooms?.map(room => (
-                            <li key={room._id}>
-                                <div><h3>{room.name}</h3>
-                                    <small>Id: {room._id}</small>
-                                </div>
-                                <div className='actions'>
-                                    <button onClick={() => {
-                                        router.push('/room/' + room._id)
-                                    }}>join</button>
-                                    <button>&#x1F6C8; info</button>
-                                    <button>&#x274C;</button>
-                                </div>
-                                <br/>
-                            </li>
-                        ))}
-                    </ul>
-                </label>
+                <h2>My Rooms:</h2><br/>
+                <ul>
+                    {myRooms?.map(room => (
+                        <li key={room._id}>
+                            <div><h3>{room.name}</h3>
+                                <small>Id: {room._id}</small>
+                            </div>
+                            <div className='actions'>
+                                <button onClick={() => {
+                                    router.push('/room/' + room._id)
+                                }}>join</button>
+                                <button>&#x1F6C8; info</button>
+                                <button>&#x274C;</button>
+                            </div>
+                            <br/>
+                        </li>
+                    ))}
+                </ul>
             </div>
             <br/>
             <RoomForm setMyRooms={setMyRooms}/>
