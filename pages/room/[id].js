@@ -5,7 +5,7 @@ import useUser from '@/lib/useUser'
 import useSWR from 'swr'
 
 export default function Room({ roomId }) {
-    const [messages, setMessages] = useState({});
+    const [messages, setMessages] = useState(null);
     const [toSend, setToSend] = useState('');
     const [anonymous, setAnonymous] = useState(false);
 
@@ -27,23 +27,22 @@ export default function Room({ roomId }) {
     useEffect(() => {
         const channel = channels.subscribe(Buffer.from(roomId, 'base64').toString('hex'));
 
-        channel.bind('pusher:subscription_succeeded', async () => {
+        channel.bind('message-update', function(message) {
+            updateMessage(message);
+        });
+
+        (async () => {
             const result = await fetch("/api/messages?" + new URLSearchParams({ roomId }));
 
             if (!result.ok) {
                 console.log('failed to load messages');
                 return;
             }
-
             const messages = await result.json();
-
+            setMessages({});
             messages.forEach(message => updateMessage(message));
-        });
-
-        channel.bind('message-update', function(message) {
-            updateMessage(message);
-        });
-    });
+        })();
+    }, [channels, roomId]);
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -107,6 +106,7 @@ export default function Room({ roomId }) {
        <br /><br />
        <div className='grid'>
             <div className='terminal'>
+                {!messages ? <><br />Loading messages...</> :
                 <ul>
                     {Object.values(messages)
                         .sort((a, b) => (Number(a._id) - Number(b._id)))
@@ -136,7 +136,7 @@ export default function Room({ roomId }) {
                                 </div>
                             </li>
                     ))}
-                </ul>
+                </ul>}
             </div>
             <form className='inputBox' onSubmit={(e) => {handleSubmit(e)}}>
                 <input className='textBar'
@@ -169,9 +169,7 @@ export default function Room({ roomId }) {
             min-height: 60px;
             font: 1.5em system-ui;
             border: 1px solid #eaeaea;
-            inline-size: 100% - 80px;
-            overflow-wrap: break-word;
-            line-height: 20px;
+            overflow-wrap: anywhere;
             border-radius: 5px;
             display: grid;
             grid-template-rows: 1fr auto;
@@ -194,7 +192,8 @@ export default function Room({ roomId }) {
 
         .message p{
             margin-right: 90px;
-            margin-bottom: 20px;
+            line-height: 25px;
+            margin-bottom: 10px;
         }
 
         .message small {
@@ -225,10 +224,12 @@ export default function Room({ roomId }) {
             overflow-y: scroll;
         }
 
-        .terminal ul {
-            margin: 5px;
-            display: grid;
-            gap: 5px;
+        .terminal > ul {
+            margin: 10px;
+        }
+
+        .terminal > ul > li {
+            margin: 10px 0;
         }
 
         .subTerminal {
