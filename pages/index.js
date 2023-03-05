@@ -39,7 +39,7 @@ export default function Home() {
                   <p>Visit your dashboard</p>
                 </Link>
               </div>}
-            </> : 
+            </> :
             <div className="card">
               <Link href="/login">
                 <h3>Login &rarr;</h3>
@@ -135,6 +135,7 @@ export default function Home() {
         }
 
         .card {
+          min-width: 200px;
           margin: 1rem;
           flex-basis: 45%;
           padding: 1.5rem;
