@@ -4,8 +4,6 @@ import emailjs from '@emailjs/browser'
 import useUser from "@/lib/useUser"
 import { useRouter } from "next/router"
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
-
 export default function Dashboard() {
     const { user } = useUser();
     const [myRooms, setMyRooms] = useState([]);
@@ -20,6 +18,8 @@ export default function Dashboard() {
     function sendEmails(e) {
 
     }
+
+    if (!user) return <p>Loading...</p>
     
     return (
         <div style={{margin: '20px'}}>
@@ -88,6 +88,8 @@ export default function Dashboard() {
 function RoomForm({setMyRooms}) {
     const { user } = useUser();
     const dialog = useRef();
+    const roomName = useRef();
+    const participants = useRef();
 
     const [schedule, setSchedule] = useState({
         mon: { start: '', end: '' },
@@ -98,8 +100,6 @@ function RoomForm({setMyRooms}) {
         sat: { start: '', end: '' },
         sun: { start: '', end: '' }
     });
-    const roomName = useRef('');
-    const participants = useRef('');
 
     function handleScheduleChange(time, day, bound) {
         setSchedule(schedule => ({
@@ -113,25 +113,19 @@ function RoomForm({setMyRooms}) {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        const emails = participants.current.value.split(/[,\s]+/).pop();
+        const emails = participants.current.value.split(/[,\s]+/);
 
-        let response = await fetch('/api/getUsers', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ emails }),
-        });
-
-        const members = await response.json();
+        if (emails[emails.length] === '') emails.pop();
 
         let room = {
             name: roomName.current.value,
             owner: { email: user.email, name: user.name },
-            members: members,
+            members: emails,
             schedule: schedule,
             messages: []
         }
 
-        response = await fetch('/api/createRoom', {
+        const response = await fetch('/api/createRoom', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(room),

@@ -10,19 +10,31 @@ export default withSessionRoute(async (req, res) => {
     const users = client.db("cs495").collection("users");
 
     if (req.method === 'PUT') {
-      const userCheck = await users.findOne({ email: email.toLowerCase() });
-      if (userCheck) {
+      const user = await users.findOne(
+        { email: email.toLowerCase() },
+        { _id: 0, registered: 1 }
+      );
+      if (user && user.registered) {
         return res.status(httpStatus.OK).json({ message: 'User already exists' });
       }
-      // create user
+      // create/update user
       const hashPassword = await bcrypt.hash(password.toLowerCase(), 10);
-      await users.insertOne({
-        name,
-        email,
-        password: hashPassword,
-        rooms: [],
-      });
 
+      if (user) {
+        await users.updateOne(
+          { email: email.toLowerCase() },
+          { $set: { name: name, password: hashPassword }}
+        );
+      } else {
+        await users.insertOne({
+          name,
+          email,
+          password: hashPassword,
+          rooms: [],
+          registered: true,
+        });
+      }
+      
       return res.status(httpStatus.CREATED).end();
     }
 
