@@ -13,7 +13,7 @@ const channels = new Pusher({
 
 export default async function handler(req, res) {
     const { roomId } = await req.query;
-    const channel = Buffer.from(roomId, 'base64').toString('hex');
+    const channel = Buffer.from(roomId, 'base64url').toString('hex');
     
     const client = await clientPromise;
     const rooms = await client.db('cs495').collection('rooms');
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
         let message = await req.body;
         message = {
-            _id: new ObjectId(),
+            _id: new ObjectId().toString(),
             ...message
         }
 
@@ -52,11 +52,10 @@ export default async function handler(req, res) {
 
     else if (req.method === 'PUT') {
         const message = await req.body;
-        const id = new ObjectId(message._id);
 
         const response = await rooms.updateOne(
-            { _id : roomId, 'messages._id': id},
-            { $set: { 'messages.$': { _id: id, ...message } } }
+            { _id : roomId, 'messages._id': message._id },
+            { $set: { 'messages.$': message } }
         );
 
         if (!response.acknowledged) {
