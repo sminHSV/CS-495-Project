@@ -14,8 +14,8 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1 className="title">
-          Welcome to unMute, {user ? user.name : '???'}
+        <h1 className="text-white">
+          Welcome to unMute, {user ? user.name : ''}
         </h1>
 
         <div className="grid">
