@@ -4,6 +4,9 @@ import { usePusher } from '@/lib/PusherContext'
 import useUser from '@/lib/useUser'
 import useSWR from 'swr'
 
+const fetchJSON = (...args) => fetch(...args).then(res => res.json());
+const fetchText = (...args) => fetch(...args).then(res => res.text());
+
 export default function Room({ roomId }) {
     const [messages, setMessages] = useState(null);
     const [toSend, setToSend] = useState('');
@@ -12,17 +15,8 @@ export default function Room({ roomId }) {
     const { user } = useUser();
     const channels = usePusher();
 
-    const { data: room, error } = useSWR('/api/room?' + new URLSearchParams({ roomId }), 
-    async arg => {
-        const response = await fetch(arg);
-
-        if (response.ok) {
-            const room = await response.json();
-            return room;
-        } else {
-            throw new Error();
-        }
-    });
+    const { data: room, error } = useSWR('/api/room?' + new URLSearchParams({ roomId }), fetchJSON);
+    const { data: dailyCode } = useSWR('/api/dailyCode?' + new URLSearchParams({ roomId }), fetchText);
 
     useEffect(() => {
         const channel = channels.subscribe(Buffer.from(roomId, 'base64').toString('hex'));
@@ -153,7 +147,11 @@ export default function Room({ roomId }) {
                 
                 <button type="submit">Send</button>
             </form>
-            <div className='subTerminal'></div>
+            <div className='subTerminal'>
+                <h2>Attendance Code: 
+                    &nbsp;<p>{dailyCode || 'getting code...'}</p> 
+                </h2>
+            </div>
        </div>              
        <style jsx>{`
         .grid {
