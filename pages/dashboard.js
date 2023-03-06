@@ -6,14 +6,14 @@ import { useRouter } from "next/router"
 
 export default function Dashboard() {
     const { user } = useUser();
-    const [myRooms, setMyRooms] = useState([]);
+    const [myRooms, setMyRooms] = useState(null);
     const router = useRouter();
 
     useEffect(() => {
         fetch('/api/myRooms')
             .then(response => response.json())
             .then(rooms => setMyRooms(rooms));
-    }, []);
+    }, [myRooms]);
 
     function sendEmails(e) {
 
@@ -22,39 +22,48 @@ export default function Dashboard() {
     if (!user) return <p>Loading...</p>
     
     return (
-        <div style={{margin: '20px'}}>
-            <h1>Welcome, { user?.name }</h1>
-            <Link href="/" className='link'>Go back</Link>
-            <br /><br />
+        <div style={{
+            position: 'fixed',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)'
+        }}>
+            <div>
+                <h1>Welcome, { user?.name }</h1>
+                <Link href="/" className='link'>Go back</Link>
+                <br/><br/><br/>
 
-            <div className='myRooms'>
-                <h2>My Rooms:</h2><br/>
-                <ul>
-                    {myRooms?.map(room => (
-                        <li key={room._id}>
-                            <div><h3>{room.name}</h3>
-                                <small>Id: {room._id}</small>
-                            </div>
-                            <div className='actions'>
-                                <button onClick={() => {
-                                    router.push('/room/' + room._id)
-                                }}>join</button>
-                                <button>&#x1F6C8; info</button>
-                                <button>&#x274C;</button>
-                            </div>
-                            <br/>
-                        </li>
-                    ))}
-                </ul>
+                <div className='myRooms'>
+                    <h2>My Rooms:</h2><br/>
+                    <RoomForm setMyRooms={setMyRooms}/>
+                    <button style={{marginLeft: '20px'}}>+ add room</button>
+                    <br/><br/>
+                    <p>{myRooms ? '' : 'loading rooms...'}</p>
+                    <ul>
+                        {myRooms?.map(room => (
+                            <li key={room._id}>
+                                <div><h3>{room.name}</h3>
+                                    <small>Id: {room._id}</small>
+                                </div>
+                                <div className='actions'>
+                                    <button onClick={() => {
+                                        router.push('/room/' + room._id)
+                                    }}>join</button>
+                                    <button>⚙️</button>
+                                    <button>&#x274C;</button>
+                                </div>
+                                <br/>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
             <br/>
-            <RoomForm setMyRooms={setMyRooms}/>
-            <button>+ add room</button>
             <style jsx>{`
                 .myRooms ul {
                     overflow: hidden;
                     overflow-y: scroll;
-                    height: 600px;
+                    height: 400px;
                     width: 300px;
                 }
 
@@ -89,6 +98,7 @@ function RoomForm({setMyRooms}) {
     const dialog = useRef();
     const roomName = useRef();
     const participants = useRef();
+    const [state, setState] = useState('typing');
 
     const [schedule, setSchedule] = useState({
         mon: { start: '', end: '' },
@@ -112,6 +122,8 @@ function RoomForm({setMyRooms}) {
 
     async function handleSubmit(e) {
         e.preventDefault();
+        setState('submitting');
+
         const emails = participants.current.value.split(/[,\s]+/);
 
         if (emails[emails.length] === '') emails.pop();
@@ -124,14 +136,13 @@ function RoomForm({setMyRooms}) {
             messages: []
         }
 
-        const response = await fetch('/api/createRoom', {
+        await fetch('/api/createRoom', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(room),
         });
-
-        room = await response.json();
-        setMyRooms(rooms => [...rooms, room]);
+        setMyRooms(null);
+        setState('typing');
 
         dialog.current.close();
     }
@@ -149,9 +160,12 @@ function RoomForm({setMyRooms}) {
                 + create room
             </button>
             <dialog ref={dialog}>
+                {state === 'submitting' ? 
+                    <p>creating room...</p>
+                :
                 <form method='dialog' onSubmit={e => handleSubmit(e)}>
-                    <label>
-                        <span style={{color: 'red'}}>*</span> Room Name: 
+                    <h2 style={{display: 'flex', alignItems: 'center', gridColumn: '1 / 3'}}>
+                        <p><span style={{color: 'red'}}>*</span> Room Name:</p>
                         <input 
                             type='text' 
                             placeholder='Enter a room name'
@@ -161,13 +175,8 @@ function RoomForm({setMyRooms}) {
                             onKeyDown={ignoreEnter}
                             ref={roomName}
                             required
-                        >
-                        </input>
-                    </label>
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'right',
-                    }}><span style={{color: 'red'}}>*</span>: required</div>
+                        />
+                    </h2>
                     <br/><br/>
                     <div className='meetingTimes'>
                         <div>
@@ -270,18 +279,21 @@ function RoomForm({setMyRooms}) {
                             ></textarea>
                         </div>
                     </div>
-                    <button type='button' onClick={e => dialog.current.close()}>
+                    <button type='button' onClick={() => dialog.current.close()}>
                         cancel
                     </button>
-                    <button type='submit'>
+                    <button    
+                        type='submit'
+                        disabled={state === 'submitting'}
+                    >
                         submit
                     </button>
-                </form>
+                </form>}
             </dialog>
             <style jsx>{`
-                button {
-                    margin-top: 20px;
+                form > button {
                     margin-left: 20px;
+                    margin-top: 10px;
                     margin-right: 20px;
                 }
 
@@ -320,7 +332,7 @@ function RoomForm({setMyRooms}) {
                     left: 50%;
                     margin-left: -250px;
                     top: 20%;
-                    width: 600px;
+                    padding: 20px;
                 }
 
                 dialog > form {
