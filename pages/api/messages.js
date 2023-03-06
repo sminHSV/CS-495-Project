@@ -1,7 +1,6 @@
 import Pusher from "pusher"
 import clientPromise from '@/lib/mongodb'
 import httpStatus from 'http-status'
-import room from "./room";
 
 var ObjectId = require('mongodb').ObjectId;
 

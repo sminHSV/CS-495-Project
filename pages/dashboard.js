@@ -128,14 +128,15 @@ function RoomForm({setMyRooms}) {
         e.preventDefault();
         setState('submitting');
 
-        const emails = participants.current.value.split(/[,\s]+/);
-
+        const emails = participants.current.value.toLowerCase().split(/[,\s]+/);
         if (emails[emails.length] === '') emails.pop();
+
+        const members = emails.map(email => ({ email, attendanceCode: '' }));
 
         let room = {
             name: roomName.current.value,
             owner: user.email,
-            members: emails,
+            members: members,
             schedule: schedule,
             messages: []
         }
