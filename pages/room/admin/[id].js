@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { usePusher } from '@/lib/PusherContext'
 import useUser from '@/lib/useUser'
 import useSWR from 'swr'
@@ -11,11 +11,13 @@ export default function Room({ roomId }) {
     const [messages, setMessages] = useState(null);
     const [toSend, setToSend] = useState('');
     const [anonymous, setAnonymous] = useState(false);
+    const [members, setMembers] = useState(null);
 
     const { user } = useUser();
     const channels = usePusher();
 
     const { data: room, error } = useSWR('/api/room?' + new URLSearchParams({ roomId }), fetchJSON);
+    const { data: dailyCode } = useSWR('/api/attendance/code?' + new URLSearchParams({ roomId }), fetchText);
 
     useEffect(() => {
         const channel = channels.subscribe(Buffer.from(roomId, 'base64').toString('hex'));
@@ -26,7 +28,6 @@ export default function Room({ roomId }) {
 
         (async () => {
             const result = await fetch("/api/messages?" + new URLSearchParams({ roomId }));
-
             if (!result.ok) {
                 console.log('failed to load messages');
                 return;
@@ -34,6 +35,25 @@ export default function Room({ roomId }) {
             const messages = await result.json();
             setMessages({});
             messages.forEach(message => updateMessage(message));
+        })();
+    }, [channels, roomId]);
+
+    useEffect(() => {
+        const channel = channels.subscribe(Buffer.from(roomId, 'base64').toString('hex'));
+
+        channel.bind('member-update', function(member) {
+            updateMember(member);
+        });
+
+        (async () => {
+            const result = await fetch("/api/members?" + new URLSearchParams({ roomId }));
+            if (!result.ok) {
+                console.log('failed to load members');
+                return;
+            }
+            const members = await result.json();
+            setMembers({});
+            members.forEach(member => updateMember(member));
         })();
     }, [channels, roomId]);
     
@@ -84,6 +104,13 @@ export default function Room({ roomId }) {
         }));
     }
 
+    function updateMember(member) {
+        setMembers(members => ({
+            ...members,
+            [member.email] : member
+        }));
+    }
+
     if (error) {
         return <p>Couldn&apos;t load room</p>
     }
@@ -94,6 +121,10 @@ export default function Room({ roomId }) {
 
     if (!user) {
         return <p>Authorizing user...</p>
+    }
+
+    if (user.email !== room.owner) {
+        return <p>Unauthorized access</p>
     }
 
     return (
@@ -151,7 +182,20 @@ export default function Room({ roomId }) {
                 <button type="submit">Send</button>
             </form>
             <div className='subTerminal'>
-                <AttendanceForm roomId={roomId} user={user} />
+                <h2>Attendance Code:&nbsp;{dailyCode || 'getting code...'}</h2>
+                <div className='attendance'>
+                    {members ? 
+                        <ul>
+                            {Object.values(members).map(member => (
+                                <li key={member.email}>
+                                    {member.attendanceCode === dailyCode ?
+                                        <>&#x2705;</> : <>&#x274C;</>}
+                                    &nbsp;{member.email}
+                                </li>
+                            ))}
+                        </ul>
+                    : <p>Loading attendance...</p>}
+                </div>
             </div>
        </div>              
        <style jsx>{`
@@ -237,7 +281,18 @@ export default function Room({ roomId }) {
             border-radius: 10px;
             grid-column: 3;
             grid-row: 1 / 4;
-            padding: 20px;
+            display: grid;
+            grid-template-rows: fit-content(100%);
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .subTerminal > .attendance {
+            margin-left: 20px;
+            overflow: hidden;
+            overflow-y: scroll;
+            overflow-x: scroll;
+            height: auto;
         }
 
         .inputBox {
@@ -267,61 +322,6 @@ export default function Room({ roomId }) {
     );
 }
 
-export function AttendanceForm({ roomId, user }) {
-    const [state, setState] = useState('absent');
-    const code = useRef();
-
-    useEffect(() => {
-        fetch("/api/attendance/verify?"  + new URLSearchParams({ roomId, email: user.email }))
-            .then(res => res.text())
-            .then(res => {
-                if (res === 'valid') {
-                    setState('attending');
-                } else if (state === 'submitting') {
-                    setState('failed');
-                }
-            });
-    }, [state, roomId, user.email]);
-
-    const handleSubmitCode = async (e) => {
-        e.preventDefault();
-        
-        await fetch("/api/members?" + new URLSearchParams({ roomId }), {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email: user.email, 
-                attendanceCode: code.current.value
-            }),
-        });
-
-        code.current.value = '';
-        setState('submitting');
-    }
-
-    return (
-        <>
-        {state === 'attending' ? <p>Attendance recorded &#x2705;</p>
-        : <form onSubmit={e => handleSubmitCode(e)}>
-            <label>
-                Enter Attendance Code:<br/>
-                <input type='text' 
-                    ref={code}
-                    placeholder='Enter attendance code'
-                />
-            </label> <br/>
-            <button type='submit'>
-                submit
-            </button> <br/>
-            <span style={{color: 'red'}}>
-                {state === 'failed' ? 'Invalid code' : ''}
-            </span>
-        </form>
-        }
-        </>
-    );
-}
-
 export function getServerSideProps(context) {
     return {
         props: { 
@@ -329,4 +329,3 @@ export function getServerSideProps(context) {
         }
     };
 }
-
