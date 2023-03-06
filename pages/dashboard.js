@@ -47,7 +47,11 @@ export default function Dashboard() {
                                 </div>
                                 <div className='actions'>
                                     <button onClick={() => {
-                                        router.push('/room/' + room._id)
+                                        if (user.email === room.owner) {
+                                            router.push('/room/admin/' + room._id);
+                                        } else {
+                                            router.push('/room/' + room._id);
+                                        }
                                     }}>join</button>
                                     <button>⚙️</button>
                                     <button>&#x274C;</button>
@@ -130,7 +134,7 @@ function RoomForm({setMyRooms}) {
 
         let room = {
             name: roomName.current.value,
-            owner: { email: user.email, name: user.name },
+            owner: user.email,
             members: emails,
             schedule: schedule,
             messages: []

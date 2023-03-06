@@ -1,6 +1,7 @@
 import Pusher from "pusher"
 import clientPromise from '@/lib/mongodb'
 import httpStatus from 'http-status'
+import room from "./room";
 
 var ObjectId = require('mongodb').ObjectId;
 
@@ -17,17 +18,15 @@ export default async function handler(req, res) {
     
     const client = await clientPromise;
     const rooms = await client.db('cs495').collection('rooms');
+    const messages = await client.db('cs495').collection('messages');
 
     if (req.method === 'POST') {
         let message = await req.body;
-        message = {
-            _id: new ObjectId().toString(),
-            ...message
-        }
+        await messages.insertOne(message);
 
         const response = await rooms.updateOne(
             { _id: roomId },
-            { $push: { messages: message } }
+            { $push: {messages: message._id} }
         );
 
         if (!response.acknowledged) {
@@ -38,24 +37,25 @@ export default async function handler(req, res) {
     } 
 
     else if (req.method === 'GET') {
-        const { messages } = await rooms.findOne(
+        const { messages: ids } = await rooms.findOne(
             { _id: roomId },
-            {_id: 0, messages: 1 }
+            { _id: 0, messages: 1 }
+        );
+        const cursor = await messages.find(
+            { _id: { $in: ids } },
         );
 
-        if (messages) {
-            res.send(messages);
-            return res.status(httpStatus.OK).end();
-        }
-        return res.status(httpStatus.NOT_FOUND).end();
+        res.send(await cursor.toArray());
+        return res.status(httpStatus.OK).end();
     }
 
     else if (req.method === 'PUT') {
         const message = await req.body;
+        const {_id: _, ...update} = message;
 
-        const response = await rooms.updateOne(
-            { _id : roomId, 'messages._id': message._id },
-            { $set: { 'messages.$': message } }
+        const response = await messages.updateOne(
+            { _id: new ObjectId(message._id) },
+            { $set: update }
         );
 
         if (!response.acknowledged) {

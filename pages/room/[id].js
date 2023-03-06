@@ -148,9 +148,7 @@ export default function Room({ roomId }) {
                 <button type="submit">Send</button>
             </form>
             <div className='subTerminal'>
-                <h2>Attendance Code: 
-                    &nbsp;<p>{dailyCode || 'getting code...'}</p> 
-                </h2>
+                <h2>Attendance Code:&nbsp;{dailyCode || 'getting code...'}</h2>
             </div>
        </div>              
        <style jsx>{`

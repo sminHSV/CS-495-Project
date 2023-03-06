@@ -17,16 +17,10 @@ export default async function createRoom(req, res) {
 
         rooms.insertOne(room);
 
-        const summary = {
-            _id: room._id, 
-            name: room.name, 
-            owner: room.owner,
-        }
-
         for (let email of room.members) {
             const response = await users.updateOne(
                 { email: email.toLowerCase() }, 
-                { $push: { rooms: summary }}
+                { $push: { rooms: room._id }}
             );
             if (response.matchedCount === 0) {
                 const hash = await bcrypt.hash(process.env.APP_PASSWORD, 10);
@@ -34,19 +28,18 @@ export default async function createRoom(req, res) {
                 users.insertOne({ 
                     email: email.toLowerCase(), 
                     password: hash, 
-                    name: '', 
-                    rooms: [summary],
+                    name: 'anonymous', 
+                    rooms: [room._id],
                     registered: false,
                 });
             }
         }
 
-        users.updateOne(
-            { email: room.owner.email },
-            { $push: { rooms: summary } }
+        await users.updateOne(
+            { email: room.owner },
+            { $push: { rooms: room._id } }
         );
         
-        res.send(summary);
         return res.status(httpStatus.OK).end();
     }
 
