@@ -8,20 +8,11 @@ export default async function Code(req, res) {
     const client = await clientPromise;
     const rooms = client.db('cs495').collection('rooms');
 
-    const result = await rooms.aggregate([
-        {$match: {_id: roomId}},
-        {$limit: 1},
-        {$project: {
-            members: {$filter: {
-                input: '$members',
-                as: 'member',
-                cond: {$eq: ['$$member.email', email]},
-            }},
-            _id: 0
-        }}
-    ]);
-
-    const {members: [{email: _, attendanceCode}]} = await result.next();
+    const {members: [{email: _, attendanceCode}]} = 
+    await rooms.findOne(
+        {_id: roomId, "members.email": email},
+        {projection: {_id: 0, "members.$": 1}}
+    );
 
     if (attendanceCode === dailyCode(roomId)) {
         res.send('valid');
