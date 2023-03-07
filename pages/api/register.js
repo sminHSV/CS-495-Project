@@ -23,7 +23,7 @@ export default withSessionRoute(async (req, res) => {
       if (user) {
         await users.updateOne(
           { email: email.toLowerCase() },
-          { $set: { name: name, password: hashPassword }}
+          { $set: { name: name, password: hashPassword, registered: true }}
         );
       } else {
         await users.insertOne({

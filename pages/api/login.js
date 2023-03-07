@@ -11,10 +11,10 @@ export default withSessionRoute(async (req, res) => {
         const users = client.db("cs495").collection("users");
         const user = await users.findOne(
             { email: email.toLowerCase() },
-            { _id: 0, email: 1, name: 1 }
+            { _id: 0, email: 1, name: 1, registered: 1 }
         );
 
-        if (!user) {
+        if (!user || !user.registered) {
             return res.status(httpStatus.UNAUTHORIZED).json({ message: 'User does not exist'})
         }
 
