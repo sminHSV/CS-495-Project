@@ -1,6 +1,5 @@
 import clientPromise from '@/lib/mongodb'
 import httpStatus from 'http-status'
-import bcrypt from 'bcryptjs'
 
 var ObjectId = require('mongodb').ObjectId;
 
@@ -17,29 +16,28 @@ export default async function createRoom(req, res) {
 
         rooms.insertOne(room);
 
-        for (let member of room.members) {
-            const email = member.email;
-            const response = await users.updateOne(
-                { email: email }, 
-                { $push: { rooms: room._id }}
-            );
-            if (response.matchedCount === 0) {
-                const hash = await bcrypt.hash(process.env.APP_PASSWORD, 10);
-
-                users.insertOne({ 
-                    email: email, 
-                    password: hash, 
-                    name: 'anonymous', 
-                    rooms: [room._id],
-                    registered: false,
-                });
-            }
-        }
-
-        await users.updateOne(
+        users.updateOne(
             { email: room.owner },
             { $push: { rooms: room._id } }
         );
+
+        for (let member of room.members) {
+            const email = member.email;
+            users.updateOne(
+                { email: email }, 
+                { $push: { rooms: room._id }}
+            ).then(res => {
+                if (res.matchedCount === 0) {
+                    users.insertOne({ 
+                        email: email, 
+                        password: '', 
+                        name: 'anonymous', 
+                        rooms: [room._id],
+                        registered: false,
+                    });
+                }
+            })
+        }
         
         return res.status(httpStatus.OK).end();
     }
