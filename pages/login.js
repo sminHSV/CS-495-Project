@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useState, useRef } from 'react';
 import Link from 'next/link';
+import styles from '/styles/Home.module.css'
 
 export default function SignInPage() {
     const router = useRouter();
@@ -38,7 +39,9 @@ export default function SignInPage() {
             top: '30%',
             left: '50%',
             transform: 'translate(-50%, -50%)'
+            
         }}>
+            <button className={styles.button}>Click me</button>
             <div>
                 <form onSubmit={handleSubmit}>
                     <div>
@@ -62,7 +65,7 @@ export default function SignInPage() {
                         </label>
                     </div><br/>
                     <div>
-                        <button disabled={
+                        <button className={styles.button} disabled={
                             status === 'submitting'
                         } type="submit">
                             Sign in
