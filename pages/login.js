@@ -41,7 +41,6 @@ export default function SignInPage() {
             transform: 'translate(-50%, -50%)'
             
         }}>
-            <button className={styles.button}>Click me</button>
             <div>
                 <form onSubmit={handleSubmit}>
                     <div>
