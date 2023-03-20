@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import React, { useEffect, useState, useRef } from 'react'
-import emailjs from '@emailjs/browser'
 import useUser from "@/lib/useUser"
 import { useRouter } from "next/router"
 
@@ -14,10 +13,6 @@ export default function Dashboard() {
             .then(response => response.json())
             .then(rooms => setMyRooms(rooms));
     }, [myRooms]);
-
-    function sendEmails(e) {
-
-    }
 
     if (!user) return <p>Loading...</p>
     
