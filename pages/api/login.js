@@ -3,6 +3,9 @@ import httpStatus from 'http-status';
 import clientPromise from '@/lib/mongodb';
 import bcrypt from "bcryptjs";
 
+/**
+ * Create a new user session.
+ */
 export default withSessionRoute(async (req, res) => {
     if (req.method === "POST") {
         const { email, password } = await req.body;

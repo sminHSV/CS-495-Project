@@ -1,6 +1,9 @@
 import { useState, useContext } from 'react'
 import { RoomContext } from '@/lib/roomContext'
 
+/**
+ * Displays the message submission form and handles sending messages.
+ */
 export default function MessageForm () {
 
     const {roomId, user} = useContext(RoomContext);

@@ -3,6 +3,9 @@ import httpStatus from 'http-status';
 import clientPromise from 'lib/mongodb';
 import { withSessionRoute } from 'lib/withSession';
 
+/**
+ * Register a new user.
+ */
 export default withSessionRoute(async (req, res) => {
   const { name, email, password } = await req.body;
   const client = await clientPromise;

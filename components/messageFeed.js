@@ -3,6 +3,9 @@ import { usePusher } from '@/lib/PusherContext'
 import { fetchJSON } from '@/lib/fetch'
 import { RoomContext } from '@/lib/roomContext'
 
+/**
+ * Handles displaying and updating messages and message interactions.
+ */
 export default function MessageFeed() {
 
     const {roomId, user} = useContext(RoomContext);

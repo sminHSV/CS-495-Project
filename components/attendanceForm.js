@@ -1,6 +1,11 @@
 import { useEffect, useState, useRef, useContext } from 'react'
 import { RoomContext } from '@/lib/roomContext'
 
+/**
+ * JSX element containing the participants' attendance submission.
+ * Handles updating the participants' attendance status.
+ * Must be provided a RoomContext.
+ */
 export default function AttendanceForm() {
 
     const {roomId, user} = useContext(RoomContext);

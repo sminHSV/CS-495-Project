@@ -3,6 +3,11 @@ import httpStatus from 'http-status'
 
 var ObjectId = require('mongodb').ObjectId;
 
+/**
+ * Inserts a new room into the database.
+ * FIXME: adding a large number of members to a room may
+ * cause the request to timeout.
+ */
 export default async function createRoom(req, res) {
     const client = await clientPromise;
     const rooms = client.db('cs495').collection('rooms');
@@ -21,6 +26,10 @@ export default async function createRoom(req, res) {
             { $push: { rooms: room._id } }
         );
 
+        // Sungmin says: this for loop may cause the request to timeout
+        // when there are many members (the timeout period for the free Vercel
+        // license is very short). I modified the for loop to prevent this
+        // from happening, but I haven't tested it yet.
         for (let member of room.members) {
             const email = member.email;
             users.updateOne(

@@ -4,6 +4,10 @@ import { fetchText, fetchJSON } from '@/lib/fetch';
 import { useState, useEffect, useContext } from 'react'
 import { RoomContext } from '@/lib/roomContext'
 
+/**
+ * JSX element containing the attendance code and attendance list.
+ * Must be provided a RoomContext
+ */
 export default function AttendanceChart() {
 
     const {roomId, user} = useContext(RoomContext);

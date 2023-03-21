@@ -2,8 +2,6 @@ import Pusher from "pusher"
 import clientPromise from '@/lib/mongodb'
 import httpStatus from 'http-status'
 
-var ObjectId = require('mongodb').ObjectId;
-
 const channels = new Pusher({
     appId: process.env.APP_ID,
     key: process.env.KEY,
@@ -11,6 +9,14 @@ const channels = new Pusher({
     cluster: 'us2',
 });
 
+/**
+ * Expects roomId as a query parameter.
+ * 
+ * GET: sends the list of room members and their corresponding attendance status.
+ * 
+ * PUT: updates the given member's attendance status. 
+ * Expects the member's email and attendance status in the request body.
+ */
 export default async function Members(req, res) {
     const { roomId } = req.query;
     const channel = Buffer.from(roomId, 'base64url').toString('hex');
