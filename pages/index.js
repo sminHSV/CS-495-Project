@@ -3,6 +3,8 @@ import styles from "@/styles/Home.module.css"
 import Link from 'next/link'
 import useUser from "@/lib/useUser"
 
+
+
 export default function Home() {
   const { user } = useUser();
 
@@ -14,9 +16,10 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1 className="text-white">
-          Welcome to unMute, {user ? user.name : ''}
-        </h1>
+        <h1 class ="frontPageh1">
+          Welcome to unMute, {user ? user.name : '!'}
+      
+          </h1>
 
         <div className="grid">
           {user ? <>
@@ -137,7 +140,7 @@ export default function Home() {
         .card {
           min-width: 200px;
           margin: 1rem;
-          flex-basis: 45%;
+          //flex-basis: 45%;
           padding: 1.5rem;
           text-align: left;
           color: inherit;
