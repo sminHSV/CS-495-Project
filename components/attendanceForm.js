@@ -48,7 +48,8 @@ export default function AttendanceForm() {
                 Enter Attendance Code:<br/>
                 <input type='text' 
                     ref={code}
-                    placeholder='Enter attendance code'
+                    placeholder='Enter code'
+                    style={{width: '100%'}}
                 />
             </label> <br/>
             <button type='submit'>

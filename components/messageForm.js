@@ -24,6 +24,7 @@ export default function MessageForm () {
                 time: Date.now(),
                 upvotes: [],
                 replies: [],
+                status: 'waiting'
             }),
         });
 

@@ -1,16 +1,20 @@
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState, useContext, useRef } from 'react'
 import { usePusher } from '@/lib/PusherContext'
 import { fetchJSON } from '@/lib/fetch'
 import { RoomContext } from '@/lib/roomContext'
+import Message from './message'
 
 /**
- * Handles displaying and updating messages and message interactions.
+ * Handles organising and sorting messages.
  */
 export default function MessageFeed() {
 
     const {roomId, user} = useContext(RoomContext);
     const [messages, setMessages] = useState(null);
     const channels = usePusher();
+    const [statusOrder, setStatusOrder] = useState({
+        urgent: 0, waiting: 1, answered: 2
+    })
 
     function updateMessage(message) {
         setMessages(messages => ({
@@ -33,101 +37,17 @@ export default function MessageFeed() {
 
     }, [channels, roomId]);
 
-    const handleUpvote = async (e, message) => {
-        e.preventDefault();
+    return (messages ? 
+        <ul>{ 
+            Object.values(messages)
+                .sort((a, b) => (Number(a.time) - Number(b.time)))
+                .sort((a, b) => b.upvotes.length - a.upvotes.length)
+                .sort((a, b) => statusOrder[a.status] - statusOrder[b.status])
+                .map(message => <li key={message._id}>
+                    <Message message={message} />
+                </li>)
+        }</ul>
 
-        e.target.disabled = true;
-
-        const result = await fetch("/api/messages?" + new URLSearchParams({ roomId }), {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                ...message, 
-                upvotes: [...message.upvotes, user.email] 
-            }),
-        });
-        if (!result.ok) {
-            console.error('failed to update message');
-        }
-    }
-
-    return (<>
-        {!messages ? <><br />Loading messages...</> :
-        <ul>
-            {Object.values(messages)
-                .sort((a, b) => (Number(a._id) - Number(b._id)))
-                .map(message => (
-                    <li key={message._id}>
-                        <div className='message'>
-                            <div>
-                                <button id='reply'>reply</button>
-                                <button id='upvote' 
-                                    onClick={e => {handleUpvote(e, message)}}
-                                    disabled={message.upvotes.find(email => email === user.email)}
-                                >
-                                    {message.upvotes.length} &#9757;
-                                </button>
-                                <p>{message.body}</p>
-                                <small>
-                                    Sent by {
-                                        message.anonymous ? 'anonymous' : message.sender?.name
-                                    } at {
-                                        new Date(message.time).toLocaleTimeString()
-                                    }
-                                </small>
-                            </div>
-                            <details>
-                                <summary>{message.replies.length} replies</summary>
-                            </details>
-                        </div>
-                    </li>
-            ))}
-        </ul>}
-        <style jsx>{`
-            .message {
-                position: relative;
-                padding: 5px;
-                min-height: 60px;
-                font: 1.5em system-ui;
-                border: 1px solid #eaeaea;
-                overflow-wrap: anywhere;
-                border-radius: 5px;
-                display: grid;
-                grid-template-rows: 1fr auto;
-                gap: 5px;
-            }
-
-            .message > details > summary {
-                display: flex;
-                justify-content: center;
-                font-size: 0.5em;
-                list-style: none;
-                cursor: pointer;
-                background-color: dimgray;
-            }
-
-            .message > details > summary:hover {
-                background-color: gray;
-                text-decoration: underline;
-            }
-
-            .message small {
-                font-size: 0.5em;
-            }
-    
-            .message #reply {
-                position: absolute;
-                font-size: 0.7em;
-                margin: 3px;
-                right: 45px;
-            }
-    
-            .message #upvote {
-                position: absolute;
-                font-size: 0.6em;
-                margin: 3px;
-                right: 10px;
-            }
-        `}</style>
-    </>)
+        : <p>Loading messages...</p> 
+    )
 }
