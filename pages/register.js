@@ -44,13 +44,9 @@ export default function Register() {
     };
 
     return (
-        <div style={{
-            position: 'fixed',
-            top: '30%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)'
-        }}>
-            <div>
+
+            <div class ="parent">
+                <div class ="child">
                 <form onSubmit={handleSubmit}>
                 <div>
                     <label>
@@ -107,6 +103,6 @@ export default function Register() {
                 <br />
                 <Link href="/">Go Back</Link>
             </div>
-        </div>
+       </div>
     );
   }

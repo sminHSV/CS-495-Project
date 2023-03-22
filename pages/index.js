@@ -17,7 +17,7 @@ export default function Home() {
 
       <main>
         <h1 class ="frontPageh1">
-          Welcome to unMute, {user ? user.name : '!'}
+          Welcome to unMute {user ? user.name : '!'}
       
           </h1>
 

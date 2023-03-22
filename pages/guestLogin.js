@@ -26,7 +26,8 @@ export default function Register() {
     return (
         <>
         <form onSubmit={handleSubmit}>
-        <div>
+        <div class = "parent">
+        <div class="child">
             <label>
             Name: <input 
                 type="text" 
@@ -34,17 +35,24 @@ export default function Register() {
                 disabled={status === 'submitting'}
             />
             </label>
-        </div>
+       
         <div>
             <button disabled={
                 name.length === 0 ||
                 status === 'submitting'
             } type="submit">Register</button>
         </div>
+        </div>
+        </div>
         {errorMsg && <p className="error">{errorMsg}</p>}
         </form>
         <br />
+        <div class="parent">
+        <div class="child">
         <Link href="/">Go Back</Link>
+        </div>
+        </div>
         </>
+       
     );
   }
