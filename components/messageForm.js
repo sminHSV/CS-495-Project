@@ -6,7 +6,7 @@ import { RoomContext } from '@/lib/roomContext'
  */
 export default function MessageForm () {
 
-    const {roomId, user} = useContext(RoomContext);
+    const {room, user} = useContext(RoomContext);
     const [toSend, setToSend] = useState('');
     const [anonymous, setAnonymous] = useState(false);
 
@@ -14,7 +14,7 @@ export default function MessageForm () {
         e.preventDefault();
         setToSend('');
 
-        const result = await fetch("/api/messages?" + new URLSearchParams({ roomId }), {
+        const result = await fetch("/api/messages?" + new URLSearchParams({ roomId: room._id }), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 

@@ -27,15 +27,15 @@ export default function Room({ roomId }) {
             <Link href="/" className='link'>Leave room</Link>
             <br /><br />
             <div className='grid'>
-                <RoomContext.Provider value={{roomId, user}}>
+                <RoomContext.Provider value={{room, user}}>
                     <div className='terminal'>
-                        <MessageFeed roomId={roomId} user={user} />
+                        <MessageFeed />
                     </div>
                     <div className='inputBox'>
-                        <MessageForm roomId={roomId} user={user} />
+                        <MessageForm />
                     </div>
                     <div className='subTerminal'>
-                        <AttendanceChart roomId={roomId} />
+                        <AttendanceChart />
                     </div>
                 </RoomContext.Provider>
             </div>

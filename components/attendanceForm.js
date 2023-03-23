@@ -8,12 +8,12 @@ import { RoomContext } from '@/lib/roomContext'
  */
 export default function AttendanceForm() {
 
-    const {roomId, user} = useContext(RoomContext);
+    const {room, user} = useContext(RoomContext);
     const [state, setState] = useState('absent');
     const code = useRef();
 
     useEffect(() => {
-        fetch("/api/attendance/verify?"  + new URLSearchParams({ roomId, email: user.email }))
+        fetch("/api/attendance/verify?"  + new URLSearchParams({ roomId: room._id, email: user.email }))
             .then(res => res.text())
             .then(res => {
                 if (res === 'valid') {
@@ -22,12 +22,12 @@ export default function AttendanceForm() {
                     setState('failed');
                 }
             });
-    }, [state, roomId, user.email]);
+    }, [state, room, user.email]);
 
     const handleSubmitCode = async (e) => {
         e.preventDefault();
         
-        await fetch("/api/members?" + new URLSearchParams({ roomId }), {
+        await fetch("/api/members?" + new URLSearchParams({ roomId: room._id }), {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

@@ -6,13 +6,13 @@ import { RoomContext } from '@/lib/roomContext'
  */
 export default function Message({ message }) {
 
-    const {roomId, user} = useContext(RoomContext);
+    const {room, user} = useContext(RoomContext);
 
     const handleUpvote = async (e) => {
         e.preventDefault();
         e.target.disabled = true;
 
-        const result = await fetch("/api/messages?" + new URLSearchParams({ roomId }), {
+        const result = await fetch("/api/messages?" + new URLSearchParams({ roomId: room._id }), {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -27,7 +27,7 @@ export default function Message({ message }) {
     const handleStatus = async (e) => {
         e.preventDefault();
 
-        const result = await fetch("/api/messages?" + new URLSearchParams({ roomId }), {
+        const result = await fetch("/api/messages?" + new URLSearchParams({ roomId: room._id }), {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -63,7 +63,8 @@ export default function Message({ message }) {
             <select 
                 onInput={handleStatus} 
                 value={message.status}
-                disabled={user.email != message.sender.email}
+                disabled={user.email != room.owner 
+                    && user.email != message.sender.email}
             >
                 <option value='waiting'>waiting</option>
                 <option value='urgent'>urgent</option>
@@ -91,7 +92,7 @@ export default function Message({ message }) {
                 font: 1.5em system-ui;
                 border-radius: 5px;
                 display: grid;
-                grid-template-columns: 11lvh auto 6lvh;
+                grid-template-columns: 8lvh auto 6lvh;
                 gap: 5px;
             }
 
@@ -151,6 +152,7 @@ export default function Message({ message }) {
 
             .actions > button {
                 height: 3lvh;
+                font-size: 0.7em;
             }
         `}</style>
     </>)

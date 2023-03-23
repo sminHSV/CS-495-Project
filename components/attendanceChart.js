@@ -10,8 +10,8 @@ import { RoomContext } from '@/lib/roomContext'
  */
 export default function AttendanceChart() {
 
-    const {roomId, user} = useContext(RoomContext);
-    const { data: dailyCode } = useSWR('/api/attendance/code?' + new URLSearchParams({ roomId }), fetchText);
+    const {room, user} = useContext(RoomContext);
+    const { data: dailyCode } = useSWR('/api/attendance/code?' + new URLSearchParams({ roomId: room._id }), fetchText);
     const channels = usePusher();
     const [members, setMembers] = useState(null);
 
@@ -23,7 +23,7 @@ export default function AttendanceChart() {
     }
 
     useEffect(() => {
-        const channel = channels.subscribe(Buffer.from(roomId, 'base64').toString('hex'));
+        const channel = channels.subscribe(Buffer.from(room._id, 'base64').toString('hex'));
 
         channel.bind('member-update', function(member) {
             updateMember(member);
@@ -31,10 +31,10 @@ export default function AttendanceChart() {
 
         setMembers({});
 
-        fetchJSON("/api/members?" + new URLSearchParams({ roomId }))
+        fetchJSON("/api/members?" + new URLSearchParams({ roomId: room._id }))
             .then(members => members.forEach(member => updateMember(member)));
 
-    }, [channels, roomId]);
+    }, [channels, room]);
 
     return (<>
         <h2>Attendance Code:&nbsp;{dailyCode || 'getting code...'}</h2>

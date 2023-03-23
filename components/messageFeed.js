@@ -9,7 +9,7 @@ import Message from './message'
  */
 export default function MessageFeed() {
 
-    const {roomId, user} = useContext(RoomContext);
+    const {room, user} = useContext(RoomContext);
     const [messages, setMessages] = useState(null);
     const channels = usePusher();
     const [statusOrder, setStatusOrder] = useState({
@@ -24,7 +24,7 @@ export default function MessageFeed() {
     }
 
     useEffect(() => {
-        const channel = channels.subscribe(Buffer.from(roomId, 'base64').toString('hex'));
+        const channel = channels.subscribe(Buffer.from(room._id, 'base64').toString('hex'));
 
         channel.bind('message-update', function(message) {
             updateMessage(message);
@@ -32,10 +32,10 @@ export default function MessageFeed() {
 
         setMessages({});
         
-        fetchJSON("/api/messages?" + new URLSearchParams({ roomId }))
+        fetchJSON("/api/messages?" + new URLSearchParams({ roomId: room._id }))
             .then(messages => messages.forEach(message => updateMessage(message)));
 
-    }, [channels, roomId]);
+    }, [channels, room]);
 
     return (messages ? 
         <ul>{ 
