@@ -20,14 +20,14 @@ export default withSessionRoute(async (req, res) => {
             }
             let testAccount = await nodemailer.createTestAccount();
 
-            
+            console.log("User: %s\nPass: %s", testAccount.user, testAccount.pass);
             let transporter = nodemailer.createTransport({
                 host: "smtp.ethereal.email",
                 port: 587,
                 secure: false, 
                 auth: {
-                user: testAccount.user, 
-                pass: testAccount.pass, 
+                    user: testAccount.user, 
+                    pass: testAccount.pass, 
                 },
             });
 
@@ -35,19 +35,20 @@ export default withSessionRoute(async (req, res) => {
 
             await client.db('cs495').collection("tokens").insertOne({
               _id: tokenId,
-              creatorId: user._id,
+              creatorId: email,
               type: "passwordReset",
               expireAt: new Date(Date.now() + 20 * 60 * 1000), //20 mins 
             });
-
+            
             // db.collection("tokens").createIndex("expireAt", { expireAfterSeconds: 0 });
 
-            const link = `${process.env.WEB_URI}password-reset-form/${tokenId}/${email}`;
+            const link = `${process.env.WEB_URI}/resetPassword/${tokenId}`;
+
             let info = await transporter.sendMail({
                 from: '"Andrew Testing" <andrew@testing.com>', // sender address
-                to: email, 
+                to: email,
                 subject: "Password reset", // Subject line
-                html: "<b>Please click the link below to reset your password</b><b>"+link +"</b>", // html body
+                html: "<b>Please click the link below to reset your password: </b><b>"+link +"</b>", // html body
             });
 
             console.log("Message sent: %s", info.messageId);
@@ -68,8 +69,7 @@ export default withSessionRoute(async (req, res) => {
                 }
             
                 const password = await bcrypt.hash(password.toLowerCase(), 10);
-                await client.db('cs495').collection("tokens").updateOne({ _id: deletedToken.creatorId }, { $set: { password } });
-
+                await client.db("cs495").collection("users").updateOne({ _id: deletedToken.creatorId }, { $set: { password} });
                 return res.status(httpStatus.OK).end();
             }
         }
@@ -78,6 +78,6 @@ export default withSessionRoute(async (req, res) => {
 
     } catch (error) {
         console.log(error, error.message);
-        res.status(fetchResponse?.status || 500).json(error.message);
+        return res.status(httpStatus.BAD_REQUEST).end();
     }
 });

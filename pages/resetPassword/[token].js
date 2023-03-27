@@ -39,7 +39,7 @@ export default function Reset_Password(){
         </div>
         <div>
             <label>
-            New Passowrd: <input 
+            New Password: <input 
                 type="text" 
                 value={password}
                 onChange={e => setPassword(e.target.value)}
@@ -49,7 +49,7 @@ export default function Reset_Password(){
         </div>
         <div>
             <button disabled={
-                email.length === 0 ||
+                password.length === 0 ||
                 status === 'submitting'
             } type="submit">Set New Password</button>
         </div>
