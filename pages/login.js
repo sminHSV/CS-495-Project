@@ -42,38 +42,45 @@ export default function SignInPage() {
             
         }}>
             <div>
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <label>
-                        Email: <br/><input 
-                            type="text" 
-                            ref={email}
-                            disabled={status === 'submitting'} 
-                            required
-                        />
-                        </label>
-                    </div><br/>
-                    <div>
-                        <label>
-                        Password: <br/><input 
-                            type="password" 
-                            ref={password}
-                            disabled={status === 'submitting'}
-                            required
-                        />
-                        </label>
-                    </div><br/>
-                    <div>
-                        <button className={styles.button} disabled={
-                            status === 'submitting'
-                        } type="submit">
-                            Sign in
-                        </button>
-                    </div>
-                    <span style={{color: 'red'}}>
-                        {errorMsg || <br/>}
-                    </span>
-                </form>
+                <div style={{
+                    border: '1px solid black',
+                    borderRadius: '5px',
+                    padding: '20px',
+                    backgroundColor: '#f5f5f5'
+                }}>
+                    <form onSubmit={handleSubmit}>
+                        <div>
+                            <label>
+                            Email: <br/><input 
+                                type="text" 
+                                ref={email}
+                                disabled={status === 'submitting'} 
+                                required
+                            />
+                            </label>
+                        </div><br/>
+                        <div>
+                            <label>
+                            Password: <br/><input 
+                                type="password" 
+                                ref={password}
+                                disabled={status === 'submitting'}
+                                required
+                            />
+                            </label>
+                        </div><br/>
+                        <div>
+                            <button className={styles.button} disabled={
+                                status === 'submitting'
+                            } type="submit">
+                                Sign in
+                            </button>
+                        </div>
+                        <span style={{color: 'red'}}>
+                            {errorMsg || <br/>}
+                        </span>
+                    </form>
+                </div>
                 <br />
                 <Link href="/register" className='link'>Register an account</Link>
                 <br /><br />
