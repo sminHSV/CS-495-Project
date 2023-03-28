@@ -56,19 +56,17 @@ export default withSessionRoute(async (req, res) => {
         }
         
         else if(req.method == 'PUT'){
-            console.log("PUT request started");
             const { token, password } = req.body;
            
             const deletedToken = await client.db("cs495")
                 .collection("tokens")
-                .findOneAndDelete({ _id: token.id, type: token.type });
-        
+                .findOneAndDelete({ _id: token, type: 'passwordReset'});
+            
             if (!deletedToken) {
                 res.status(403).end();
                 return;
             }
-
-            await client.db("cs495").collection("users").updateOne({ _id: deletedToken.creatorId }, { $set: { password } });
+            await client.db("cs495").collection("users").updateOne({email: deletedToken.value.creatorId }, { $set: { password: password } });
             return res.status(httpStatus.OK).end();
         
         }
