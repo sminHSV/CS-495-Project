@@ -77,20 +77,11 @@ export default function SignInPage() {
                 <br /><br />
                 <Link href="/guestLogin" className='link'>Sign in as a guest</Link>
                 <br /><br />
+                <Link href="/resetPassword" className='link'>Reset/Forgot Password?</Link>
+                <br /><br />
                 <Link href="/" className='link'>Go Back</Link>
             </div>
-            {errorMsg && <p style={{color: 'red'}}>{errorMsg}</p>}
-        <br />
-        <Link href="/register" className='link'>Register an account</Link>
-        <br /><br />
-        <Link href="/guestLogin" className='link'>Sign in as a guest</Link>
-        <br /><br />
-        <Link href="/resetPassword" className='link'>Reset/Forgot Password?</Link>
-        <br /><br />
-        <Link href="/" className='link'>Go Back</Link>
-        
-                
+            {errorMsg && <p style={{color: 'red'}}>{errorMsg}</p>} 
         </div>
-
     );
 }
