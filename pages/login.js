@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 
 export default function SignInPage() {
     const router = useRouter();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const email = useRef();
+    const password = useRef();
 
     const [errorMsg, setErrorMsg] = useState(null);
     const [status, setStatus] = useState('typing');
@@ -17,7 +17,10 @@ export default function SignInPage() {
         const response = await fetch("/api/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ 
+                email: email.current.value,
+                password: password.current.value
+            }),
         });
 
         if (response.ok) {
@@ -30,17 +33,53 @@ export default function SignInPage() {
     };
 
     return (
-        <>
-        <form onSubmit={handleSubmit}>
+        <div style={{
+            position: 'fixed',
+            top: '30%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
+        }}>
             <div>
-                <label>
-                Email: <input 
-                    type="text" 
-                    onChange={e => setEmail(e.target.value)} 
-                    disabled={status === 'submitting'} 
-                />
-                </label>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label>
+                        Email: <br/><input 
+                            type="text" 
+                            ref={email}
+                            disabled={status === 'submitting'} 
+                            required
+                        />
+                        </label>
+                    </div><br/>
+                    <div>
+                        <label>
+                        Password: <br/><input 
+                            type="password" 
+                            ref={password}
+                            disabled={status === 'submitting'}
+                            required
+                        />
+                        </label>
+                    </div><br/>
+                    <div>
+                        <button disabled={
+                            status === 'submitting'
+                        } type="submit">
+                            Sign in
+                        </button>
+                    </div>
+                    <span style={{color: 'red'}}>
+                        {errorMsg || <br/>}
+                    </span>
+                </form>
+                <br />
+                <Link href="/register" className='link'>Register an account</Link>
+                <br /><br />
+                <Link href="/guestLogin" className='link'>Sign in as a guest</Link>
+                <br /><br />
+                <Link href="/" className='link'>Go Back</Link>
             </div>
+
             <div>
                 <label>
                 Password: <input 
@@ -68,5 +107,8 @@ export default function SignInPage() {
         <br /><br />
         <Link href="/" className='link'>Go Back</Link>
         </>
+
+        </div>
+
     );
 }

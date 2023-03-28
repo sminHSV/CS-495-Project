@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@next/font": "^13.1.6",
+
+    "@emailjs/browser": "^3.10.0",
+    "@next/font": "13.1.6",
     "bcryptjs": "^2.4.3",
     "eslint": "8.34.0",
     "eslint-config-next": "13.1.6",
@@ -25,6 +27,7 @@
     "pusher-js": "^8.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "seedrandom": "^3.0.5",
     "swr": "^2.0.3"
   }
 }

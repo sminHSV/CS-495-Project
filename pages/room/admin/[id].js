@@ -7,8 +7,8 @@ import useSWR from 'swr'
 import useUser from '@/lib/useUser'
 
 import MessageFeed from '@/components/messageFeed'
-import AttendanceForm from '@/components/attendanceForm'
 import MessageForm from '@/components/messageForm'
+import AttendanceChart from '@/components/attendanceChart'
 
 export default function Room({ roomId }) {
 
@@ -18,6 +18,8 @@ export default function Room({ roomId }) {
     if (error) return <p>Couldn&apos;t load room</p>
     if (!room) return <p>Loading room...</p>
     if (!user) return <p>Authorizing user...</p>
+
+    if (user.email !== room.owner) return <p>Unauthorized access</p>
 
     return (<>
         <div style={{margin: '10px'}}>
@@ -33,11 +35,11 @@ export default function Room({ roomId }) {
                         <MessageForm />
                     </div>
                     <div className='subTerminal'>
-                        <AttendanceForm />
+                        <AttendanceChart />
                     </div>
                 </RoomContext.Provider>
             </div>
-        </div>        
+        </div>              
         <style jsx>{`
             .grid {
                 display: grid;
@@ -63,7 +65,10 @@ export default function Room({ roomId }) {
                 border-radius: 10px;
                 grid-column: 3;
                 grid-row: 1 / 4;
-                padding: 20px;
+                display: grid;
+                grid-template-rows: fit-content(100%);
+                gap: 20px;
+                padding: 10px;
             }
 
             .inputBox {
@@ -86,4 +91,3 @@ export function getServerSideProps(context) {
         }
     };
 }
-

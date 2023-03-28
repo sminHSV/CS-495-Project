@@ -1,28 +1,40 @@
 import { useRouter } from 'next/router';
-import {useState } from 'react';
+import {useRef, useState } from 'react';
 import Link from 'next/link'
+import httpStatus from 'http-status';
 
 export default function Register() {
     const router = useRouter();
 
-    const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
-    const [password, setPassword] = useState('');
+    const email = useRef();
+    const name = useRef();
+    const password1 = useRef();
+    const password2 = useRef();
 
     const [errorMsg, setErrorMsg] = useState(null);
     const [status, setStatus] = useState('typing');
   
     const handleSubmit = async (e) => {
-      e.preventDefault();
-      setStatus('submitting');
+        e.preventDefault();
+        setStatus('submitting');
+
+        if (password1.current.value !== password2.current.value) {
+            setErrorMsg('Passwords don\'t match.');
+            setStatus('typing');
+            return;
+        }
   
         const response = await fetch('/api/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, name }),
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                email: email.current.value, 
+                password: password1.current.value, 
+                name: name.current.value
+            }),
         });
 
-        if (response.ok) {
+        if (response.status === httpStatus.CREATED) {
             return router.push('/login');
         } else {
             let message = (await response.json()).message;
@@ -32,48 +44,69 @@ export default function Register() {
     };
 
     return (
-        <>
-        <form onSubmit={handleSubmit}>
-        <div>
-            <label>
-            Email: <input 
-                type="text" 
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                disabled={status === 'submitting'}
-            />
-            </label>
+        <div style={{
+            position: 'fixed',
+            top: '30%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
+        }}>
+            <div>
+                <form onSubmit={handleSubmit}>
+                <div>
+                    <label>
+                    Email: <br/><input 
+                        type="text" 
+                        ref={email}
+                        disabled={status === 'submitting'}
+                        required
+                    />
+                    </label>
+                </div><br/>
+                <div>
+                    <label>
+                    Name: <br/><input 
+                        type="text" 
+                        ref={name}
+                        disabled={status === 'submitting'}
+                        required
+                    />
+                    </label>
+                </div><br/>
+                <div>
+                    <label>
+                    Password: <br/><input 
+                        type="password" 
+                        ref={password1}
+                        disabled={status === 'submitting'}
+                        required 
+                    />
+                    </label>
+                </div><br/>
+                <div>
+                    <label>
+                    Confirm Password: <br/><input 
+                        type="password" 
+                        ref={password2}
+                        disabled={status === 'submitting'}
+                        required
+                    />
+                    </label>
+                </div>
+                <br/>
+                <div>
+                    <button 
+                        disabled={status === 'submitting'} 
+                        type="submit">
+                        Register
+                    </button>
+                </div>
+                <span style={{color: 'red'}}>
+                    {errorMsg || <br/>}
+                </span>
+                </form>
+                <br />
+                <Link href="/">Go Back</Link>
+            </div>
         </div>
-        <div>
-            <label>
-            Name: <input 
-                type="text" 
-                onChange={e => setName(e.target.value)}
-                disabled={status === 'submitting'}
-            />
-            </label>
-        </div>
-        <div>
-            <label>
-            Password: <input 
-                type="password" 
-                onChange={e => setPassword(e.target.value)}
-                disabled={status === 'submitting'} 
-            />
-            </label>
-        </div>
-        <div>
-            <button disabled={
-                email.length === 0 ||
-                name.length === 0 ||
-                password.length === 0 ||
-                status === 'submitting'
-            } type="submit">Register</button>
-        </div>
-        {errorMsg && <p className="error">{errorMsg}</p>}
-        </form>
-        <br />
-        <Link href="/">Go Back</Link>
-        </>
     );
   }
