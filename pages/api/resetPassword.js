@@ -1,4 +1,3 @@
-import bcrypt from 'bcryptjs';
 import httpStatus from 'http-status';
 import clientPromise from 'lib/mongodb';
 import { withSessionRoute } from 'lib/withSession';
@@ -57,21 +56,21 @@ export default withSessionRoute(async (req, res) => {
         }
         
         else if(req.method == 'PUT'){
+            console.log("PUT request started");
             const { token, password } = req.body;
-            async (req, res) => {
-                const deletedToken = await db
-                  .collection("tokens")
-                  .findOneAndDelete({ _id: id, type });
-            
-                if (!deletedToken) {
-                  res.status(403).end();
-                  return;
-                }
-            
-                const password = await bcrypt.hash(password.toLowerCase(), 10);
-                await client.db("cs495").collection("users").updateOne({ _id: deletedToken.creatorId }, { $set: { password} });
-                return res.status(httpStatus.OK).end();
+           
+            const deletedToken = await client.db("cs495")
+                .collection("tokens")
+                .findOneAndDelete({ _id: token.id, type: token.type });
+        
+            if (!deletedToken) {
+                res.status(403).end();
+                return;
             }
+
+            await client.db("cs495").collection("users").updateOne({ _id: deletedToken.creatorId }, { $set: { password } });
+            return res.status(httpStatus.OK).end();
+        
         }
 
         return res.status(httpStatus.BAD_REQUEST).end();

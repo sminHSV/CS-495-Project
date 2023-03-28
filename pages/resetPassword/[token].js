@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
 import {useState } from 'react';
-import Link from 'next/link'
+import Link from 'next/link';
+import bcrypt from 'bcryptjs';
 
 export default function Reset_Password(){
     const router = useRouter();
-    const [password, setPassword] = useState('');
+    const [newPassword, setPassword] = useState('');
 
     const [errorMsg, setErrorMsg] = useState(null);
     const [status, setStatus] = useState('typing');
@@ -13,21 +14,21 @@ export default function Reset_Password(){
     const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus('submitting');
-    
+        let password =  await bcrypt.hash(newPassword.toLowerCase(), 10);
           const response = await fetch('/api/resetPassword', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({token, password }),
+            body: JSON.stringify({token, password}),
         });
 
         if (response.ok) {
-            return router.push('/resetSuccesful');
+            return router.push('/resetSuccessful');
         }
         else {
             let message = (await response.json()).message;
             setErrorMsg(message);
             setStatus('typing');
-            return router.push('/resetUnsuccesful');
+            return router.push('/resetUnsuccessful');
         }
     };
 
@@ -41,7 +42,7 @@ export default function Reset_Password(){
             <label>
             New Password: <input 
                 type="text" 
-                value={password}
+                value={newPassword}
                 onChange={e => setPassword(e.target.value)}
                 disabled={status === 'submitting'}
             />
@@ -49,7 +50,7 @@ export default function Reset_Password(){
         </div>
         <div>
             <button disabled={
-                password.length === 0 ||
+                newPassword.length === 0 ||
                 status === 'submitting'
             } type="submit">Set New Password</button>
         </div>
