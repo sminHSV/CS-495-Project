@@ -79,25 +79,7 @@ export default function SignInPage() {
                 <br /><br />
                 <Link href="/" className='link'>Go Back</Link>
             </div>
-
-            <div>
-                <label>
-                Password: <input 
-                    type="password" 
-                    onChange={e => setPassword(e.target.value)}
-                    disabled={status === 'submitting'}
-                />
-                </label>
-            </div>
-            <div>
-                <button disabled={
-                    email.length === 0 ||
-                    password.length === 0 ||
-                    status === 'submitting'
-                } type="submit">Sign in</button>
-            </div>
             {errorMsg && <p style={{color: 'red'}}>{errorMsg}</p>}
-        </form>
         <br />
         <Link href="/register" className='link'>Register an account</Link>
         <br /><br />
@@ -106,8 +88,8 @@ export default function SignInPage() {
         <Link href="/resetPassword" className='link'>Reset/Forgot Password?</Link>
         <br /><br />
         <Link href="/" className='link'>Go Back</Link>
-        </>
-
+        
+                
         </div>
 
     );
