@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 
 export default function JoinRoom() {
-    const [id, setId] = useState('');
+    const [name, setName] = useState('');
     const [status, setStatus] = useState('typing');
     const [error, setError] = useState(null);
 
@@ -13,10 +13,25 @@ export default function JoinRoom() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setStatus('submitting');
+        const res = await fetch('/api/join?name='+name, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            
+          });
+        console.log("%s: %s",res, res.id);
+        const id = await res.json();
+        return router.push('/room/' + id.id);
+        if (res) {
+        //FIXME: make page succseful login 
+       
 
-        router.push('/room/' + id);
+        } else {
+            let message = (await response.json()).message;
+            setErrorMsg(message);
+            return router.push('/room/0');
+        }
+        
     };
-
     return (
         <>
         <form onSubmit={handleSubmit}>
@@ -32,16 +47,16 @@ export default function JoinRoom() {
                 }}>
             <div>
                 <label>
-                Enter Room Id: <input 
+                Enter Room Name: <input 
                     type="text" 
-                    onChange={e => setId(e.target.value)} 
+                    onChange={e => setName(e.target.value)} 
                     disabled={status === 'submitting'} 
                 />
                 </label>
             </div>
             <div>
                 <button disabled={
-                    id.length === 0 ||
+                    name.length === 0 ||
                     status === 'submitting'
                 } type="submit">Join</button>
             </div>
