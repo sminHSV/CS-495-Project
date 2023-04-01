@@ -19,7 +19,6 @@
     "http-status": "^1.6.2",
     "iron-session": "^6.3.1",
     "mongodb": "^4.14.0",
-main
     "pusher": "^5.1.2",
     "pusher-js": "^8.0.1",
     "react": "18.2.0",
