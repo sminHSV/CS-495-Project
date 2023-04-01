@@ -13,9 +13,6 @@ export default function Home() {
         <link rel="icon" href="unMuteIcon.ico" />
       </Head>
 
-      <div class={styles.topnav}>
-        </div>
-
       <main className={styles.main}>
         <div className={styles.logoWrapper}>
           <img
