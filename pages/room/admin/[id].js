@@ -15,7 +15,11 @@ export default function Room({ roomId }) {
     const { user } = useUser();
     const { data: room, error } = useSWR('/api/room?' + new URLSearchParams({ roomId }), fetchJSON);
 
-    if (error) return <p>Couldn&apos;t load room</p>
+    if (error) return (<>
+        <p>Couldn&apos;t load room</p>
+        <Link href="/login" class ="link">Go Back</Link>
+        </>
+        );
     if (!room) return <p>Loading room...</p>
     if (!user) return <p>Authorizing user...</p>
 
