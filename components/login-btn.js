@@ -1,6 +1,5 @@
 import useUser from '@/lib/useUser'
 import Link from 'next/link'
-import styles from '@/styles/LoginBtn.module.css'
 
 /**
  * simple button for redirecting the user to the login page.
