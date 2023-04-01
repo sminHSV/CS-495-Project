@@ -79,6 +79,8 @@ export default function SignInPage() {
                         <span style={{color: 'red'}}>
                             {errorMsg || <br/>}
                         </span>
+                        <Link href="/resetPassword" className='link'>Reset Password</Link>
+                        <div></div>
                         <Link href="/" className='link'>Go Back</Link>
                     </form>
                 </div>

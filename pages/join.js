@@ -27,7 +27,8 @@ export default function JoinRoom() {
                     borderRadius: '5px',
                     padding: '20px',
                     backgroundColor: '#f5f5f5',
-                    width: '250px'
+                    minWidth: '350px',
+                    width: '40vh'
                 }}>
             <div>
                 <label>
