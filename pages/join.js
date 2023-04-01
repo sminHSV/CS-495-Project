@@ -20,6 +20,15 @@ export default function JoinRoom() {
     return (
         <>
         <form onSubmit={handleSubmit}>
+        <div class="parent">
+            <div class="child">
+                <div style={{
+                    border: '1px solid black',
+                    borderRadius: '5px',
+                    padding: '20px',
+                    backgroundColor: '#f5f5f5',
+                    width: '250px'
+                }}>
             <div>
                 <label>
                 Enter Room Id: <input 
@@ -35,10 +44,17 @@ export default function JoinRoom() {
                     status === 'submitting'
                 } type="submit">Join</button>
             </div>
+            <Link href="/" class ="link">Go Back</Link>
             {error && <p className="error">{error}</p>}
+            </div>
+            </div>
+        </div>
         </form>
         <br />
-        <Link href="/">Go Back</Link>
+        
+       
         </>
+      
+       
     )
 }

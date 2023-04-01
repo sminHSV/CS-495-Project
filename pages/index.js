@@ -83,10 +83,10 @@ export default function Home() {
 </div>
 
 <div className={styles.card}>
-  <Link href="/contact">
+  <Link href="/guestLogin">
     <div>
-      <h3>Contact Us &rarr;</h3>
-      <p>Get in touch with our team</p>
+      <h3>Guest Login &rarr;</h3>
+      <p>Login as Guest</p>
     </div>
   </Link>
 </div>
