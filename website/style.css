@@ -75,7 +75,7 @@ body {
   div[role="banner"] {
     justify-content: center;
     color: white;
-    background: rgb(46,12,20);
+    background: #003249;
     width: 100%;
     position: fixed;
     top: 0;
@@ -141,4 +141,17 @@ body {
   ul.ext {
     margin: 0;
  
+  }
+
+  .column {
+    float: left;
+    width: 33.33%;
+    padding: 5px;
+  }
+  
+  /* Clear floats after image containers */
+  .row::after {
+    content: "";
+    clear: both;
+    display: table;
   }
