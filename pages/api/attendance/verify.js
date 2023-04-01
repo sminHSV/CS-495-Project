@@ -2,6 +2,9 @@ import httpStatus from 'http-status';
 import clientPromise from '@/lib/mongodb';
 import dailyCode from '@/lib/dailyCode';
 
+/**
+ * Verifies that the given attendance code is valid.
+ */
 export default async function Code(req, res) {
     const { roomId, email } = req.query;
 

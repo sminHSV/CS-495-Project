@@ -1,6 +1,9 @@
 import { withSessionRoute } from 'lib/withSession';
 import httpStatus from 'http-status';
 
+/**
+ * Create a new Guest session.
+ */
 export default withSessionRoute(async (req, res) => {
     if (req.method === "POST") {
         const { name } = req.body;

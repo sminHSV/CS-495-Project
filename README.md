@@ -24,6 +24,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 This project is being deployed using Vercel.
 
-Here is the project page on Vercel: https://vercel.com/sminhsv/cs-495-project
-
 You can visit the most recent build here: https://cs-495-project.vercel.app/

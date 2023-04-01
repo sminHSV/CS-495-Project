@@ -11,6 +11,15 @@ const channels = new Pusher({
     cluster: 'us2',
 });
 
+/**
+ * Expects roomId as a query parameter.
+ * 
+ * POST: adds the given message to the message feed.
+ * 
+ * GET: sends the message feed as an array
+ * 
+ * PUT: updates the specified message (e.g. upvote count, replies)
+ */
 export default async function handler(req, res) {
     const { roomId } = await req.query;
     const channel = Buffer.from(roomId, 'base64url').toString('hex');

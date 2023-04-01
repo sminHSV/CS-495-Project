@@ -2,6 +2,9 @@ import { withSessionRoute } from 'lib/withSession';
 import clientPromise from '@/lib/mongodb'
 import httpStatus from 'http-status'
 
+/**
+ * Sends every room that the user is a member of.
+ */
 export default withSessionRoute(async (req, res) => {
     const user = req.session.user;
 

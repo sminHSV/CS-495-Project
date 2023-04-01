@@ -1,8 +1,10 @@
 import { withSessionRoute } from 'lib/withSession';
 import clientPromise from '@/lib/mongodb'
 import httpStatus from 'http-status'
-var ObjectId = require('mongodb').ObjectId;
 
+/**
+ * Send the specified room's info.
+ */
 export default withSessionRoute(async (req, res) => {
 
     if (req.method === 'GET') {
