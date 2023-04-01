@@ -65,25 +65,20 @@ export default function Dashboard() {
                     height: 400px;
                     width: 300px;
                 }
-
                 .myRooms li {
                     width: auto;
                     display: grid;
                     grid-template-columns: 150px auto;
                 }
-
                 .myRooms li > .actions {
                     visibility: hidden;
                 }
-
                 .myRooms li > .actions > button + button {
                     margin-left: 10px
                 }
-
                 .myRooms li:hover > .actions {
                     visibility: visible;
                 }
-
                 .myRooms small {
                     font-size: 12px;
                 }
@@ -174,7 +169,20 @@ function RoomForm({setMyRooms}) {
               <div
               >
                 <form method="dialog" onSubmit={(e) => handleSubmit(e)}>
-                  {/* ... */}
+                                  <h2 style={{display: 'flex', alignItems: 'center', gridColumn: '1 / 3'}}>
+                        <p><span style={{color: 'red'}}>*</span> Room Name:</p>
+                        <input 
+                            type='text' 
+                            placeholder='Enter a room name'
+                            style={{
+                                marginLeft: '10px'
+                            }}
+                            onKeyDown={ignoreEnter}
+                            ref={roomName}
+                            required
+                        />
+                    </h2>
+                    <br/> <br/>
                   <div className="meetingTimes">
                     <div>
                       <h2>Meeting Times:</h2>
