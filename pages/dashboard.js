@@ -156,34 +156,31 @@ function RoomForm({setMyRooms}) {
 
     return (
         <>
-            <button onClick={e => dialog.current.showModal()}>
-                + create room
+          <button onClick={(e) => dialog.current.showModal()}>
+            + create room
             </button>
-            <dialog ref={dialog}>
-                {state === 'submitting' ? 
-                    <p>creating room...</p>
-                :
-                <form method='dialog' onSubmit={e => handleSubmit(e)}>
-                    <h2 style={{display: 'flex', alignItems: 'center', gridColumn: '1 / 3'}}>
-                        <p><span style={{color: 'red'}}>*</span> Room Name:</p>
-                        <input 
-                            type='text' 
-                            placeholder='Enter a room name'
-                            style={{
-                                marginLeft: '10px'
-                            }}
-                            onKeyDown={ignoreEnter}
-                            ref={roomName}
-                            required
-                        />
-                    </h2>
-                    <br/><br/>
-                    <div className='meetingTimes'>
-                        <div>
-                            <h2>Meeting Times:</h2>
-                            <br/>
-                            <div className='timechart'>
-                                <label>Mon:</label> 
+      <dialog
+        ref={dialog}
+        style={{
+          maxHeight: "80vh",
+          overflowY: "scroll",
+          padding: "20px",
+          width: "400px",
+        }}
+      >
+            {state === "submitting" ? (
+              <p>creating room...</p>
+            ) : (
+              <div
+              >
+                <form method="dialog" onSubmit={(e) => handleSubmit(e)}>
+                  {/* ... */}
+                  <div className="meetingTimes">
+                    <div>
+                      <h2>Meeting Times:</h2>
+                      <br />
+                      <div className="timechart">
+                         <label>Mon:</label> 
                                 <p>
                                     <input type='time' 
                                         onInput={e => handleScheduleChange(e.target.value, 'mon', 'start')}
@@ -267,29 +264,29 @@ function RoomForm({setMyRooms}) {
                                         required={schedule.sun.start !== ''}
                                     /> 
                                 </p> 
-                            </div>
-                        </div>
+                      </div>
                     </div>
-                    <div className='participants'>
-                        <div>
-                            <h2>Participants:</h2>
-                            <br/>
-                            <textarea ref={participants}
-                                placeholder='Enter email addresses separated by commas'
-                            ></textarea>
-                        </div>
+                  </div>
+                  <div className="participants">
+                    <div>
+                      <h2>Participants:</h2>
+                      <br />
+                      <textarea
+                        ref={participants}
+                        placeholder="Enter email addresses separated by commas"
+                      ></textarea>
                     </div>
-                    <button type='button' onClick={() => dialog.current.close()}>
-                        cancel
-                    </button>
-                    <button    
-                        type='submit'
-                        disabled={state === 'submitting'}
-                    >
-                        submit
-                    </button>
-                </form>}
-            </dialog>
+                  </div>
+                  <button type="button" onClick={() => dialog.current.close()}>
+                    cancel
+                  </button>
+                  <button type="submit" disabled={state === "submitting"}>
+                    submit
+                  </button>
+                </form>
+              </div>
+            )}
+          </dialog>
             <style jsx>{`
                 form > button {
                     margin-left: 20px;
@@ -341,6 +338,13 @@ function RoomForm({setMyRooms}) {
                     grid-template-columns: 1fr 1fr;
                 }
             `}</style>
-        </>
-    )
+
+
+            </>
+    );
 }
+
+
+       
+
+                        
