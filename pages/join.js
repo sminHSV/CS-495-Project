@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useState } from 'react';
 import Link from 'next/link';
-import LoginBtn from "@/components/login-btn";
+
 
 export default function JoinRoom() {
     const [id, setId] = useState('');
