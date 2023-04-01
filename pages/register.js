@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import {useRef, useState } from 'react';
 import Link from 'next/link'
 import httpStatus from 'http-status';
+import styles from '/styles/Home.module.css'
 
 export default function Register() {
     const router = useRouter();
@@ -44,69 +45,72 @@ export default function Register() {
     };
 
     return (
-        <div style={{
-            position: 'fixed',
-            top: '30%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)'
-        }}>
-            <div>
-                <form onSubmit={handleSubmit}>
-                <div>
-                    <label>
-                    Email: <br/><input 
-                        type="text" 
-                        ref={email}
-                        disabled={status === 'submitting'}
-                        required
-                    />
-                    </label>
-                </div><br/>
-                <div>
-                    <label>
-                    Name: <br/><input 
-                        type="text" 
-                        ref={name}
-                        disabled={status === 'submitting'}
-                        required
-                    />
-                    </label>
-                </div><br/>
-                <div>
-                    <label>
-                    Password: <br/><input 
-                        type="password" 
-                        ref={password1}
-                        disabled={status === 'submitting'}
-                        required 
-                    />
-                    </label>
-                </div><br/>
-                <div>
-                    <label>
-                    Confirm Password: <br/><input 
-                        type="password" 
-                        ref={password2}
-                        disabled={status === 'submitting'}
-                        required
-                    />
-                    </label>
+        <div class="parent">
+            <div class="child">
+                <div style={{
+                    border: '1px solid black',
+                    borderRadius: '5px',
+                    padding: '20px',
+                    backgroundColor: '#f5f5f5',
+                    width: '250px'
+                }}>
+                    <form onSubmit={handleSubmit}>
+                        <div>
+                            <label>
+                            Email: <br/><input 
+                                type="text" 
+                                ref={email}
+                                disabled={status === 'submitting'}
+                                required
+                            />
+                            </label>
+                        </div><br/>
+                        <div>
+                            <label>
+                            Name: <br/><input 
+                                type="text" 
+                                ref={name}
+                                disabled={status === 'submitting'}
+                                required
+                            />
+                            </label>
+                        </div><br/>
+                        <div>
+                            <label>
+                            Password: <br/><input 
+                                type="password" 
+                                ref={password1}
+                                disabled={status === 'submitting'}
+                                required 
+                            />
+                            </label>
+                        </div><br/>
+                        <div>
+                            <label>
+                            Confirm Password: <br/><input 
+                                type="password" 
+                                ref={password2}
+                                disabled={status === 'submitting'}
+                                required
+                            />
+                            </label>
+                        </div>
+                        <br/>
+                        <div>
+                            <button className={styles.button}
+                                disabled={status === 'submitting'} 
+                                type="submit">
+                                Register
+                            </button>
+                        </div>
+                        <span style={{color: 'red'}}>
+                            {errorMsg || <br/>}
+                        </span>
+                    </form>
                 </div>
-                <br/>
-                <div>
-                    <button 
-                        disabled={status === 'submitting'} 
-                        type="submit">
-                        Register
-                    </button>
-                </div>
-                <span style={{color: 'red'}}>
-                    {errorMsg || <br/>}
-                </span>
-                </form>
                 <br />
                 <Link href="/">Go Back</Link>
             </div>
         </div>
     );
-  }
+}
