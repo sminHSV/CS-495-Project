@@ -106,10 +106,11 @@ export default function Register() {
                         <span style={{color: 'red'}}>
                             {errorMsg || <br/>}
                         </span>
+                        <Link href="/" class='link'>Go Back</Link>
                     </form>
                 </div>
                 <br />
-                <Link href="/">Go Back</Link>
+                
             </div>
         </div>
     );
