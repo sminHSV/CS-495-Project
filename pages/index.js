@@ -30,9 +30,11 @@ export default function Home() {
         </h1>
 
         <p className={styles.about}>
+          
           UnMute is a platform that provides a safe and anonymous space for students to ask questions and participate in class discussions,
           helping to overcome the barriers that prevent active engagement and promoting a more inclusive learning environment.
-        </p>
+        
+          </p>
         <div className={styles.grid}>
           {user ? (
             <>
