@@ -306,3 +306,9 @@
   margin-bottom: 2rem;
 }
 
+.topnav {
+  background-color: #003249;
+  overflow: hidden;
+  height: 200px;
+}
+

@@ -13,6 +13,9 @@ export default function Home() {
         <link rel="icon" href="unMuteIcon.ico" />
       </Head>
 
+      <div class={styles.topnav}>
+        </div>
+
       <main className={styles.main}>
         <div className={styles.logoWrapper}>
           <img
@@ -22,6 +25,9 @@ export default function Home() {
           />
         </div>
 
+        <div class="topnav">
+        <a class="active">Speak Freely, Learn Confidently</a>
+        </div>
         <h1 className={styles.title}>
           Welcome to UnMute {user ? user.name : '!'}
         </h1>
