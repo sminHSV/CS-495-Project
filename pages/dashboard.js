@@ -61,7 +61,7 @@ export default function Dashboard() {
             <style jsx>{`
                 .myRooms ul {
                     overflow: hidden;
-                    overflow-y: scroll;
+                    overflow-y:auto;
                     height: 400px;
                     width: 300px;
                 }
