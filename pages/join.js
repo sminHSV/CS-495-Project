@@ -35,8 +35,8 @@ export default function JoinRoom() {
     return (
         <>
         <form onSubmit={handleSubmit}>
-        <div class="parent">
-            <div class="child">
+        <div className="parent">
+            <div className="child">
                 <div style={{
                     border: '1px solid black',
                     borderRadius: '5px',
@@ -60,7 +60,7 @@ export default function JoinRoom() {
                     status === 'submitting'
                 } type="submit">Join</button>
             </div>
-            <Link href="/" class ="link">Go Back</Link>
+            <Link href="/" className="link">Go Back</Link>
             {error && <p className="error">{error}</p>}
             </div>
             </div>

@@ -45,8 +45,8 @@ export default function Register() {
     };
 
     return (
-        <div class="parent">
-            <div class="child">
+        <div className="parent">
+            <div className="child">
                 <div style={{
                     border: '1px solid black',
                     borderRadius: '5px',
@@ -107,7 +107,7 @@ export default function Register() {
                         <span style={{color: 'red'}}>
                             {errorMsg || <br/>}
                         </span>
-                        <Link href="/" class='link'>Go Back</Link>
+                        <Link href="/" className='link'>Go Back</Link>
                     </form>
                 </div>
                 <br />

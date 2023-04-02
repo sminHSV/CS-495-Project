@@ -22,8 +22,8 @@ export default function Home() {
           />
         </div>
 
-        <div class="topnav">
-        <a class="active">Speak Freely, Learn Confidently</a>
+        <div className="topnav">
+        <a className="active">Speak Freely, Learn Confidently</a>
         </div>
         <h1 className={styles.title}>
           Welcome to UnMute {user ? user.name : '!'}

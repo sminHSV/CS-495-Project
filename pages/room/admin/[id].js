@@ -17,7 +17,7 @@ export default function Room({ roomId }) {
 
     if (error) return (<>
         <p>Couldn&apos;t load room</p>
-        <Link href="/login" class ="link">Go Back</Link>
+        <Link href="/login" className="link">Go Back</Link>
         </>
         );
     if (!room) return <p>Loading room...</p>
