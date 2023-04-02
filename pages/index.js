@@ -22,17 +22,19 @@ export default function Home() {
           />
         </div>
 
-        <div class="topnav">
-        <a class="active">Speak Freely, Learn Confidently</a>
+        <div className="topnav">
+        <a className="active">Speak Freely, Learn Confidently</a>
         </div>
         <h1 className={styles.title}>
           Welcome to UnMute {user ? user.name : '!'}
         </h1>
 
         <p className={styles.about}>
+          
           UnMute is a platform that provides a safe and anonymous space for students to ask questions and participate in class discussions,
           helping to overcome the barriers that prevent active engagement and promoting a more inclusive learning environment.
-        </p>
+        
+          </p>
         <div className={styles.grid}>
           {user ? (
             <>
@@ -91,14 +93,14 @@ export default function Home() {
   </Link>
 </div>
 
-<div className={styles.card}>
+{/* <div className={styles.card}>
   <Link href="/FAQ">
     <div>
       <h3>FAQs &rarr;</h3>
       <p>Frequently asked questions</p>
     </div>
   </Link>
-</div>
+</div> */}
 
         </div>
       </main>

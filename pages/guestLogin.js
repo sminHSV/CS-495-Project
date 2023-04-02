@@ -26,8 +26,8 @@ export default function Register() {
     return (
         <>
         <form onSubmit={handleSubmit}>
-        <div class = "parent">
-        <div class="child">
+        <div className= "parent">
+        <div className="child">
             <label>
             Name: <input 
                 type="text" 
@@ -47,8 +47,8 @@ export default function Register() {
         {errorMsg && <p className="error">{errorMsg}</p>}
         </form>
         <br />
-        <div class="parent">
-        <div class="child">
+        <div className="parent">
+        <div className="child">
         <Link href="/">Go Back</Link>
         </div>
         </div>

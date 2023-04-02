@@ -45,14 +45,15 @@ export default function Register() {
     };
 
     return (
-        <div class="parent">
-            <div class="child">
+        <div className="parent">
+            <div className="child">
                 <div style={{
                     border: '1px solid black',
                     borderRadius: '5px',
                     padding: '20px',
                     backgroundColor: '#f5f5f5',
-                    width: '250px'
+                    minWidth:'50px',
+                    width: '40vh'
                 }}>
                     <form onSubmit={handleSubmit}>
                         <div>
@@ -106,7 +107,7 @@ export default function Register() {
                         <span style={{color: 'red'}}>
                             {errorMsg || <br/>}
                         </span>
-                        <Link href="/" class='link'>Go Back</Link>
+                        <Link href="/" className='link'>Go Back</Link>
                     </form>
                 </div>
                 <br />
