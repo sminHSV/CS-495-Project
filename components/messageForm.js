@@ -39,8 +39,8 @@ export default function MessageForm () {
                 onChange={(e) => setToSend(e.target.value)}
                 placeholder="ask a question..."
             />
-            <br /><br /><br />
-            <label> Ask anonymously </label>
+            
+            <label>Ask anonymously </label>
             <input type="checkbox" onChange={() => {
                 setAnonymous(!anonymous)
             }}/>
@@ -49,15 +49,20 @@ export default function MessageForm () {
         </form>
         <style jsx>{`
             .textBar {
-                position: absolute;
-                width: 85%;
+                width: 100%;
                 margin-top: 15px;
-                justify-self: center;
+            }
+
+            label {
+                vertical-align: top;
+            }
+
+            [type=checkbox] {
+                width: 2em;
             }
     
             button {
-                position: absolute;
-                right: 10%;
+                float: right;
                 width: 100px;
             }
         `}</style>

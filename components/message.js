@@ -40,66 +40,69 @@ export default function Message({ message }) {
     }
 
     return (<>
-        <div className='message'>
-            <div className='status'>
-                {
-                    message.status === 'waiting' && <span>&#10067;</span> ||
-                    message.status === 'answered' && <span>&#9989;</span> ||
-                    message.status === 'urgent' && <span>&#10071;</span>
-                }
-            </div>
-
-            <div><p>{message.body}</p></div>
-
-            <div className='actions'>
-                <button 
-                    onClick={e => {handleUpvote(e, message)}}
-                    disabled={message.upvotes.find(email => email === user.email)}
+        <details>
+            <summary className='message'>
+                <select 
+                    onInput={handleStatus} 
+                    value={message.status}
+                    disabled={user.email != room.owner 
+                        && user.email != message.sender.email}
                 >
-                    {message.upvotes.length} &#9757;
-                </button>
-            </div>
+                    <option value='waiting' title="unanswered">&#10067;</option>
+                    <option value='urgent' title="urgent">&#10071;</option>
+                    <option value='answered' title="answered">&#9989;</option>
+                </select>
+        
+                <div className='body'>
+                    <p>{message.body}</p>
 
-            <select 
-                onInput={handleStatus} 
-                value={message.status}
-                disabled={user.email != room.owner 
-                    && user.email != message.sender.email}
-            >
-                <option value='waiting'>waiting</option>
-                <option value='urgent'>urgent</option>
-                <option value='answered'>answered</option>
-            </select>
+                    <small>
+                        Sent by {
+                            message.anonymous ? 'anonymous' : message.sender?.name
+                        } at {
+                            new Date(message.time).toLocaleTimeString()
+                        }
+                    </small>
+                </div>
 
-            <small>
-                Sent by {
-                    message.anonymous ? 'anonymous' : message.sender?.name
-                } at {
-                    new Date(message.time).toLocaleTimeString()
-                }
-            </small>
-            
-            <details className='replies'>
-                <summary>{message.replies.length} replies</summary>
-            </details>
-        </div>
+                <div className='actions'>
+                    <button 
+                        onClick={e => {handleUpvote(e, message)}}
+                        disabled={message.upvotes.find(email => email === user.email)}
+                    >
+                        {message.upvotes.length} &#9757;
+                    </button>
+                </div>
+            </summary>
+        </details>
+        
         <style jsx>{`
             .message {
                 position: relative;
                 padding: 5px;
-                min-height: 10lvh;
+                min-height: auto;
                 border: 1px solid #eaeaea;
                 font: 1.5em system-ui;
                 border-radius: 5px;
                 display: grid;
-                grid-template-columns: 8lvh auto 6lvh;
+                grid-template-columns: 3.5em auto 3em;
                 gap: 5px;
             }
 
+            .message:hover {
+                background: rgba(var(--card-rgb), 0.1);
+                border: 1px solid rgba(var(--card-border-rgb), 0.15);
+            }
+
             select {
-                font-size: 0.5em;
                 display: flex;
+                font-size: 2em;
                 grid-column: 1;
+                height: min-content;
+            }
+
+            option {
+                text-align: center;
             }
 
             .status {  
@@ -114,34 +117,30 @@ export default function Message({ message }) {
 
             p {
                 overflow-wrap: anywhere;
+                text-align: left;
                 grid-column: 2;
-                margin-left: 2lvh;
+            }
+
+            .body {
+                position: relative;
+                margin-left: 0.5em;
             }
 
             small {
-                grid-column: 2 / 4;
-                margin-left: 2lvh;
+                grid-column: 2;
+                text-align: left;
+                postion: absolute;
+                bottom: 0;
+                font-size: 0.5em;
+                vertical-align: bottom;
             }
 
             details {
-                grid-column: 1 / 4;
-            }
-
-            summary {
-                display: flex;
-                justify-content: center;
-                font-size: 0.5em;
                 list-style: none;
+            }
+
+            details:hover {
                 cursor: pointer;
-                background-color: dimgray;
-            }
-
-            summary:hover {
-                background-color: gray;
-            }
-
-            small {
-                font-size: 0.5em;
             }
 
             .actions {
@@ -151,7 +150,8 @@ export default function Message({ message }) {
             }
 
             .actions > button {
-                height: 3lvh;
+                height: 2em;
+                min-width: 2.5em;
                 font-size: 0.7em;
             }
         `}</style>

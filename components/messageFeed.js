@@ -37,7 +37,7 @@ export default function MessageFeed() {
 
     }, [channels, room]);
 
-    return (messages ? 
+    return (<>{messages ? 
         <ul>{ 
             Object.values(messages)
                 .sort((a, b) => (Number(a.time) - Number(b.time)))
@@ -48,6 +48,12 @@ export default function MessageFeed() {
                 </li>)
         }</ul>
 
-        : <p>Loading messages...</p> 
-    )
+        : <p>Loading messages...</p>
+        }
+        <style jsx>{`
+            li {
+                margin-bottom: 5px;
+            }
+        `}</style> 
+    </>)
 }
