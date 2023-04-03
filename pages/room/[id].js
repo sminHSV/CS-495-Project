@@ -24,7 +24,7 @@ export default function Room({ roomId }) {
             <h1>Welcome to {room.name}</h1>
             <Link href="/" className='link'>Leave room</Link>
             <br /><br />
-            <div className='grid'>
+            <div className='layout'>
                 <RoomContext.Provider value={{room, user}}>
                     <div className='terminal'>
                         <MessageFeed />
@@ -39,7 +39,7 @@ export default function Room({ roomId }) {
             </div>
         </div>        
         <style jsx>{`
-            .grid {
+            .layout {
                 display: grid;
                 grid-template-columns: repeat(3, 30vw);
                 gap: 10px;
@@ -47,6 +47,7 @@ export default function Room({ roomId }) {
             }
 
             .terminal {
+                position: relative;
                 color: inherit;
                 border: 1px solid #eaeaea;
                 border-radius: 10px;
@@ -63,7 +64,10 @@ export default function Room({ roomId }) {
                 border-radius: 10px;
                 grid-column: 3;
                 grid-row: 1 / 4;
-                padding: 20px;
+                display: grid;
+                grid-template-rows: fit-content(100%);
+                gap: 20px;
+                padding: 10px;
             }
 
             .inputBox {
