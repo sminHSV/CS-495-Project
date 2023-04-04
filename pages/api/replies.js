@@ -33,7 +33,7 @@ export default async function handler(req, res) {
 
         const response = await messages.updateOne(
             { _id: new ObjectId(messageId) },
-            { $push: {replies: reply._id} }
+            { $push: {replies: new ObjectId(reply._id)} }
         );
 
         if (!response.acknowledged) {
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
             { _id: { $in: ids } },
         );
 
-        res.send(await cursor.toArray());
+        await res.send(await cursor.toArray());
         return res.status(httpStatus.OK).end();
     }
 

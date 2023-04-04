@@ -1,7 +1,6 @@
 import MessageForm from "./messageForm"
 import { RoomContext } from '@/lib/roomContext'
 import { useEffect, useState, useContext, useRef } from 'react'
-import { usePusher } from '@/lib/PusherContext'
 import { fetchJSON } from '@/lib/fetch'
 
 export default function MessageThread({ message }) {
