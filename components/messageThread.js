@@ -32,7 +32,7 @@ export default function MessageThread({ message }) {
                         <p>{reply.body}</p>
                         <small>
                             Sent by {
-                                message.anonymous ? 'anonymous' : reply.sender?.name
+                                reply.anonymous ? 'anonymous' : reply.sender?.name
                             } at {
                                 new Date(reply.time).toLocaleTimeString()
                             }
