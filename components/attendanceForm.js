@@ -40,26 +40,30 @@ export default function AttendanceForm() {
         setState('submitting');
     }
 
-    return (
-        <>
+    return (<>
         {state === 'attending' ? <p>Attendance recorded &#x2705;</p>
         : <form onSubmit={e => handleSubmitCode(e)}>
             <label>
-                Enter Attendance Code:<br/>
+                Attendance Code:
+                <span style={{color: 'red'}}>
+                    {state === 'failed' ? ' Invalid code' : ''}
+                </span>
+                <br/>
                 <input type='text' 
                     ref={code}
                     placeholder='Enter code'
-                    style={{width: '100%'}}
+                    required
                 />
-            </label> <br/>
+            </label>
             <button type='submit'>
                 submit
             </button> <br/>
-            <span style={{color: 'red'}}>
-                {state === 'failed' ? 'Invalid code' : ''}
-            </span>
         </form>
         }
-        </>
-    );
+        <style jsx>{`
+            input {
+                width: 15em;
+            }
+        `}</style>
+    </>);
 }

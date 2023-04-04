@@ -28,7 +28,7 @@ font-family: 'Source Code Pro', monospace;
     from 180deg at 50% 50%,
     #007EA7 0deg,
     #003249 55deg,
-    #80CED7 120deg,
+    #80ced7 120deg,
     #9AD1D4 160deg,
     transparent 360deg
   );
@@ -51,7 +51,8 @@ font-family: 'Source Code Pro', monospace;
 
   --callout-rgb: 238, 240, 241;
   --callout-border-rgb: 172, 175, 176;
-  --card-rgb: 180, 185, 188;
+  
+  --card-rgb: 128, 206, 215;
   --card-border-rgb: 131, 134, 135;
 }
 

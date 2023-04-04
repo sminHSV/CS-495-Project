@@ -1,11 +1,12 @@
 import { useEffect, useState, useContext, useRef } from 'react'
 import { RoomContext } from '@/lib/roomContext'
+import MessageThread from './messageThread';
 
 /**
  * Handles displaying messages and message interactions
  */
 export default function Message({ message }) {
-
+    const dialog = useRef();
     const {room, user} = useContext(RoomContext);
 
     const handleUpvote = async (e) => {
@@ -40,8 +41,45 @@ export default function Message({ message }) {
     }
 
     return (<>
-        <details>
-            <summary className='message'>
+        <div className='message'>
+            <select 
+                onInput={handleStatus} 
+                value={message.status}
+                disabled={user.email != room.owner 
+                    && user.email != message.sender.email}
+            >
+                <option value='waiting' title="unanswered">&#10067;</option>
+                <option value='urgent' title="urgent">&#10071;</option>
+                <option value='answered' title="answered">&#9989;</option>
+            </select>
+    
+            <div className='body'>
+                <p>{message.body}</p>
+
+                <small>
+                    Sent by {
+                        message.anonymous ? 'anonymous' : message.sender?.name
+                    } at {
+                        new Date(message.time).toLocaleTimeString()
+                    }
+                </small>
+            </div>
+
+            <div className='actions'>
+                <button onClick={() => dialog.current?.showModal()}>
+                    {message.replies.length} &#128172;	
+                </button>
+                <button 
+                    onClick={e => {handleUpvote(e, message)}}
+                    disabled={message.upvotes.find(email => email === user.email)}
+                >
+                    {message.upvotes.length} &#9757;
+                </button>
+            </div>
+        </div>
+        <dialog ref={dialog}>
+            <button onClick={() => dialog.current?.close()}>close</button>
+            <h1>
                 <select 
                     onInput={handleStatus} 
                     value={message.status}
@@ -52,46 +90,35 @@ export default function Message({ message }) {
                     <option value='urgent' title="urgent">&#10071;</option>
                     <option value='answered' title="answered">&#9989;</option>
                 </select>
-        
-                <div className='body'>
+                <div>
                     <p>{message.body}</p>
-
-                    <small>
-                        Sent by {
+                    <small>Sent by {
                             message.anonymous ? 'anonymous' : message.sender?.name
                         } at {
                             new Date(message.time).toLocaleTimeString()
                         }
                     </small>
                 </div>
-
-                <div className='actions'>
-                    <button 
-                        onClick={e => {handleUpvote(e, message)}}
-                        disabled={message.upvotes.find(email => email === user.email)}
-                    >
-                        {message.upvotes.length} &#9757;
-                    </button>
-                </div>
-            </summary>
-        </details>
-        
+            </h1>
+            <MessageThread message={message} />
+        </dialog>
         <style jsx>{`
             .message {
                 position: relative;
                 padding: 5px;
                 min-height: auto;
-                border: 1px solid #eaeaea;
-                font: 1.5em system-ui;
+                border: 0.1em solid #eaeaea;
+                font-size: 1.5em;
                 border-radius: 5px;
                 display: grid;
-                grid-template-columns: 3.5em auto 3em;
-                gap: 5px;
+                grid-template-columns: 3.5em auto 4.5em;
+                gap: 0.2em;
+                width: auto;
             }
 
             .message:hover {
                 background: rgba(var(--card-rgb), 0.1);
-                border: 1px solid rgba(var(--card-border-rgb), 0.15);
+                border: 0.1em solid rgba(var(--card-border-rgb), 0.15);
             }
 
             select {
@@ -133,6 +160,7 @@ export default function Message({ message }) {
                 bottom: 0;
                 font-size: 0.5em;
                 vertical-align: bottom;
+                white-space: nowrap;
             }
 
             details {
@@ -146,13 +174,50 @@ export default function Message({ message }) {
             .actions {
                 display: flex;
                 justify-content: right;
-                padding: 5px;
+                padding: 0.2em;
             }
 
             .actions > button {
                 height: 2em;
                 min-width: 2.5em;
                 font-size: 0.7em;
+            }
+
+            .actions > button ~ button {
+                margin-left: 0.2em;
+            }
+
+            dialog {
+                position:fixed;
+                left: 50%;
+                top: 50%;
+                -ms-transform: translate(-50%,-50%);
+                -moz-transform:translate(-50%,-50%);
+                -webkit-transform: translate(-50%,-50%);
+                transform: translate(-50%,-50%);
+                width: 100%;
+                height: 100%;
+                padding: 1em;
+                overflow-y: scroll;
+                border-radius: 1em;
+                background: rgba(var(--card-rgb));
+            }
+
+            dialog > button {
+                position: fixed;
+                top: 1em;
+                right: 1em;
+            }
+
+            dialog > select {
+                display: inline;
+                font-size: 3em;
+            }
+
+            h1 {
+                display: grid;
+                grid-template-columns: 3.5em auto;
+                gap: 1em;
             }
         `}</style>
     </>)

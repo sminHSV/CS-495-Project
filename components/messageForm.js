@@ -4,7 +4,7 @@ import { RoomContext } from '@/lib/roomContext'
 /**
  * Displays the message submission form and handles sending messages.
  */
-export default function MessageForm () {
+export default function MessageForm ({ onSubmit, prompt }) {
 
     const {room, user} = useContext(RoomContext);
     const [toSend, setToSend] = useState('');
@@ -14,21 +14,17 @@ export default function MessageForm () {
         e.preventDefault();
         setToSend('');
 
-        const result = await fetch("/api/messages?" + new URLSearchParams({ roomId: room._id }), {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-                body: toSend, 
-                sender: user,
-                anonymous: anonymous,
-                time: Date.now(),
-                upvotes: [],
-                replies: [],
-                status: 'waiting'
-            }),
-        });
+        const message = {
+            body: toSend, 
+            sender: user,
+            anonymous: anonymous,
+            time: Date.now(),
+            upvotes: [],
+            replies: [],
+            status: 'waiting'
+        }
 
-        if (!result.ok) console.error('failed to send message');
+        onSubmit(message);
     };
 
     return (<>
@@ -37,10 +33,10 @@ export default function MessageForm () {
                 type="text"
                 value={toSend}
                 onChange={(e) => setToSend(e.target.value)}
-                placeholder="ask a question..."
+                placeholder={prompt}
             />
             
-            <label>Ask anonymously </label>
+            <label>send anonymously </label>
             <input type="checkbox" onChange={() => {
                 setAnonymous(!anonymous)
             }}/>
