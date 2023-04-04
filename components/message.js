@@ -100,6 +100,7 @@ export default function Message({ message }) {
                     </small>
                 </div>
             </h1>
+            <br />
             <MessageThread message={message} />
         </dialog>
         <style jsx>{`
@@ -201,6 +202,7 @@ export default function Message({ message }) {
                 overflow-y: scroll;
                 border-radius: 1em;
                 background: rgba(var(--card-rgb));
+                font-size: 1.5em;
             }
 
             dialog > button {
@@ -211,13 +213,13 @@ export default function Message({ message }) {
 
             dialog > select {
                 display: inline;
-                font-size: 3em;
             }
 
-            h1 {
+            dialog > h1 {
                 display: grid;
                 grid-template-columns: 3.5em auto;
                 gap: 1em;
+                font-size: 2em;
             }
         `}</style>
     </>)

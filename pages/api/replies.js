@@ -21,8 +21,8 @@ const channels = new Pusher({
  * PUT: updates the specified message (e.g. upvote count, replies)
  */
 export default async function handler(req, res) {
-    const { messageId: messageId } = await req.query;
-    const channel = messageId;
+    const { roomId: roomId, messageId: messageId } = await req.query;
+    const channel = Buffer.from(roomId, 'base64url').toString('hex');
     
     const client = await clientPromise;
     const messages = await client.db('cs495').collection('messages');
@@ -39,13 +39,17 @@ export default async function handler(req, res) {
         if (!response.acknowledged) {
             return res.status(httpStatus.NOT_MODIFIED).end();
         }
-        await channels.trigger(channel, 'message-update', reply);
+
+        const message = await messages.findOne(
+            { _id: new ObjectId(messageId) }
+        );
+        await channels.trigger(channel, 'message-update', message);
         return res.status(httpStatus.OK).end();
     } 
 
     else if (req.method === 'GET') {
         const { replies: ids } = await messages.findOne(
-            { _id: messageId },
+            { _id: new ObjectId(messageId) },
             { _id: 0, replies: 1 }
         );
         const cursor = await messages.find(
@@ -68,7 +72,11 @@ export default async function handler(req, res) {
         if (!response.acknowledged) {
             return res.status(httpStatus.NOT_MODIFIED).end();
         }
-        await channels.trigger(channel, 'message-update', reply);
+
+        const message = await messages.findOne(
+            { _id: new ObjectId(messageId) }
+        );
+        await channels.trigger(channel, 'message-update', message);
         return res.status(httpStatus.OK).end();
     }
 
