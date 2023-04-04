@@ -86,10 +86,7 @@ export default function SignInPage() {
                     </form>
                 </div>
                 <br />
-               
-               
             </div>
-            {errorMsg && <p style={{color: 'red'}}>{errorMsg}</p>} 
         </div>
     );
 }
