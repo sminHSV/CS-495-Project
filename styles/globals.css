@@ -58,6 +58,7 @@ font-family: 'Source Code Pro', monospace;
 p{
   text-align: center;
 }
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -91,7 +92,7 @@ p{
     --card-rgb: 100, 100, 100;
     --card-border-rgb: 200, 200, 200;
   }
-}
+}*/
 
 * {
   box-sizing: border-box;
@@ -157,11 +158,12 @@ input {
     margin: 1px 0;
     box-sizing: border-box;
 }
+/*
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
-}
+}*/
 
 .link:hover,
 .link:focus,
