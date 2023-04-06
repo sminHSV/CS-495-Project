@@ -52,8 +52,8 @@ export default function Register() {
                     borderRadius: '5px',
                     padding: '20px',
                     backgroundColor: '#f5f5f5',
-                    minWidth:'50px',
-                    width: '40vh'
+                    width: '225px'
+                    
                 }}>
                     <form onSubmit={handleSubmit}>
                         <div>
