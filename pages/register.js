@@ -45,14 +45,17 @@ export default function Register() {
     };
 
     return (
-        <div className="parent">
-            <div className="child">
+       
+            <div>
                 <div style={{
                     border: '1px solid black',
                     borderRadius: '5px',
                     padding: '20px',
                     backgroundColor: '#f5f5f5',
-                    width: '225px'
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
                     
                 }}>
                     <form onSubmit={handleSubmit}>
@@ -113,6 +116,6 @@ export default function Register() {
                 <br />
                 
             </div>
-        </div>
+       
     );
 }

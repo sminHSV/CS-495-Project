@@ -313,3 +313,44 @@
   height: 200px;
 }
 
+
+
+/* Dashboard Styling */
+.myRooms{
+  border: '1px solid black';
+  border-radius: '5px';
+
+}
+.myRooms blackBorder{
+  border: '10px solid black';
+  border-radius: '5px';
+}
+.myRooms ul {
+  overflow: hidden;
+  overflow-y:auto;
+  height: 50vh;
+  max-width: 300px;
+  font-size: 1vw;
+ 
+  /* width: 300px; */
+}
+
+.myRooms li {
+          
+  width: auto;
+  display: grid;
+  padding: 10px;
+  grid-template-columns: 150px auto;
+}
+.myRooms li > .actions {
+  visibility: hidden;
+}
+.myRooms li > .actions > button + button {
+  margin-left: 10px
+}
+.myRooms li:hover > .actions {
+  visibility: visible;
+}
+.myRooms small {
+  font-size: 12px;
+}

@@ -35,19 +35,21 @@ export default function JoinRoom() {
     return (
         <>
         <form onSubmit={handleSubmit}>
-        <div className="parent">
-            <div className="child">
+       
+            <div>
                 <div style={{
                     border: '1px solid black',
                     borderRadius: '5px',
                     padding: '20px',
                     backgroundColor: '#f5f5f5',
-                    minWidth: '350px',
-                    width: '40vh'
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)'
                 }}>
             <div>
                 <label>
-                Enter Room Name: <input 
+                Enter Room Name: <br/><input 
                     type="text" 
                     onChange={e => setName(e.target.value)} 
                     disabled={status === 'submitting'} 
@@ -64,7 +66,7 @@ export default function JoinRoom() {
             {error && <p className="error">{error}</p>}
             </div>
             </div>
-        </div>
+     
         </form>
         <br />
         

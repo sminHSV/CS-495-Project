@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import useUser from "@/lib/useUser"
 import { useRouter } from "next/router"
 import RoomForm from "@/components/roomForm"
+import styles from '/styles/Home.module.css'
 
 export default function Dashboard() {
     const { user } = useUser();
@@ -22,20 +23,28 @@ export default function Dashboard() {
             position: 'fixed',
             left: '50%',
             top: '50%',
-            transform: 'translate(-50%, -50%)'
+            transform: 'translate(-50%, -50%)',
+            // Border just for viewing
+            border: '1px solid black',
+            padding: '0px 20px 0px',
+            backgroundColor: '#CCDBDC',
+            borderRadius: '5px'
+           
+        
         }}>
             <div>
                 <h1>Welcome, { user?.name }</h1>
                 <Link href="/" className='link'>Go back</Link>
                 <br/><br/><br/>
 
-                <div className='myRooms'>
+                <div className={styles.myRooms}>
                     <h2>My Rooms:</h2><br/>
                     <RoomForm setMyRooms={setMyRooms}/>
                     <button style={{marginLeft: '20px'}}>+ add room</button>
                     <br/><br/>
                     <p>{myRooms ? '' : 'loading rooms...'}</p>
                     <ul>
+          
                         {myRooms?.map(room => (
                             <li key={room._id}>
                                 <div><h3>{room.name}</h3>
@@ -59,31 +68,7 @@ export default function Dashboard() {
                 </div>
             </div>
             <br/>
-            <style jsx>{`
-                .myRooms ul {
-                    overflow: hidden;
-                    overflow-y:auto;
-                    height: 400px;
-                    width: 300px;
-                }
-                .myRooms li {
-                    width: auto;
-                    display: grid;
-                    grid-template-columns: 150px auto;
-                }
-                .myRooms li > .actions {
-                    visibility: hidden;
-                }
-                .myRooms li > .actions > button + button {
-                    margin-left: 10px
-                }
-                .myRooms li:hover > .actions {
-                    visibility: visible;
-                }
-                .myRooms small {
-                    font-size: 12px;
-                }
-            `}</style>
+        
         </div>
     );
 }
