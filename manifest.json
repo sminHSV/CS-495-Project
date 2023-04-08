@@ -1,0 +1,21 @@
+{
+  "background_color": "#ffffff",
+  "description": "TestingPWA",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "cs-495-project-sminhsv.vercel",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "cs-495-project-sminhsv.vercel",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "categories": [],
+  "screenshots": [],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "type": "image/x-icon"
+    }
+  ],
+  "shortcuts": []
+}

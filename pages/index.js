@@ -93,15 +93,6 @@ export default function Home() {
   </Link>
 </div>
 
-{/* <div className={styles.card}>
-  <Link href="/FAQ">
-    <div>
-      <h3>FAQs &rarr;</h3>
-      <p>Frequently asked questions</p>
-    </div>
-  </Link>
-</div> */}
-
         </div>
       </main>
     </div>

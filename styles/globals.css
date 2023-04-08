@@ -154,6 +154,7 @@ a {
 input {
 
     width: 35vh;
+    min-width:185px;
     height: 3vh;
     padding: 1em;
     margin: 1px 0;
