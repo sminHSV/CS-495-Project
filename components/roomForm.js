@@ -241,7 +241,8 @@ export default function RoomForm({setMyRooms}) {
             }
 
             dialog > form {
-                margin: 50px;
+                margin: 10px;
+                margin-bottom: 100px;
                 display: grid;
                 grid-template-columns: 1fr 1fr;
             }
