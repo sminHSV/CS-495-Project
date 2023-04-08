@@ -13,7 +13,12 @@ export default withSessionRoute(async (req, res) => {
             const name = await req.query.name;
             const room = await rooms.findOne({ name: name});
             if (room) {
-                return res.status(httpStatus.OK).send(JSON.stringify({id : room._id}));
+                if(room.visability == 'private'){
+                    return res.status(httpStatus.NOT_FOUND).send(JSON.stringify({id : -1}));
+                }
+                else{
+                    return res.status(httpStatus.OK).send(JSON.stringify({id : room._id}));
+                }
             } else {
                 return res.status(httpStatus.NOT_FOUND).end();
             }

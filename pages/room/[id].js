@@ -12,8 +12,11 @@ import MessageForm from '@/components/messageForm'
 
 export default function Room({ roomId }) {
 
+    if(roomId == -1) return <p>Room is private. Ask host to add you to email list</p>
+    
     const { user } = useUser();
     const { data: room, error } = useSWR('/api/room?' + new URLSearchParams({ roomId }), fetchJSON);
+    
 
     async function sendMessage(message) {
         fetch("/api/messages?" + new URLSearchParams({ roomId: room._id }), {

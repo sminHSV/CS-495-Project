@@ -36,13 +36,16 @@ export default function RoomForm({setMyRooms}) {
         if (emails[emails.length] === '') emails.pop();
 
         const members = emails.map(email => ({ email, attendanceCode: '' }));
+        let  visability = 'public'
+        if(members[0].email != '') visability = 'private';
 
         let room = {
             name: roomName.current.value,
             owner: user.email,
             members: members,
             schedule: schedule,
-            messages: []
+            messages: [],
+            visability: visability
         }
 
         await fetch('/api/createRoom', {
@@ -238,7 +241,7 @@ export default function RoomForm({setMyRooms}) {
             }
 
             dialog > form {
-                margin: 10px;
+                margin: 50px;
                 display: grid;
                 grid-template-columns: 1fr 1fr;
             }
