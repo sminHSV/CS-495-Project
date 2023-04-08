@@ -18,6 +18,10 @@ export default async function createRoom(req, res) {
 
         const id = new ObjectId().toString();
         room._id = Buffer.from(id, 'hex').toString('base64url');
+        existing_room = rooms.findOne({name: room.name});
+        if(exisiting_room){
+            return res.status(httpStatus.FORBIDDEN).end();
+        }
 
         rooms.insertOne(room);
 
