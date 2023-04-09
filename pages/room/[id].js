@@ -11,8 +11,6 @@ import AttendanceForm from '@/components/attendanceForm'
 import MessageForm from '@/components/messageForm'
 
 export default function Room({ roomId }) {
-
-    if(roomId == -1) return <p>Room is private. Ask host to add you to email list</p>
     
     const { user } = useUser();
     const { data: room, error } = useSWR('/api/room?' + new URLSearchParams({ roomId }), fetchJSON);
@@ -29,6 +27,7 @@ export default function Room({ roomId }) {
     if (error) return <p>Couldn&apos;t load room</p>
     if (!room) return <p>Loading room...</p>
     if (!user) return <p>Authorizing user...</p>
+    if (roomId == -1) return <p>Room is private. Ask host to add you to email list</p>
 
     return (<>
         <div style={{
