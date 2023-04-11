@@ -48,7 +48,9 @@ export default function SignInPage() {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)'
-                }}>
+                }}><h1 className={styles.title}>
+                    Login
+                    </h1>
                     <form onSubmit={handleSubmit}>
                         <div>
                             <label>
@@ -69,7 +71,8 @@ export default function SignInPage() {
                                 required
                             />
                             </label>
-                        </div><br/>
+                        </div>
+                        <span class="brsmall"></span> 
                         <div>
                             <button className={styles.button} disabled={
                                 status === 'submitting'
@@ -80,7 +83,7 @@ export default function SignInPage() {
                         <span style={{color: 'red'}}>
                             {errorMsg || <br/>}
                         </span>
-                        <div></div>
+                        <span class="brsmall"></span> 
                         <Link href="/resetPassword" className='link'>Reset Password</Link>
                         <div></div>
                         <Link href="/" className='link'>Go Back</Link>

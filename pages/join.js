@@ -57,12 +57,13 @@ export default function JoinRoom() {
                 />
                 </label>
             </div>
+            <br/>
             <div>
                 <button className={styles.button}disabled={
                     name.length === 0 ||
                     status === 'submitting'
                 } type="submit">Join</button>
-            </div>
+            </div> 
 
 
             <Link href="/" className="link">Go Back</Link>

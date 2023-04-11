@@ -303,3 +303,18 @@ img {
     flex-direction: column;
   }
 }
+/* Break Sizes */
+.brsmall {
+  display: block;
+  margin-bottom: 0.5em;
+}
+
+.brmedium {
+  display: block;
+  margin-bottom: 1em;
+}
+
+.brlarge {
+  display: block;
+  margin-bottom: 2em;
+}
