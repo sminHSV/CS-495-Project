@@ -166,6 +166,9 @@ input {
     color-scheme: dark;
   }
 }*/
+.linkCenter{
+  text-align: center;
+}
 
 .link:hover,
 .link:focus,
