@@ -3,11 +3,14 @@ import { usePusher } from '@/lib/PusherContext'
 import { fetchText, fetchJSON } from '@/lib/fetch';
 import { useState, useEffect, useContext } from 'react'
 import { RoomContext } from '@/lib/roomContext'
+import styles from "@/styles/Home.module.css";
 
 /**
  * JSX element containing the attendance code and attendance list.
  * Must be provided a RoomContext
  */
+
+
 export default function AttendanceChart() {
 
     const {room, user} = useContext(RoomContext);
@@ -21,6 +24,27 @@ export default function AttendanceChart() {
             [member.email] : member
         }));
     }
+
+    function exportAttendees() {
+        if (members) {
+          const rows = Object.values(members).map((member) => [
+            member.attendanceCode === dailyCode ? "Present" : "Absent",
+            member.email,
+          ]);
+      
+          const csvContent =
+            "data:text/csv;charset=utf-8," +
+            rows.map((row) => row.join(",")).join("\n");
+      
+          const encodedUri = encodeURI(csvContent);
+          const link = document.createElement("a");
+          link.setAttribute("href", encodedUri);
+          link.setAttribute("download", "attendees.csv");
+          document.body.appendChild(link);
+          link.click();
+        }
+      }
+      
 
     useEffect(() => {
         const channel = channels.subscribe(Buffer.from(room._id, 'base64').toString('hex'));
@@ -51,6 +75,7 @@ export default function AttendanceChart() {
                 </ul>
             : <p>Loading attendance...</p>}
         </div>
+        <button onClick={exportAttendees} className="export-button">Export Attendees</button>
         <style jsx>{`
             .attendance {
                 margin-left: 20px;
@@ -59,6 +84,14 @@ export default function AttendanceChart() {
                 overflow-x: scroll;
                 height: auto;
             }
-        `}</style>
+            .export-button {
+                font-size: 14px;
+                padding: 6px 12px;
+                background-color: #003249; 
+                border: none;
+                color: white;
+        `}
+            
+        </style>
     </>)
 }
