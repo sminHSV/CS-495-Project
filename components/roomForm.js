@@ -75,8 +75,8 @@ export default function RoomForm({setMyRooms}) {
                 <p>creating room...</p>
             :
             <form method='dialog' onSubmit={e => handleSubmit(e)}>
-                <h2 style={{display: 'flex', alignItems: 'center', gridColumn: '1 / 3'}}>
-                    <p><span style={{color: 'red'}}>*</span> Room Name:</p>
+                <h2 style={{display: 'inline'}}>
+                    <span style={{color: 'red'}}>*</span> Room Name:
                     <input 
                         type='text' 
                         placeholder='Enter a room name'
@@ -89,98 +89,6 @@ export default function RoomForm({setMyRooms}) {
                     />
                 </h2>
                 <br/><br/>
-                <div className='meetingTimes'>
-                    <div>
-                        <h2>Meeting Times:</h2>
-                        <br/>
-                        <div className='timechart'>
-                            <label>Mon:</label> 
-                            <div>
-                                <input type='time' 
-                                    onInput={e => handleScheduleChange(e.target.value, 'mon', 'start')}
-                                    max={schedule.mon.end}
-                                    required={schedule.mon.end !== ''}
-                                /> - <input type='time' 
-                                    onChange={e => handleScheduleChange(e.target.value, 'mon', 'end')}
-                                    min={schedule.mon.start}
-                                    required={schedule.mon.start !== ''}
-                                />  
-                            </div> <br/>
-                            <label>Tue:</label> 
-                            <div>
-                                <input type='time' 
-                                    onChange={e => handleScheduleChange(e.target.value, 'tue', 'start')}
-                                    max={schedule.tue.end}
-                                    required={schedule.tue.end !== ''}
-                                /> - <input type='time' 
-                                    onChange={e => handleScheduleChange(e.target.value, 'tue', 'end')}
-                                    min={schedule.tue.start}
-                                    required={schedule.tue.start !== ''}
-                                />                                
-                            </div> <br/>
-                            <label>Wed:</label> 
-                            <div>
-                                <input type='time' 
-                                    onChange={e => handleScheduleChange(e.target.value, 'wed', 'start')}
-                                    max={schedule.wed.end}
-                                    required={schedule.wed.end !== ''}
-                                /> - <input type='time' 
-                                    onChange={e => handleScheduleChange(e.target.value, 'wed', 'end')}
-                                    min={schedule.wed.start}
-                                    required={schedule.wed.start !== ''}
-                                />                                
-                            </div> <br/>
-                            <label>Thu:</label> 
-                            <div>
-                                <input type='time' 
-                                    onChange={e => handleScheduleChange(e.target.value, 'thu', 'start')}
-                                    max={schedule.thu.end}
-                                    required={schedule.thu.end !== ''}
-                                /> - <input type='time' 
-                                    onChange={e => handleScheduleChange(e.target.value, 'thu', 'end')}
-                                    min={schedule.thu.start}
-                                    required={schedule.thu.start !== ''}
-                                />                                
-                            </div> <br/>
-                            <label>Fri:</label> 
-                            <div>
-                                <input type='time' 
-                                    onChange={e => handleScheduleChange(e.target.value, 'fri', 'start')}
-                                    max={schedule.fri.end}
-                                    required={schedule.fri.end !== ''}
-                                /> - <input type='time' 
-                                    onChange={e => handleScheduleChange(e.target.value, 'fri', 'end')}
-                                    min={schedule.fri.start}
-                                    required={schedule.fri.start !== ''}
-                                />                      
-                            </div> <br/>
-                            <label>Sat:</label> 
-                            <div>
-                                <input type='time' 
-                                    onChange={e => handleScheduleChange(e.target.value, 'sat', 'start')}
-                                    max={schedule.sat.end}
-                                    required={schedule.sat.end !== ''}
-                                /> - <input type='time' 
-                                    onChange={e => handleScheduleChange(e.target.value, 'sat', 'end')}
-                                    min={schedule.sat.start}
-                                    required={schedule.sat.start !== ''}
-                                /> 
-                            </div> <br/>
-                            <label>Sun:</label> 
-                            <div>
-                                <input type='time' 
-                                    onChange={e => handleScheduleChange(e.target.value, 'sun', 'start')}
-                                    max={schedule.sun.end}
-                                    required={schedule.sun.end !== ''}
-                                /> - <input type='time' 
-                                    onChange={e => handleScheduleChange(e.target.value, 'sun', 'end')}
-                                    min={schedule.sun.start}
-                                    required={schedule.sun.start !== ''}
-                                /> 
-                            </div> 
-                        </div>
-                    </div>
-                </div>
                 <div className='participants'>
                     <div>
                         <h2>Participants:</h2>
@@ -190,65 +98,52 @@ export default function RoomForm({setMyRooms}) {
                         ></textarea>
                     </div>
                 </div>
-                <button type='button' onClick={() => dialog.current.close()}>
-                    cancel
-                </button>
-                <button    
-                    type='submit'
-                    disabled={state === 'submitting'}
-                >
-                    submit
-                </button>
+                <br />
+                <div className='buttons'>
+                    <button type='button' onClick={() => dialog.current.close()}>
+                        cancel
+                    </button>
+                    <button    
+                        type='submit'
+                        disabled={state === 'submitting'}
+                    >
+                        submit
+                    </button>
+                </div>
             </form>}
         </dialog>
         <style jsx>{`
-            form > button {
-                margin-left: 20px;
-                margin-top: 10px;
-                margin-right: 20px;
-            }
-
             .participants {
-                grid-column: 2;
-                display: flex;
-                justify-self: center;
+                width: 80%;
             }
 
             .participants textarea {
-                width: 250px;
-                height: 275px;
-            }
-
-            .meetingTimes {
-                grid-column: 1;
-            }
-
-            .timechart {
-                display: grid; 
-                grid-template-columns: 50px 220px;
-            }
-
-            .timechart > label {
-                grid-column: 1;
+                width: 100%;
+                height: 10em;
             }
 
             dialog {
                 position: fixed;
                 left: 50%;
-                margin-left: -250px;
-                top: 20%;
-                padding: 20px;  
+                top: 50%;
+                transform: translate(-50%, -50%);
+                padding: 1em;
             }
 
-            dialog > form {
-                margin: 10px;
-                margin-bottom: 100px;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
+            form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
 
-            [type='time'] {
-                width: 100px;
+            .buttons {
+                width: 80%;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .buttons button {
+                width: 45%;
             }
         `}</style>
     </>);

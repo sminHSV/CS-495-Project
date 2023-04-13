@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useState } from 'react';
 import Link from 'next/link';
+import styles from "@/styles/Home.module.css";
 
 
 export default function JoinRoom() {
@@ -56,12 +57,15 @@ export default function JoinRoom() {
                 />
                 </label>
             </div>
+            <br/>
             <div>
-                <button disabled={
+                <button className={styles.button}disabled={
                     name.length === 0 ||
                     status === 'submitting'
                 } type="submit">Join</button>
-            </div>
+            </div> 
+
+
             <Link href="/" className="link">Go Back</Link>
             {error && <p className="error">{error}</p>}
             </div>

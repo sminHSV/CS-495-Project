@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import {useState } from 'react';
 import Link from 'next/link';
 import bcrypt from 'bcryptjs';
+import styles from "@/styles/Home.module.css";
 
 export default function Reset_Password(){
     const router = useRouter();
@@ -33,14 +34,24 @@ export default function Reset_Password(){
     };
 
     return(
-        <>
+        <div>
+        <div style={{
+            border: '1px solid black',
+            borderRadius: '5px',
+            padding: '20px',
+            backgroundColor: '#f5f5f5',
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
+        }}>
         <form onSubmit={handleSubmit}>
-         <div>
-            <p>Please enter your new password</p>
-        </div>
+        <h1 className={styles.title}>
+                    Please Enter New Password
+            </h1>
         <div>
             <label>
-            New Password: <input 
+            New Password: <br/><input 
                 type="text" 
                 value={newPassword}
                 onChange={e => setPassword(e.target.value)}
@@ -48,8 +59,9 @@ export default function Reset_Password(){
             />
             </label>
         </div>
+        <span class="brsmall"></span>
         <div>
-            <button disabled={
+            <button className={styles.button} disabled={
                 newPassword.length === 0 ||
                 status === 'submitting'
             } type="submit">Set New Password</button>
@@ -57,6 +69,7 @@ export default function Reset_Password(){
         {errorMsg && <p className="error">{errorMsg}</p>}
         </form>
         <br />
-        </>
+        </div>
+        </div>
     );
 }

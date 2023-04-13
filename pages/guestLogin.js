@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import {useState } from 'react';
 import Link from 'next/link'
+import styles from "@/styles/Home.module.css";
 
 export default function Register() {
     const router = useRouter();
@@ -38,6 +39,9 @@ export default function Register() {
                             transform: 'translate(-50%, -50%)'
                         }}>
                     <form onSubmit={handleSubmit}>
+                    <h1 className={styles.title}>
+                    Guest Login
+                    </h1>
                     <div>
                         <label>
                         Name: <br/><input 
@@ -46,16 +50,20 @@ export default function Register() {
                             disabled={status === 'submitting'}
                         />
                         </label>
-                    </div><br/>
+                    </div>
+                    <span class="brsmall"></span> 
                     <div>
-                        <button disabled={
+                        <button className={styles.button} disabled={
                             name.length === 0 ||
                             status === 'submitting'
-                        } type="submit">Register</button>
+                        } type="submit">
+                            Register
+                            </button>
                     </div>
                     <span style={{color: 'red'}}>
                         {errorMsg && <p className="error">{errorMsg}</p>}
                     </span>
+                    <span class="brsmall"></span> 
                     <Link href="/" className='link'>Go Back</Link>
                 </form>
                 </div> 
