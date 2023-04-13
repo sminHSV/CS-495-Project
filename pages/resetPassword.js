@@ -1,9 +1,8 @@
 import { useRouter } from 'next/router';
 import {useState } from 'react';
 import Link from 'next/link'
+import httpStatus from 'http-status';
  
-
-
 export default function ResetPassword(){
     const router = useRouter();
     const [email, setEmail] = useState('');
@@ -26,10 +25,13 @@ export default function ResetPassword(){
             return router.push('/resetEmailSuccessful');
 
           } else {
+            if(response.status == httpStatus.NOT_FOUND){
+                return router.push('/resetEmailNotFound');
+            }
               let message = (await response.json()).message;
               setErrorMsg(message);
               setStatus('typing');
-              return router.push('/resetEmailUnsuccesful');
+              return router.push('/resetEmailUnsuccessful');
           }
     };
 

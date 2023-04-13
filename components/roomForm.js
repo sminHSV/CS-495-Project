@@ -237,7 +237,7 @@ export default function RoomForm({setMyRooms}) {
                 left: 50%;
                 margin-left: -250px;
                 top: 20%;
-                padding: 20px;
+                padding: 20px;  
             }
 
             dialog > form {
