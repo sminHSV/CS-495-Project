@@ -75,23 +75,32 @@ export default function AttendanceChart() {
                 </ul>
             : <p>Loading attendance...</p>}
         </div>
+        <div className="button-container">
         <button onClick={exportAttendees} className="export-button">Export Attendees</button>
-        <style jsx>{`
-            .attendance {
-                margin-left: 20px;
-                overflow: hidden;
-                overflow-y: scroll;
-                overflow-x: scroll;
-                height: auto;
-            }
-            .export-button {
-                font-size: 14px;
-                padding: 6px 12px;
-                background-color: #003249; 
-                border: none;
-                color: white;
+    </div>
+    <style jsx>{`
+        .attendance {
+            margin-left: 20px;
+            overflow: hidden;
+            overflow-y: scroll;
+            overflow-x: scroll;
+            height: auto;
+        }
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-right: 20px;
+            margin-bottom: 300px;
+        }
+        .export-button {
+            font-size: 14px;
+            padding: 10px;
+            background-color: #003249; 
+            border: none;
+            color: white;
         `}
-            
-        </style>
+
+        
+    </style>
     </>)
 }
