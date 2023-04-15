@@ -45,6 +45,7 @@ export default function AttendanceChart() {
         }
       }
       
+ 
 
     useEffect(() => {
         const channel = channels.subscribe(Buffer.from(room._id, 'base64').toString('hex'));
@@ -78,6 +79,7 @@ export default function AttendanceChart() {
         <div className="button-container">
         <button onClick={exportAttendees} className="export-button">Export Attendees</button>
     </div>
+    
     <style jsx>{`
         .attendance {
             margin-left: 20px;
@@ -86,6 +88,8 @@ export default function AttendanceChart() {
             overflow-x: scroll;
             height: auto;
         }
+
+
         .button-container {
             display: flex;
             justify-content: flex-end;
