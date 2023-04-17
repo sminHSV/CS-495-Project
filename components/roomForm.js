@@ -44,7 +44,6 @@ export default function RoomForm({setMyRooms}) {
             owner: user.email,
             members: members,
             schedule: schedule,
-            messages: [],
             visability: visability
         }
 

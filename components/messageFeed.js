@@ -7,7 +7,7 @@ import Message from './message'
 /**
  * Handles organising and sorting messages.
  */
-export default function MessageFeed() {
+export default function MessageFeed({ date }) {
 
     const {room, user} = useContext(RoomContext);
     const [messages, setMessages] = useState(null);
@@ -32,10 +32,10 @@ export default function MessageFeed() {
 
         setMessages({});
         
-        fetchJSON("/api/messages?" + new URLSearchParams({ roomId: room._id }))
+        fetchJSON("/api/messages?" + new URLSearchParams({ roomId: room._id, time: date }))
             .then(messages => messages.forEach(message => updateMessage(message)));
 
-    }, [channels, room]);
+    }, [channels, room, date]);
 
     return (<>{messages ? 
         <ul>{ 

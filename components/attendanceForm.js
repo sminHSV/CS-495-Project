@@ -6,7 +6,7 @@ import { RoomContext } from '@/lib/roomContext'
  * Handles updating the participants' attendance status.
  * Must be provided a RoomContext.
  */
-export default function AttendanceForm() {
+export default function AttendanceForm({ disabled }) {
 
     const {room, user} = useContext(RoomContext);
     const [state, setState] = useState('absent');
@@ -52,10 +52,11 @@ export default function AttendanceForm() {
                 <input type='text' 
                     ref={code}
                     placeholder='Enter code'
+                    disabled={disabled}
                     required
                 />
             </label>
-            <button type='submit'>
+            <button type='submit' disabled={disabled}>
                 submit
             </button> <br/>
         </form>

@@ -5,6 +5,7 @@ import { RoomContext } from '@/lib/roomContext'
 
 import useSWR from 'swr'
 import useUser from '@/lib/useUser'
+import { useState } from 'react'
 
 import MessageFeed from '@/components/messageFeed'
 import AttendanceForm from '@/components/attendanceForm'
@@ -15,6 +16,9 @@ export default function Room({ roomId }) {
     const { user } = useUser();
     const { data: room, error } = useSWR('/api/room?' + new URLSearchParams({ roomId }), fetchJSON);
     
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const [ date, setDate ] = useState(today.getTime());
 
     async function sendMessage(message) {
         fetch("/api/messages?" + new URLSearchParams({ roomId: room._id }), {
@@ -27,7 +31,17 @@ export default function Room({ roomId }) {
     if (error) return <p>Couldn&apos;t load room</p>
     if (!room) return <p>Loading room...</p>
     if (!user) return <p>Authorizing user...</p>
-    if (roomId == -1) return <p>Room is private. Ask host to add you to email list</p>
+
+    const admin = user.email === room.owner;
+
+    if (!room.members.includes(user.email) 
+        && room.visability === 'private' 
+        && !admin) {
+        return (<> 
+            <p>Unauthorized access</p>
+            <Link href="/" className='link'>Go Back</Link>
+        </>);
+    }
 
     return (<>
         <div style={{
@@ -37,35 +51,47 @@ export default function Room({ roomId }) {
             transform: 'translate(-50%, -50%)',
             fontSize: '2lvh',
         }}>
-            <h1>Welcome to {room.name}</h1>
+            <h1>{room.name}</h1>
             <Link href="/" className='link'>Leave room</Link>
             <br /><br />
             <RoomContext.Provider value={{room, user}}>
-                <div className='attendance'><AttendanceForm /></div>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <div className='date'><input type='date' 
+                        defaultValue={today.toISOString().slice(0, 10)}
+                        onInput={(e) => {
+                            const offset = new Date().getTimezoneOffset() * 60 * 1000;
+                            setDate(e.target.valueAsNumber + offset);
+                        }}/>
+                    </div>
+                    <div className='attendanceForm'>
+                        <AttendanceForm disabled={today.getTime() != date} />
+                    </div>
+                </div>
                 <div className='layout'>
                     <div className='terminal'>
-                        <MessageFeed />
+                        <MessageFeed date={ date } />
                     </div>
                     <div className='inputBox'>
-                        <MessageForm onSubmit={sendMessage} prompt='ask a question...'/>
+                        <MessageForm 
+                            onSubmit={sendMessage} 
+                            prompt='ask a question...'
+                            disabled={today.getTime() != date}
+                        />
                     </div>
                 </div>
             </RoomContext.Provider>
         </div>        
         <style jsx>{`
             .layout {
-                display: grid;
-                grid-template-columns: repeat(3, 30vw);
-                gap: 0.5em;
-                grid-template-rows: repeat(5, 16vh);
+                width: max-content;  
             }
 
-            .attendance {
-                position: relative;
-                font-size: 0.7em;
-                display: flex;
-                justify-content: right;
-                margin-bottom: 0.2em;
+            .date {
+                align-self: flex-end;
+            }
+
+            .date > input {
+                width: min-content;
             }
 
             .terminal {
@@ -73,8 +99,7 @@ export default function Room({ roomId }) {
                 color: inherit;
                 border: 1px solid #eaeaea;
                 border-radius: 10px;
-                grid-column: 1 / 4;
-                grid-row: 1 / 5;
+                height: 60vh;
                 overflow: hidden;
                 overflow-y: scroll;
                 padding: 5px;
@@ -93,13 +118,13 @@ export default function Room({ roomId }) {
             }
 
             .inputBox {
+                margin-top: 5px;
                 position: relative
                 color: inherit;
                 border: 1px solid #eaeaea;
                 border-radius: 10px;
-                grid-column: 1 / 4;
-                grid-row: 5;
                 padding: 15px;
+                height: 12vh;
             }
         `}</style>
     </>);
