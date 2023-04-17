@@ -59,6 +59,9 @@ export default function Register() {
                     
                 }}>
                     <form onSubmit={handleSubmit}>
+                    <h1 className={styles.title}>
+                    Register Account
+                    </h1>
                         <div>
                             <label>
                             Email: <br/><input 
@@ -99,7 +102,7 @@ export default function Register() {
                             />
                             </label>
                         </div>
-                        <br/>
+                        <span class="brsmall"></span> 
                         <div>
                             <button className={styles.button}
                                 disabled={status === 'submitting'} 

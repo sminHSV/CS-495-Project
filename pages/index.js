@@ -36,8 +36,9 @@ export default function Home() {
         
           </p>
         <div className={styles.grid}>
+          {/* If logged in, options:logout, join, dashboard */}
           {user ? (
-            <>
+              <>
               <div className={styles.card}>
                 <Link href="/api/logout">
                   
@@ -54,7 +55,7 @@ export default function Home() {
                   
                 </Link>
               </div>
-
+              {/* If logged in and not guest, dashboard*/}
               {!user.guest && (
                 <div className={styles.card}>
                   <Link href="/dashboard">
@@ -67,31 +68,35 @@ export default function Home() {
               )}
             </>
           ) : (
-            <div className={styles.card}>
-              <Link href="/login">
-                  <h3>Login &rarr;</h3>
-                  <p>Sign in to an account</p>
+            //  {/* If NOT logged in, options: login, register, guestLogin */}
+            // <> below needed to return both cards
+            <>
+              <div className={styles.card}>
+                <Link href="/login">
+                    <h3>Login &rarr;</h3>
+                    <p>Sign in to an account</p>
 
+                </Link>
+              </div>
+              <div className={styles.card}>
+                <Link href="/guestLogin">
+                  <div>
+                    <h3>Guest Login &rarr;</h3>
+                    <p>Login as Guest</p>
+                  </div>
+                </Link>
+              </div>
+              <div className={styles.card}>
+              <Link href="/register">
+                <div>
+                  <h3>Register &rarr;</h3>
+                  <p>Register here for a new user</p>
+                </div>
               </Link>
-            </div>
+              </div>
+            </>
+           
           )}
-<div className={styles.card}>
-  <Link href="/register">
-    <div>
-      <h3>Register &rarr;</h3>
-      <p>Register here for a new user</p>
-    </div>
-  </Link>
-</div>
-
-<div className={styles.card}>
-  <Link href="/guestLogin">
-    <div>
-      <h3>Guest Login &rarr;</h3>
-      <p>Login as Guest</p>
-    </div>
-  </Link>
-</div>
 
         </div>
       </main>

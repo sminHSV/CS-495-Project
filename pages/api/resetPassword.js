@@ -15,7 +15,7 @@ export default withSessionRoute(async (req, res) => {
             const email = await req.query.email;
             const userCheck = await users.findOne({ email: email.toLowerCase() });
             if (!userCheck) {
-                return res.status(httpStatus.BAD_REQUEST).json({ message: 'User with that email does not exist' });
+                return res.status(httpStatus.NOT_FOUND).json({ message: 'User with that email does not exist' });
             }
             let testAccount = await nodemailer.createTestAccount();
 
