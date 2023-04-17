@@ -8,9 +8,9 @@ import { saveAs } from 'file-saver'
 /**
  * Handles organising and sorting messages.
  */
-export default function MessageFeed({ date }) {
+export default function MessageFeed() {
 
-    const {room, user} = useContext(RoomContext);
+    const {room, user, date} = useContext(RoomContext);
     const [messages, setMessages] = useState(null);
     const channels = usePusher();
     const [statusOrder, setStatusOrder] = useState({
@@ -40,7 +40,7 @@ export default function MessageFeed({ date }) {
 
         setMessages({});
         
-        fetchJSON("/api/messages?" + new URLSearchParams({ roomId: room._id, time: date }))
+        fetchJSON("/api/messages?" + new URLSearchParams({ roomId: room._id, date }))
             .then(messages => messages.forEach(message => updateMessage(message)));
 
     }, [channels, room, date]);

@@ -44,7 +44,8 @@ export default function RoomForm({setMyRooms}) {
             owner: user.email,
             members: members,
             schedule: schedule,
-            visability: visability
+            visability: visability,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         }
 
         await fetch('/api/createRoom', {

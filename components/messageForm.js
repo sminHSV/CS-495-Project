@@ -46,9 +46,12 @@ export default function MessageForm ({ onSubmit, prompt, disabled }) {
             <button type="submit" disabled={disabled}>Send</button>
         </form>
         <style jsx>{`
+            .inputBox {
+                width: 100%;
+            }
+
             .textBar {
                 width: 100%;
-                margin-top: 15px;
             }
 
             label {
@@ -62,6 +65,7 @@ export default function MessageForm ({ onSubmit, prompt, disabled }) {
             button {
                 float: right;
                 width: 100px;
+                
             }
         `}</style>
     </>)

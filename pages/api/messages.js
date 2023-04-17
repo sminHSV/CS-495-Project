@@ -21,7 +21,7 @@ const channels = new Pusher({
  * PUT: updates the specified message (e.g. upvote count, replies)
  */
 export default async function handler(req, res) {
-    const { roomId, time } = await req.query;
+    const { roomId, date } = await req.query;
     const channel = Buffer.from(roomId, 'base64url').toString('hex');
     
     const client = await clientPromise;
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     else if (req.method === 'GET') {
         const cursor = await messages.find({ 
             roomId: roomId, 
-            time: { $gte: Number(time), $lt: Number(time) + 86400000},
+            time: { $gte: Number(date), $lt: Number(date) + 86400000},
         });
 
         res.send(await cursor.toArray());

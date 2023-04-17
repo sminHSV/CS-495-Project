@@ -10,6 +10,8 @@ import { useState } from 'react'
 import MessageFeed from '@/components/messageFeed'
 import AttendanceForm from '@/components/attendanceForm'
 import MessageForm from '@/components/messageForm'
+import AttendanceChart from '@/components/attendanceChart'
+
 
 export default function Room({ roomId }) {
     
@@ -49,28 +51,39 @@ export default function Room({ roomId }) {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            fontSize: '2lvh',
+            fontSize: '15px',
         }}>
             <h1>{room.name}</h1>
             <Link href="/" className='link'>Leave room</Link>
             <br /><br />
-            <RoomContext.Provider value={{room, user}}>
-                <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                    <div className='date'><input type='date' 
-                        defaultValue={today.toISOString().slice(0, 10)}
-                        onInput={(e) => {
-                            const offset = new Date().getTimezoneOffset() * 60 * 1000;
-                            setDate(e.target.valueAsNumber + offset);
-                        }}/>
-                    </div>
-                    <div className='attendanceForm'>
-                        <AttendanceForm disabled={today.getTime() != date} />
-                    </div>
-                </div>
+            <RoomContext.Provider value={{room, user, date}}>
                 <div className='layout'>
-                    <div className='terminal'>
-                        <MessageFeed date={ date } />
+                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                        <div className='date'><input type='date' 
+                            defaultValue={today.toLocaleDateString('en-CA')}
+                            onInput={(e) => {
+                                let date = e.target.valueAsDate;
+                                date = new Date(
+                                    date.getUTCFullYear(),
+                                    date.getUTCMonth(),
+                                    date.getUTCDate(),
+                                    date.getUTCHours(),
+                                    date.getUTCMinutes(),
+                                    date.getUTCSeconds(),
+                                    date.getUTCMilliseconds());
+                                setDate(date.getTime());
+                            }}/>
+                        </div>
+                        {!admin && <div className='attendanceForm'>
+                            <AttendanceForm disabled={today.getTime() != date} />
+                        </div>}
                     </div>
+                    <div className='terminal'>
+                        <MessageFeed />
+                    </div>
+                    {admin && <div className='subTerminal'> 
+                        <AttendanceChart />
+                    </div>}
                     <div className='inputBox'>
                         <MessageForm 
                             onSubmit={sendMessage} 
@@ -83,7 +96,10 @@ export default function Room({ roomId }) {
         </div>        
         <style jsx>{`
             .layout {
-                width: max-content;  
+                max-width: max-content;
+                display: grid;
+                grid-template-columns: minmax(max-content, 800px) auto;
+                grid-template-rows: auto 60vh auto;
             }
 
             .date {
@@ -92,6 +108,7 @@ export default function Room({ roomId }) {
 
             .date > input {
                 width: min-content;
+                height: min-content;
             }
 
             .terminal {
@@ -99,10 +116,11 @@ export default function Room({ roomId }) {
                 color: inherit;
                 border: 1px solid #eaeaea;
                 border-radius: 10px;
-                height: 60vh;
+                
                 overflow: hidden;
                 overflow-y: scroll;
                 padding: 5px;
+                grid-column: 1 / 2;
             }
 
             .subTerminal {
@@ -110,10 +128,6 @@ export default function Room({ roomId }) {
                 border: 1px solid #eaeaea;
                 border-radius: 10px;
                 grid-column: 3;
-                grid-row: 1 / 5;
-                display: grid;
-                grid-template-rows: fit-content(100%);
-                gap: 20px;
                 padding: 10px;
             }
 
@@ -123,8 +137,10 @@ export default function Room({ roomId }) {
                 color: inherit;
                 border: 1px solid #eaeaea;
                 border-radius: 10px;
-                padding: 15px;
-                height: 12vh;
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                grid-column: 1 / 4;
             }
         `}</style>
     </>);
