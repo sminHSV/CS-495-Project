@@ -21,8 +21,6 @@ export default function AttendanceChart() {
         Object.fromEntries(room.members.map(email => [email, 'absent']))
     );
 
-    console.log(attendance);
-
     function updateAttendance(record) {
         setAttendance(members => ({
             ...members,
@@ -57,6 +55,13 @@ export default function AttendanceChart() {
         channel.bind('attendance-update', function(record) {
             updateAttendance(record);
         });
+
+        for (const email of room.members) {
+            setAttendance(members => ({
+                ...members,
+                [email] : 'absent'
+            }));
+        }
 
         fetchJSON("/api/attendance/records?" + new URLSearchParams({ roomId: room._id, date }))
             .then(records => records.forEach(record => updateAttendance(record)));

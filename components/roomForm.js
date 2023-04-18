@@ -34,15 +34,14 @@ export default function RoomForm({setMyRooms}) {
 
         const emails = participants.current.value.toLowerCase().split(/[,\s]+/);
         if (emails[emails.length] === '') emails.pop();
-        // ?
-        const members = emails.map(email => ({ email, attendanceCode: '' }));
+
         let  visability = 'public'
         if(members[0].email != '') visability = 'private';
 
         let room = {
             name: roomName.current.value,
             owner: user.email,
-            members: members,
+            members: emails,
             schedule: schedule,
             visability: visability,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,

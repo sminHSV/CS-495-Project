@@ -5,7 +5,7 @@ import { RoomContext } from '@/lib/roomContext'
 
 import useSWR from 'swr'
 import useUser from '@/lib/useUser'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import MessageFeed from '@/components/messageFeed'
 import AttendanceForm from '@/components/attendanceForm'
@@ -13,14 +13,13 @@ import MessageForm from '@/components/messageForm'
 import AttendanceChart from '@/components/attendanceChart'
 import styles from "@/styles/Home.module.css";
 
-
 export default function Room({ roomId }) {
     
     const { user } = useUser();
     const { data: room, error } = useSWR('/api/room?' + new URLSearchParams({ roomId }), fetchJSON);
-    
+
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setHours(0,0,0,0);
     const [ date, setDate ] = useState(today.getTime());
 
     async function sendMessage(message) {
@@ -35,7 +34,7 @@ export default function Room({ roomId }) {
     if (!room) return <p>Loading room...</p>
     if (!user) return <p>Authorizing user...</p>
 
-    const admin = user.email === room.owner;
+    const admin = room.owner === user.email;
 
     if (!room.members.includes(user.email) 
         && room.visability === 'private' 
@@ -71,11 +70,7 @@ export default function Room({ roomId }) {
                                 date = new Date(
                                     date.getUTCFullYear(),
                                     date.getUTCMonth(),
-                                    date.getUTCDate(),
-                                    date.getUTCHours(),
-                                    date.getUTCMinutes(),
-                                    date.getUTCSeconds(),
-                                    date.getUTCMilliseconds());
+                                    date.getUTCDate());
                                 setDate(date.getTime());
                             }}/>
                             
@@ -111,7 +106,7 @@ export default function Room({ roomId }) {
             .layout {
                 max-width: max-content;
                 display: grid;
-                grid-template-columns: minmax(max-content, 800px) auto;
+                grid-template-columns: minmax(max-content, 100vw) auto;
                 grid-template-rows: auto 60vh auto;
                
             }
@@ -131,7 +126,6 @@ export default function Room({ roomId }) {
                 color: inherit;
                 border: 1px solid #eaeaea;
                 border-radius: 10px;
-                
                 overflow: hidden;
                 overflow-y: scroll;
                 padding: 5px;
