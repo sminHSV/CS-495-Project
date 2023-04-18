@@ -10,7 +10,7 @@ import { saveAs } from 'file-saver'
  */
 export default function MessageFeed() {
 
-    const {room, user} = useContext(RoomContext);
+    const {room, user, date} = useContext(RoomContext);
     const [messages, setMessages] = useState(null);
     const channels = usePusher();
     const [statusOrder, setStatusOrder] = useState({
@@ -49,10 +49,10 @@ export default function MessageFeed() {
 
         setMessages({});
         
-        fetchJSON("/api/messages?" + new URLSearchParams({ roomId: room._id }))
+        fetchJSON("/api/messages?" + new URLSearchParams({ roomId: room._id, date }))
             .then(messages => messages.forEach(message => updateMessage(message)));
 
-    }, [channels, room]);
+    }, [channels, room, date]);
 
     return (<>{messages ? 
         <ul>{ 

@@ -52,11 +52,7 @@ export default function Dashboard() {
                                 </div>
                                 <div className='actions'>
                                     <button onClick={() => {
-                                        if (user.email === room.owner) {
-                                            router.push('/room/admin/' + room._id);
-                                        } else {
-                                            router.push('/room/' + room._id);
-                                        }
+                                        router.push('/room/' + room._id);
                                     }}>join</button>
                                     <button>⚙️</button>
                                     <button>&#x274C;</button>

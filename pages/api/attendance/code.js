@@ -6,8 +6,8 @@ import dailyCode from '@/lib/dailyCode';
  * The attendance code should only be shared with room admins.
  */
 export default async function Code(req, res) {
-    const { roomId } = req.query;
+    const { roomId, date } = req.query;
 
-    res.send(dailyCode(roomId));
+    res.send(await dailyCode(roomId, date));
     return res.status(httpStatus.OK).end();
 }

@@ -5,19 +5,13 @@ import dailyCode from '@/lib/dailyCode';
 /**
  * Verifies that the given attendance code is valid.
  */
-export default async function Code(req, res) {
-    const { roomId, email } = req.query;
+export default async function Verify(req, res) {
+    const { roomId, date, code } = req.query;
 
     const client = await clientPromise;
     const rooms = client.db('cs495').collection('rooms');
 
-    const {members: [{email: _, attendanceCode}]} = 
-    await rooms.findOne(
-        {_id: roomId, "members.email": email},
-        {projection: {_id: 0, "members.$": 1}}
-    );
-
-    if (attendanceCode === dailyCode(roomId)) {
+    if (code === dailyCode(roomId, date)) {
         res.send('valid');
     } else {
         res.send('invalid');

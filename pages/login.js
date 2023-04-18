@@ -72,7 +72,7 @@ export default function SignInPage() {
                             />
                             </label>
                         </div>
-                        <span class="brsmall"></span> 
+                        <span className="brsmall"></span> 
                         <div>
                             <button className={styles.button} disabled={
                                 status === 'submitting'

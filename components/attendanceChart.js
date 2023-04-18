@@ -13,23 +13,27 @@ import styles from "@/styles/Home.module.css";
 
 export default function AttendanceChart() {
 
-    const {room, user} = useContext(RoomContext);
-    const { data: dailyCode } = useSWR('/api/attendance/code?' + new URLSearchParams({ roomId: room._id }), fetchText);
+    const {room, user, date} = useContext(RoomContext);
+    const { data: dailyCode } = useSWR('/api/attendance/code?' + new URLSearchParams({ roomId: room._id, date}), fetchText);
     const channels = usePusher();
-    const [members, setMembers] = useState(null);
 
-    function updateMember(member) {
-        setMembers(members => ({
+    const [attendance, setAttendance] = useState(
+        Object.fromEntries(room.members.map(email => [email, 'absent']))
+    );
+
+    console.log(attendance);
+
+    function updateAttendance(record) {
+        setAttendance(members => ({
             ...members,
-            [member.email] : member
+            [record.email] : 'present'
         }));
     }
 
     function exportAttendees() {
-        if (members) {
-          const rows = Object.values(members).map((member) => [
-            member.attendanceCode === dailyCode ? "Present" : "Absent",
-            member.email,
+        if (attendance) {
+          const rows = Object.entries(attendance).map(([email, status]) => [
+            status, email,
           ]);
       
           const csvContent =
@@ -43,41 +47,43 @@ export default function AttendanceChart() {
           document.body.appendChild(link);
           link.click();
         }
-      }
-      
- 
+
+    }
+
 
     useEffect(() => {
         const channel = channels.subscribe(Buffer.from(room._id, 'base64').toString('hex'));
 
-        channel.bind('member-update', function(member) {
-            updateMember(member);
+        channel.bind('attendance-update', function(record) {
+            updateAttendance(record);
         });
 
-        setMembers({});
-
-        fetchJSON("/api/members?" + new URLSearchParams({ roomId: room._id }))
-            .then(members => members.forEach(member => updateMember(member)));
-
-    }, [channels, room]);
+        fetchJSON("/api/attendance/records?" + new URLSearchParams({ roomId: room._id, date }))
+            .then(records => records.forEach(record => updateAttendance(record)));
+        
+    }, [channels, room, date]);
 
     return (<>
+    <div style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
         <h2>Attendance Code:&nbsp;{dailyCode || 'getting code...'}</h2>
+        <br />
         <div className='attendance'>
-            {members ? 
+            {attendance ? 
                 <ul>
-                    {Object.values(members).map(member => (
-                        <li key={member.email}>
-                            {member.attendanceCode === dailyCode ?
+                    {Object.entries(attendance).map(([email, status]) => (
+                        <li key={email}>
+                            {status === 'present' ?
                                 <>&#x2705;</> : <>&#x274C;</>}
-                            &nbsp;{member.email}
+                            &nbsp;{email}
                         </li>
                     ))}
                 </ul>
             : <p>Loading attendance...</p>}
         </div>
+        <br />
         <div className="button-container">
-        <button onClick={exportAttendees} className="export-button">Export Attendees</button>
+            <button onClick={exportAttendees} className="export-button">Export Attendees</button>
+        </div>
     </div>
     
     <style jsx>{`
@@ -85,16 +91,18 @@ export default function AttendanceChart() {
             margin-left: 20px;
             overflow: hidden;
             overflow-y: scroll;
-            overflow-x: scroll;
-            height: auto;
+            min-width: max-content;
+            flex-grow: 2;
         }
 
+        .attendance ul {
+            height: 100%;
+        }
 
         .button-container {
             display: flex;
             justify-content: flex-end;
             margin-right: 20px;
-            margin-bottom: 300px;
         }
         .export-button {
             font-size: 14px;

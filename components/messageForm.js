@@ -4,7 +4,7 @@ import { RoomContext } from '@/lib/roomContext'
 /**
  * Displays the message submission form and handles sending messages.
  */
-export default function MessageForm ({ onSubmit, prompt }) {
+export default function MessageForm ({ onSubmit, prompt, disabled }) {
 
     const {room, user} = useContext(RoomContext);
     const [toSend, setToSend] = useState('');
@@ -18,6 +18,7 @@ export default function MessageForm ({ onSubmit, prompt }) {
             body: toSend, 
             sender: user,
             anonymous: anonymous,
+            roomId: room._id,
             time: Date.now(),
             upvotes: [],
             replies: [],
@@ -34,19 +35,23 @@ export default function MessageForm ({ onSubmit, prompt }) {
                 value={toSend}
                 onChange={(e) => setToSend(e.target.value)}
                 placeholder={prompt}
+                disabled={disabled}
             />
             
             <label>send anonymously </label>
             <input type="checkbox" onChange={() => {
                 setAnonymous(!anonymous)
-            }}/>
+            }} disabled={disabled}/>
             
-            <button type="submit">Send</button>
+            <button type="submit" disabled={disabled}>Send</button>
         </form>
         <style jsx>{`
+            .inputBox {
+                width: 100%;
+            }
+
             .textBar {
                 width: 100%;
-                margin-top: 15px;
             }
 
             label {
@@ -54,12 +59,13 @@ export default function MessageForm ({ onSubmit, prompt }) {
             }
 
             [type=checkbox] {
-                width: 2em;
+                width: 1em;
             }
     
             button {
                 float: right;
                 width: 100px;
+                
             }
         `}</style>
     </>)

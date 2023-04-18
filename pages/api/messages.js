@@ -21,7 +21,7 @@ const channels = new Pusher({
  * PUT: updates the specified message (e.g. upvote count, replies)
  */
 export default async function handler(req, res) {
-    const { roomId } = await req.query;
+    const { roomId, date } = await req.query;
     const channel = Buffer.from(roomId, 'base64url').toString('hex');
     
     const client = await clientPromise;
@@ -30,12 +30,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
         let message = await req.body;
-        await messages.insertOne(message);
-
-        const response = await rooms.updateOne(
-            { _id: roomId },
-            { $push: {messages: message._id} }
-        );
+        const response = await messages.insertOne(message);
 
         if (!response.acknowledged) {
             return res.status(httpStatus.NOT_MODIFIED).end();
@@ -45,13 +40,10 @@ export default async function handler(req, res) {
     } 
 
     else if (req.method === 'GET') {
-        const { messages: ids } = await rooms.findOne(
-            { _id: roomId },
-            { _id: 0, messages: 1 }
-        );
-        const cursor = await messages.find(
-            { _id: { $in: ids } },
-        );
+        const cursor = await messages.find({ 
+            roomId: roomId, 
+            time: { $gte: Number(date), $lt: Number(date) + 86400000},
+        });
 
         res.send(await cursor.toArray());
         return res.status(httpStatus.OK).end();
