@@ -24,10 +24,19 @@ export default function MessageFeed() {
         }));
     }
 
-    function exportThreads(){
+    async function exportThreads(){
         if(messages){
-            var blob = new Blob(["Hello, world!"], {type: "text/plain;charset=utf-8"});
-            saveAs(blob, "hello world.txt");
+            var messages_print = []
+            // let param = new URLSearchParams({ roomId: room._id })
+            // const response = await fetch("/api/messages?" + param , {
+            //     method: "GET",
+            //     headers: { "Content-Type": "application/json" },
+            // });
+            fetchJSON("/api/messages?" + new URLSearchParams({ roomId: room._id }))
+            .then(messages => messages.forEach(message => messages_print.push(message)));
+            console.log('Messages: ', messages_print);
+            var blob = new Blob(messages_print, {type: "text/plain;charset=utf-8"});
+            saveAs(blob, "messages.txt");
         }
     }
 
