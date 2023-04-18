@@ -330,10 +330,10 @@
   overflow: hidden;
   overflow-y:auto;
   height: 50vh;
-  max-width: 300px;
+  /* max-width: 300px; */
   font-size: 1vw;
  
-  /* width: 300px; */
+  width: 30vw;
 }
 
 .myRooms li {
@@ -341,7 +341,7 @@
   width: auto;
   display: grid;
   padding: 10px;
-  grid-template-columns: 150px auto;
+  grid-template-columns: 10vw auto;
 }
 .myRooms li > .actions {
   visibility: hidden;

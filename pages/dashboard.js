@@ -28,9 +28,9 @@ export default function Dashboard() {
             border: '1px solid black',
             padding: '0px 20px 0px',
             backgroundColor: '#CCDBDC',
-            borderRadius: '5px'
+            borderRadius: '5px',
+          
            
-        
         }}>
             <div>
                 <h1>Welcome, { user?.name }</h1>

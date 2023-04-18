@@ -11,6 +11,7 @@ import MessageFeed from '@/components/messageFeed'
 import AttendanceForm from '@/components/attendanceForm'
 import MessageForm from '@/components/messageForm'
 import AttendanceChart from '@/components/attendanceChart'
+import styles from "@/styles/Home.module.css";
 
 
 export default function Room({ roomId }) {
@@ -42,6 +43,9 @@ export default function Room({ roomId }) {
         return (<> 
             <p>Unauthorized access</p>
             <Link href="/" className='link'>Go Back</Link>
+            <div>
+
+            </div>
         </>);
     }
 
@@ -55,9 +59,10 @@ export default function Room({ roomId }) {
         }}>
             <h1>{room.name}</h1>
             <Link href="/" className='link'>Leave room</Link>
-            <br /><br />
+            
             <RoomContext.Provider value={{room, user, date}}>
                 <div className='layout'>
+                    
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
                         <div className='date'><input type='date' 
                             defaultValue={today.toLocaleDateString('en-CA')}
@@ -73,7 +78,15 @@ export default function Room({ roomId }) {
                                     date.getUTCMilliseconds());
                                 setDate(date.getTime());
                             }}/>
+                            
                         </div>
+                       {/* Quiz Functionality Beginning */}
+                       {admin && <div className='button-container'> 
+                       <a href="/join">
+                         <button className='export-button'>Make Poll</button>
+                        </a> 
+                       </div>}
+                       {/* Quiz Functionality End */}
                         {!admin && <div className='attendanceForm'>
                             <AttendanceForm disabled={today.getTime() != date} />
                         </div>}
@@ -100,10 +113,12 @@ export default function Room({ roomId }) {
                 display: grid;
                 grid-template-columns: minmax(max-content, 800px) auto;
                 grid-template-rows: auto 60vh auto;
+               
             }
 
             .date {
                 align-self: flex-end;
+                
             }
 
             .date > input {
@@ -141,6 +156,19 @@ export default function Room({ roomId }) {
                 align-items: center;
                 padding: 10px;
                 grid-column: 1 / 4;
+            }
+            .button-container {
+                display: flex;
+                justify-content: flex-end;
+                margin-right: 20px;
+                margin-bottom: 20px;
+            }
+            .export-button {
+                font-size: 14px;
+                padding: 10px;
+                background-color: #003249; 
+                border: none;
+                color: white;
             }
         `}</style>
     </>);

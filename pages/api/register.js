@@ -34,6 +34,7 @@ export default withSessionRoute(async (req, res) => {
           email,
           password: hashPassword,
           rooms: [],
+          polls:[],
           registered: true,
         });
       }
