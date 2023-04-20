@@ -43,6 +43,7 @@ export default async function handler(req, res) {
         const cursor = await messages.find({ 
             roomId: roomId, 
             time: { $gte: Number(date), $lt: Number(date) + 86400000},
+            status: { $ne: 'reply'},
         });
 
         res.send(await cursor.toArray());

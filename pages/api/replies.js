@@ -29,6 +29,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
         let reply = await req.body;
+        reply = {...reply, status: 'reply'};
         await messages.insertOne(reply);
 
         const response = await messages.updateOne(
