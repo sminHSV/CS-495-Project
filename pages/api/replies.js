@@ -48,10 +48,13 @@ export default async function handler(req, res) {
     } 
 
     else if (req.method === 'GET') {
-        const { replies: ids } = await messages.findOne(
+        let { replies: ids } = await messages.findOne(
             { _id: new ObjectId(messageId) },
             { _id: 0, replies: 1 }
         );
+
+        ids = ids.map((id) => new ObjectId(id));
+
         const cursor = await messages.find(
             { _id: { $in: ids } },
         );
