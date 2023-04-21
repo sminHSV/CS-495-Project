@@ -14,7 +14,6 @@ export default withSessionRoute(async (req, res) => {
         const users = client.db("cs495").collection("users");
         const user = await users.findOne(
             { email: email.toLowerCase() },
-            { _id: 0, email: 1, name: 1, registered: 1 }
         );
 
         if (!user || !user.registered) {
@@ -24,7 +23,7 @@ export default withSessionRoute(async (req, res) => {
         const valid = await bcrypt.compare(password, user.password);
 
         if (valid === true) {
-            req.session.user = { ...user, guest: false };
+            req.session.user = { email: user.email, name: user.name, guest: false };
             await req.session.save();
             return res.status(httpStatus.OK).end();
         } else {

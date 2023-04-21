@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react'
 import { RoomContext } from '@/lib/roomContext'
-
+import styles from '@/styles/Home.module.css'
 /**
  * Displays the message submission form and handles sending messages.
  */
@@ -43,7 +43,7 @@ export default function MessageForm ({ onSubmit, prompt, disabled }) {
                 setAnonymous(!anonymous)
             }} disabled={disabled}/>
             
-            <button type="submit" disabled={disabled}>Send</button>
+            <button className={styles.button}type="submit" disabled={disabled}>Send</button>
         </form>
         <style jsx>{`
             .inputBox {

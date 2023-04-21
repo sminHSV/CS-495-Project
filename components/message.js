@@ -180,7 +180,7 @@ export default function Message({ message }) {
 
             .actions > button {
                 height: 2em;
-                min-width: 2.5em;
+                min-width: min-content;
                 font-size: 0.7em;
             }
 
@@ -202,7 +202,7 @@ export default function Message({ message }) {
                 overflow-y: scroll;
                 border-radius: 1em;
                 background: rgba(var(--card-rgb));
-                font-size: 1.5em;
+                font-size: calc(1em + 0.5vw);
             }
 
             dialog > button {
@@ -219,7 +219,7 @@ export default function Message({ message }) {
                 display: grid;
                 grid-template-columns: 3.5em auto;
                 gap: 1em;
-                font-size: 2em;
+                font-size: 1.5em;
             }
         `}</style>
     </>)

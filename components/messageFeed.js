@@ -3,8 +3,7 @@ import { usePusher } from '@/lib/PusherContext'
 import { fetchJSON } from '@/lib/fetch'
 import { RoomContext } from '@/lib/roomContext'
 import Message from './message'
-// import { saveAs } from 'file-saver' 
-//FIXME: DOES NOT WORK 
+//import { saveAs } from 'file-saver'
 
 /**
  * Handles organising and sorting messages.

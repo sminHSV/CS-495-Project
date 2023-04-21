@@ -43,6 +43,7 @@ export default async function handler(req, res) {
         const cursor = await messages.find({ 
             roomId: roomId, 
             time: { $gte: Number(date), $lt: Number(date) + 86400000},
+            status: { $ne: 'reply'},
         });
 
         res.send(await cursor.toArray());
@@ -51,7 +52,7 @@ export default async function handler(req, res) {
 
     else if (req.method === 'PUT') {
         const message = await req.body;
-        const {_id: _, ...update} = message;
+        const {_id: _, replies: __, ...update} = message;
 
         const response = await messages.updateOne(
             { _id: new ObjectId(message._id) },
