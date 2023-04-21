@@ -73,24 +73,32 @@ export default function Room({ roomId }) {
                                     date.getUTCDate());
                                 setDate(date.getTime());
                             }}/>
+                        
                             
                         </div>
-                       {/* Quiz Functionality Beginning */}
-                       {admin && <div className='button-container'> 
+                         {/* Quiz Functionality Beginning */}
+                    {admin && <div> 
                        <a href="/join">
                          <button className='export-button'>Make Poll</button>
                         </a> 
                        </div>}
+                       <a href="/join">
+                         <button className='export-button'>View Poll</button>
+                        </a> 
                        {/* Quiz Functionality End */}
+                       
                         {!admin && <div className='attendanceForm'>
                             <AttendanceForm disabled={today.getTime() != date} />
                         </div>}
+                         
                     </div>
                     <div className='terminal'>
                         <MessageFeed />
                     </div>
                     {admin && <div className='subTerminal'> 
+                   
                         <AttendanceChart />
+                        
                     </div>}
                     <div className='inputBox'>
                         <MessageForm 
