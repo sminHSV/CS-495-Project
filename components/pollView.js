@@ -1,15 +1,19 @@
 import React, { useEffect, useState, useRef, useContext} from 'react'
 import { RoomContext } from '@/lib/roomContext'
+import { PollContext } from '@/lib/pollContext'
 import RoomForm from "@/components/pollForm"
+import { usePusher } from '@/lib/PusherContext'
 import useUser from "@/lib/useUser"
 import { fetchText, fetchJSON } from '@/lib/fetch';
 import { useRouter } from "next/router"
+import useSWR from 'swr'
 import styles from "@/styles/Home.module.css"
 
 export default function PollView({viewMyPolls}) {
-    const {room, user, date} = useContext(RoomContext);
+    const {poll, user, date} = useContext(PollContext);
+    // const { data: dailyCode } = useSWR('/api/poll?' + new URLSearchParams({ pollId: poll._id, date}), fetchText);
     const dialog = useRef();
-
+    const channels = usePusher();
     const [state, setState] = useState('typing');
     const [myPolls, setMyPolls] = useState(null);
 
@@ -21,12 +25,6 @@ export default function PollView({viewMyPolls}) {
     async function handleSubmit(e) {
         e.preventDefault();
         setState('submitting');
-
-
-
-
-
-
         viewMyPolls(null); 
         setState('typing');
 

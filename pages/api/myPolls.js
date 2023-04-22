@@ -20,13 +20,13 @@ export default withSessionRoute(async (req, res) => {
     // );
 
     const { polls: poll_ids } = await rooms.findOne(
-        { voters: {$in:user.email} },
+        { id: rooms.id},
         { _id: 0, polls: 1}
     );
 
     const cursor = await polls.find(
         { _id: { $in: poll_ids }},
-        { _id: 1, name: 1, owner: 0 }
+        { _id: 0, name: 1, owner: 0 }
     )
 
     res.send(await cursor.toArray());
