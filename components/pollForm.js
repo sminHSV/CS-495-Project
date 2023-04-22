@@ -1,12 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useContext} from 'react'
+import { RoomContext } from '@/lib/roomContext'
 import useUser from "@/lib/useUser"
+import { fetchText, fetchJSON } from '@/lib/fetch';
+import styles from "@/styles/Home.module.css"
 
-export default function pollForm({setMyPolls}) {
-    const { user } = useUser();
+export default function PollForm({setMyPolls}) {
+    const {room, user, date} = useContext(RoomContext);
     const dialog = useRef();
     const pollName = useRef();
     const pollNumOptions = useRef();
-    const voters = useRef();
     const options = useRef();
     const [state, setState] = useState('typing');
 
@@ -20,9 +22,11 @@ export default function pollForm({setMyPolls}) {
         // 
         let poll = {
             name: pollName.current.value,
+            roomPoll:room._id,
             owner: user.email,
             numOfOptions: pollNumOptions.current.value,
             choices: choices,
+            voters: [],
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         }
 
@@ -76,7 +80,7 @@ export default function pollForm({setMyPolls}) {
                             marginLeft: '10px'
                         }}
                         onKeyDown={ignoreEnter}
-                        ref={numOfOptions}
+                        ref={pollNumOptions}
                         required
                     />
                 </h2>

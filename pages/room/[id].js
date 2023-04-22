@@ -11,6 +11,7 @@ import MessageFeed from '@/components/messageFeed'
 import AttendanceForm from '@/components/attendanceForm'
 import MessageForm from '@/components/messageForm'
 import AttendanceChart from '@/components/attendanceChart'
+import PollForm from "@/components/pollForm"
 import styles from "@/styles/Home.module.css";
 
 export default function Room({ roomId }) {
@@ -21,7 +22,7 @@ export default function Room({ roomId }) {
     const today = new Date();
     today.setHours(0,0,0,0);
     const [ date, setDate ] = useState(today.getTime());
-
+    const [myPolls, setMyPolls] = useState(null);
     async function sendMessage(message) {
         fetch("/api/messages?" + new URLSearchParams({ roomId: room._id }), {
             method: "POST",
@@ -76,11 +77,9 @@ export default function Room({ roomId }) {
                         
                             
                         </div>
-                         {/* Quiz Functionality Beginning */}
-                    {admin && <div> 
-                       <a href="/join">
-                         <button className='export-button'>Make Poll</button>
-                        </a> 
+                         {/* Poll Functionality Beginning */}
+                        {admin && <div> 
+                            <PollForm setMyPolls={setMyPolls}/>
                        </div>}
                        <a href="/join">
                          <button className='export-button'>View Poll</button>
@@ -171,6 +170,38 @@ export default function Room({ roomId }) {
                 background-color: #003249; 
                 border: none;
                 color: white;
+            }
+            .participants {
+                width: 80%;
+            }
+
+            .participants textarea {
+                width: 100%;
+                height: 10em;
+            }
+
+            dialog {
+                position: fixed;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                padding: 1em;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .buttons {
+                width: 80%;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .buttons button {
+                width: 45%;
             }
         `}</style>
     </>);

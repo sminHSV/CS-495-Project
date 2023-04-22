@@ -11,7 +11,8 @@ export default withSessionRoute(async (req, res) => {
     const client = await clientPromise;
     const users = await client.db('cs495').collection('users');
     const rooms = await client.db('cs495').collection('rooms');
-
+    //  code queries a MongoDB database for a user's rooms based on their email 
+    // address and returns an array of room IDs associated with that user's email.
     const { rooms: room_ids } = await users.findOne(
         { email: user.email },
         { _id: 0, rooms: 1}
