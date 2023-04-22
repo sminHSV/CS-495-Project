@@ -18,6 +18,8 @@ export default function PollView({viewMyPolls}) {
     const [myPolls, setMyPolls] = useState(null);
     const router = useRouter();
 
+    const [currPoll, setCurrPoll] = useState(null);
+
     useEffect(() => {
         fetch('/api/myPolls')
             .then(response => response.json())
@@ -45,12 +47,13 @@ export default function PollView({viewMyPolls}) {
             + View Polls
         </button>
         <dialog ref={dialog}>
-        <div className={styles.myRooms}>
+        {!currPoll ? 
+            <div className={styles.myRooms}>
             <form method='dialog' onSubmit={e => handleSubmit(e)}>
                 <h2 style={{display: 'inline'}}>
                     <span style={{color: 'red'}}>*</span> Polls
                 </h2>
-                <p>{myPolls ? '' : 'loading polls...'}</p>
+                <p>{currPoll ? '' : 'loading polls...'}</p>
                 <br/>
                     <ul>
                  
@@ -62,7 +65,7 @@ export default function PollView({viewMyPolls}) {
                                     </div>
                                     <div className='actions'>
                                         <button className={styles.plswork} onClick={() => {
-                                            router.push('/poll/' + poll._id);
+                                            setCurrPoll(poll);
                                         }}>join</button>
                                         <button className={styles.plswork} >⚙️</button>
                                         <button className={styles.plswork}>&#x274C;</button>
@@ -73,13 +76,31 @@ export default function PollView({viewMyPolls}) {
                       
                     </ul>
                 <br />
-                <div className='buttons'>
-                    <button type='button' onClick={() => dialog.current.close()}>
-                        Exit
-                    </button>
-                </div>
             </form>
-        </div>    
+            </div> : 
+            <div>
+                <h2>{currPoll.name}</h2>
+                <ul>
+                    {currPoll.choices.map(option => (
+                        <li key={option}>
+                            <div>
+                                <button><h3>{option}</h3></button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        }
+
+        <div className='buttons'>
+            <button type='button' onClick={() => {
+                setCurrPoll(null);
+                dialog.current.close()
+            }}>
+                Exit
+            </button>
+        </div>
+            
         </dialog>
         <style jsx>{`
             .options {
