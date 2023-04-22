@@ -44,6 +44,7 @@ export default async function createPoll(req, res) {
         let x=0;
         // Add members of room to poll 
         //poll has room id and room id used to find members to add 
+        //add poll to users
         const cursor = rooms.find({ $and: [{ 'members': { $exists: true }},{ '_id':poll.roomPoll}]});
             await cursor.forEach(room => {
                 room.members.forEach(email => {
@@ -54,6 +55,10 @@ export default async function createPoll(req, res) {
                     if(x==0){
                     rooms.updateOne(
                         { _id: room._id },
+                        { $push: { polls: poll._id}}
+                    );
+                    users.updateOne(
+                        { email: email },
                         { $push: { polls: poll._id}}
                     );
                     console.log(email); 

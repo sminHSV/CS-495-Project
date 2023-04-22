@@ -43,7 +43,7 @@ export default function Dashboard() {
                     <br/><br/>
                     <p>{myRooms ? '' : 'loading rooms...'}</p>
                     <ul>
-          
+        
                         {myRooms?.map(room => (
                             <li key={room._id}>
                                 <div className={styles.border}>

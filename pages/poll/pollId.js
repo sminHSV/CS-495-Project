@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { fetchJSON } from '@/lib/fetch'
 
 import { RoomContext } from '@/lib/roomContext'
-
+import { PollContext } from '@/lib/pollContext'
 import useSWR from 'swr'
 import useUser from '@/lib/useUser'
 import { useState, useEffect, useRef } from 'react'
@@ -21,11 +21,11 @@ export default function Poll({ pollId }) {
     const { data: poll, error } = useSWR('/api/poll?' + new URLSearchParams({ pollId }), fetchJSON);
 
 
-    if (error) return <p>Couldn&apos;t load room</p>
-    if (!poll) return <p>Loading room...</p>
-    if (!user) return <p>Authorizing user...</p>
+    // if (error) return <p>Couldn&apos;t load room</p>
+    // if (!poll) return <p>Loading room...</p>
+    // if (!user) return <p>Authorizing user...</p>
 
-    const admin = room.owner === user.email;
+    // const admin = room.owner === user.email;
 
     // if (!room.members.includes(user.email) 
     //     && room.visability === 'private' 
@@ -48,7 +48,7 @@ export default function Poll({ pollId }) {
             fontSize: '15px',
         }}>
             <h1>{poll.name}</h1>
-            <Link href="/" className='link'>Leave room</Link>
+            <Link href="/" className='link'>Leave Poll</Link>
             
         </div>        
         <style jsx>{`

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useContext} from 'react'
 import { RoomContext } from '@/lib/roomContext'
 import { PollContext } from '@/lib/pollContext'
-import RoomForm from "@/components/pollForm"
+import PollForm from "@/components/pollForm"
 import { usePusher } from '@/lib/PusherContext'
 import useUser from "@/lib/useUser"
 import { fetchText, fetchJSON } from '@/lib/fetch';
@@ -16,12 +16,14 @@ export default function PollView({viewMyPolls}) {
     const channels = usePusher();
     const [state, setState] = useState('typing');
     const [myPolls, setMyPolls] = useState(null);
+    const router = useRouter();
 
     useEffect(() => {
         fetch('/api/myPolls')
             .then(response => response.json())
             .then(polls => setMyPolls(polls));
     }, [myPolls]);
+    
     async function handleSubmit(e) {
         e.preventDefault();
         setState('submitting');
@@ -43,45 +45,41 @@ export default function PollView({viewMyPolls}) {
             + View Polls
         </button>
         <dialog ref={dialog}>
-            {state === 'submitting' ? 
-                <p>Redirecting...</p>
-            :
+        <div className={styles.myRooms}>
             <form method='dialog' onSubmit={e => handleSubmit(e)}>
                 <h2 style={{display: 'inline'}}>
                     <span style={{color: 'red'}}>*</span> Polls
                 </h2>
+                <p>{myPolls ? '' : 'loading polls...'}</p>
                 <br/>
-                {/* <ul>
-          
-                        { {myPolls?.map(poll => (
-                            <li key={poll._id}>
-                                <div className={styles.border}>
+                    <ul>
+                 
+                            {myPolls?.map(poll => (
+                                <li key={poll._id}>
+                                    <div>
+                                        <h3>{poll.name}</h3>
+                           
+                                    </div>
                                     <div className='actions'>
                                         <button className={styles.plswork} onClick={() => {
                                             router.push('/poll/' + poll._id);
                                         }}>join</button>
+                                        <button className={styles.plswork} >⚙️</button>
+                                        <button className={styles.plswork}>&#x274C;</button>
                                     </div>
-                                </div>
-                                <br/>
-                            </li>
-
-                        ))}
-                    </ul>  */}
-
-
-
-
-
-
-
-
+                                    <br/>
+                                </li>
+                            ))}
+                      
+                    </ul>
                 <br />
                 <div className='buttons'>
                     <button type='button' onClick={() => dialog.current.close()}>
                         Exit
                     </button>
                 </div>
-            </form>}
+            </form>
+        </div>    
         </dialog>
         <style jsx>{`
             .options {
