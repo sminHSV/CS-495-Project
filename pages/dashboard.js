@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import useUser from "@/lib/useUser"
 import { useRouter } from "next/router"
 import RoomForm from "@/components/roomForm"
-import styles from '/styles/Home.module.css'
+import styles from "@/styles/Home.module.css"
 
 export default function Dashboard() {
     const { user } = useUser();
@@ -40,25 +40,32 @@ export default function Dashboard() {
                 <div className={styles.myRooms}>
                     <h2>My Rooms:</h2><br/>
                     <RoomForm setMyRooms={setMyRooms}/>
-                    <button style={{marginLeft: '20px'}}>+ add room</button>
                     <br/><br/>
                     <p>{myRooms ? '' : 'loading rooms...'}</p>
                     <ul>
           
                         {myRooms?.map(room => (
                             <li key={room._id}>
-                                <div><h3>{room.name}</h3>
+                                <div className={styles.container}>
+                                    
+                                <div >
+                                    <h3>{room.name}</h3>
                                     <small>Id: {room._id}</small>
                                 </div>
-                                <div className='actions'>
-                                    <button onClick={() => {
+                                <div >
+
+                                    <button className={styles.plswork} onClick={() => {
                                         router.push('/room/' + room._id);
                                     }}>join</button>
-                                    <button>⚙️</button>
-                                    <button>&#x274C;</button>
+                                    <button className={styles.plswork} >⚙️</button>
+                                    <button className={styles.plswork}>&#x274C;</button>
+                            
+                                </div>
                                 </div>
                                 <br/>
+                             
                             </li>
+
                         ))}
                     </ul>
                 </div>

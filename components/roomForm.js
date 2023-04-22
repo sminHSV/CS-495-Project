@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import useUser from "@/lib/useUser"
+import styles from "@/styles/Home.module.css"
 
 export default function RoomForm({setMyRooms}) {
     const { user } = useUser();
@@ -66,7 +67,7 @@ export default function RoomForm({setMyRooms}) {
     }
 
     return (<>
-        <button onClick={e => dialog.current.showModal()}>
+        <button className={styles.plswork} onClick={e => dialog.current.showModal()}>
             + create room
         </button>
         <dialog ref={dialog}>
