@@ -3,7 +3,6 @@ import { usePusher } from '@/lib/PusherContext'
 import { fetchJSON } from '@/lib/fetch'
 import { RoomContext } from '@/lib/roomContext'
 import Message from './message'
-//import { saveAs } from 'file-saver'
 
 /**
  * Handles organising and sorting messages.
@@ -22,13 +21,6 @@ export default function MessageFeed() {
             ...messages,
             [message._id] : message
         }));
-    }
-
-    function exportThreads(){
-        if(messages){
-            var blob = new Blob(["Hello, world!"], {type: "text/plain;charset=utf-8"});
-            saveAs(blob, "hello world.txt");
-        }
     }
 
     useEffect(() => {
@@ -58,9 +50,6 @@ export default function MessageFeed() {
     
         : <p>Loading messages...</p>
         }
-        <div className='button-container'>
-        <button onClick={exportThreads} className="export-button">Export Questions/Threads</button>
-        </div>
         <style jsx>{`
             li {
                 margin-bottom: 5px;
