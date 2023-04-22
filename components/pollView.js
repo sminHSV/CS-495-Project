@@ -51,9 +51,9 @@ export default function PollView({viewMyPolls}) {
                     <span style={{color: 'red'}}>*</span> Polls
                 </h2>
                 <br/>
-                <ul>
+                {/* <ul>
           
-                        {myPolls?.map(poll => (
+                        { {myPolls?.map(poll => (
                             <li key={poll._id}>
                                 <div className={styles.border}>
                                     <div className='actions'>
@@ -66,7 +66,7 @@ export default function PollView({viewMyPolls}) {
                             </li>
 
                         ))}
-                    </ul>
+                    </ul>  */}
 
 
 
