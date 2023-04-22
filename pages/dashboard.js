@@ -20,12 +20,9 @@ export default function Dashboard() {
             user: user
         }),
     });
-
-    if (response.ok) {
-        return router.push("/dashboard");
-    } else {
-
-    }
+          
+    return router.push("/dashboard");
+   
     };
 
     useEffect(() => {
