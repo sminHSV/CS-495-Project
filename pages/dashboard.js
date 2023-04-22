@@ -47,17 +47,17 @@ export default function Dashboard() {
                         {myRooms?.map(room => (
                             <li key={room._id}>
                                 <div className={styles.border}>
-                                <div>
-                                    <h3>{room.name}</h3>
-                                    <small>Id: {room._id}</small>
-                                </div>
-                                <div className='actions'>
-                                    <button className={styles.plswork} onClick={() => {
-                                        router.push('/room/' + room._id);
-                                    }}>join</button>
-                                    <button className={styles.plswork} >⚙️</button>
-                                    <button className={styles.plswork}>&#x274C;</button>
-                                </div>
+                                    <div>
+                                        <h3>{room.name}</h3>
+                                        <small>Id: {room._id}</small>
+                                    </div>
+                                    <div className='actions'>
+                                        <button className={styles.plswork} onClick={() => {
+                                            router.push('/room/' + room._id);
+                                        }}>join</button>
+                                        <button className={styles.plswork} >⚙️</button>
+                                        <button className={styles.plswork}>&#x274C;</button>
+                                    </div>
                                 </div>
                                 <br/>
                              

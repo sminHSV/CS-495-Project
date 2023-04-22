@@ -46,6 +46,7 @@ export default async function createRoom(req, res) {
                         password: '', 
                         name: 'anonymous', 
                         rooms: [room._id],
+                        polls: [],
                         registered: false,
                     });
                 }

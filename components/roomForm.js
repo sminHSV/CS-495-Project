@@ -44,6 +44,7 @@ export default function RoomForm({setMyRooms}) {
             owner: user.email,
             members: emails,
             schedule: schedule,
+            polls:[],
             visability: visability,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         }

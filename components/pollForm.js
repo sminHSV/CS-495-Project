@@ -35,7 +35,7 @@ export default function PollForm({setMyPolls}) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(poll),
         });
-        setMyPolls(null); //?
+        setMyPolls(null); 
         setState('typing');
 
         dialog.current.close();
