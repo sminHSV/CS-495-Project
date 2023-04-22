@@ -10,6 +10,24 @@ export default function Dashboard() {
     const [myRooms, setMyRooms] = useState(null);
     const router = useRouter();
 
+    const deleteRoom = async (roomId) =>{
+    //add check to confirm room delete 
+    const response = await fetch("/api/room", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+            room: roomId,
+            user: user
+        }),
+    });
+
+    if (response.ok) {
+        return router.push("/dashboard");
+    } else {
+
+    }
+    };
+
     useEffect(() => {
         fetch('/api/myRooms')
             .then(response => response.json())
@@ -58,7 +76,7 @@ export default function Dashboard() {
                                         router.push('/room/' + room._id);
                                     }}>join</button>
                                     <button className={styles.plswork} >⚙️</button>
-                                    <button className={styles.plswork}>&#x274C;</button>
+                                    <button className={styles.plswork} onClick={() => deleteRoom(room._id)}>&#x274C;</button>
                             
                                 </div>
                                 </div>

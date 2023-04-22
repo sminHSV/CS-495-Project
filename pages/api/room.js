@@ -13,7 +13,7 @@ export default withSessionRoute(async (req, res) => {
     
         const client = await clientPromise;
         const rooms = await client.db('cs495').collection('rooms');
-    
+        
         const result = await rooms.findOne(
             { _id: roomId },
             { _id: 1, name: 1, owner: 1, schedule: 1 }
@@ -26,6 +26,33 @@ export default withSessionRoute(async (req, res) => {
             return res.status(httpStatus.NOT_FOUND).end();
         }
     }
-
-    return res.status(httpStatus.BAD_REQUEST);
+    else if(req.method === 'DELETE'){
+        const client = await clientPromise;
+        const rooms = await client.db('cs495').collection('rooms');
+        const users = await client.db('cs495').collection('users');
+        const { room, user } = req.body;
+        const result = await rooms.findOne({_id: room});
+        if(result){
+            if(result.owner == user.email){
+                rooms.deleteOne({_id: room});
+                for( var x of result.members){
+                    
+                    await users.updateOne({_id: user._id}, { $set: { rooms: newRooms } }) 
+                }
+            }
+            else{
+                var newRooms = user.rooms;
+                const index = newRooms.indexOf(5);
+                if (index > -1) { 
+                    newRooms.splice(index, 1); 
+                }
+                await users.updateOne({_id: user._id}, { $set: { rooms: newRooms } })
+            }
+            return res.status(httpStatus.OK).end();
+        }
+        else{
+            return res.status(httpStatus.NOT_FOUND).end();
+        }
+    }
+        
 });

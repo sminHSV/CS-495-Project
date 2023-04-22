@@ -37,7 +37,7 @@ export default function RoomForm({setMyRooms}) {
         if (emails[emails.length] === '') emails.pop();
 
         let  visability = 'public'
-        if(members[0].email != '') visability = 'private';
+        if(emails[0].email != '') visability = 'private';
 
         let room = {
             name: roomName.current.value,
