@@ -57,11 +57,12 @@ export default function Dashboard() {
                     <RoomForm setMyRooms={setMyRooms}/>
                     <br/><br/>
                     <p>{myRooms ? '' : 'loading rooms...'}</p>
+                    <div className={styles.viewBorder}>
                     <ul>
         
                         {myRooms?.map(room => (
                             <li key={room._id}>
-                                <div className={styles.container}>
+                                <div className={styles.classBorder}>
                                     
                                 <div >
                                     <h3>{room.name}</h3>
@@ -83,6 +84,7 @@ export default function Dashboard() {
 
                         ))}
                     </ul>
+                    </div>
                 </div>
             </div>
             <br/>
