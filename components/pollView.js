@@ -52,27 +52,31 @@ export default function PollView({viewMyPolls}) {
                 </h2>
                 <p>{myPolls ? '' : 'loading polls...'}</p>
                 <br/>
+                <div className={styles.myPolls}>
                     <ul>
                         {Object.values(myPolls)?.map(poll => (
                             <li key={poll._id}>
                                 <div>
                                     <h3>{poll.name}</h3>
-                        
                                 </div>
+                     
                                 <div className='actions'>
                                     <button className={styles.plswork} onClick={() => {
                                         setCurrPoll(poll);
-                                    }}>join</button>
-                                    <button className={styles.plswork} >⚙️</button>
-                                    <button className={styles.plswork}>&#x274C;</button>
-                                </div>
+                                        
+                                    }}>vote</button>
+                                    </div>
+                            
+                       
                                 <br/>
                             </li>
                         ))}
                     </ul>
+                    </div>
                 <br />
             </div> : 
             <div>
+            
                 <h2>{currPoll.name}</h2>
                 <ul>
                     {currPoll.choices.map(choice => (
@@ -92,22 +96,26 @@ export default function PollView({viewMyPolls}) {
                                     <h3>{choice} {currPoll.voters.reduce((acc, vote) => 
                                         vote.choice === choice ? acc + 1 : acc
                                     , 0)}</h3>
+                                    
                                 </button>
+                                <br/>
+                              
                             </div>
                         </li>
                     ))}
                 </ul>
+                <br/>
             </div>
         }
 
-        <div className='buttons'>
+  
             <button type='button' onClick={() => {
                 setCurrPoll(null);
                 dialog.current.close()
             }}>
                 Exit
             </button>
-        </div>
+      
             
         </dialog>
         <style jsx>{`
@@ -125,6 +133,13 @@ export default function PollView({viewMyPolls}) {
                 left: 50%;
                 top: 50%;
                 transform: translate(-50%, -50%);
+                padding: 2em;
+            }
+            dialog2 {
+                position: fixed;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
                 padding: 1em;
             }
 
@@ -135,7 +150,7 @@ export default function PollView({viewMyPolls}) {
             }
 
             .buttons {
-                width: 80%;
+                width: 100%;
                 display: flex;
                 justify-content: space-between;
             }
