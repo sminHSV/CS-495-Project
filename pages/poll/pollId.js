@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { fetchJSON } from '@/lib/fetch'
 
 import { RoomContext } from '@/lib/roomContext'
-
+import { PollContext } from '@/lib/pollContext'
 import useSWR from 'swr'
 import useUser from '@/lib/useUser'
 import { useState, useEffect, useRef } from 'react'
@@ -15,41 +15,29 @@ import PollForm from "@/components/pollForm"
 import PollView from "@/components/pollView"
 import styles from "@/styles/Home.module.css";
 
-export default function Room({ roomId }) {
+export default function Poll({ pollId }) {
     
     const { user } = useUser();
-    const { data: room, error } = useSWR('/api/room?' + new URLSearchParams({ roomId }), fetchJSON);
+    const { data: poll, error } = useSWR('/api/poll?' + new URLSearchParams({ pollId }), fetchJSON);
 
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    const [ date, setDate ] = useState(today.getTime());
-    const [myPolls, setMyPolls] = useState(null);
-    const [myViewPolls, viewMyPolls] = useState(null);
-    async function sendMessage(message) {
-        fetch("/api/messages?" + new URLSearchParams({ roomId: room._id }), {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(message),
-        });
-    }
 
-    if (error) return <p>Couldn&apos;t load room</p>
-    if (!room) return <p>Loading room...</p>
-    if (!user) return <p>Authorizing user...</p>
+    // if (error) return <p>Couldn&apos;t load room</p>
+    // if (!poll) return <p>Loading room...</p>
+    // if (!user) return <p>Authorizing user...</p>
 
-    const admin = room.owner === user.email;
+    // const admin = room.owner === user.email;
 
-    if (!room.members.includes(user.email) 
-        && room.visability === 'private' 
-        && !admin) {
-        return (<> 
-            <p>Unauthorized access</p>
-            <Link href="/" className='link'>Go Back</Link>
-            <div>
+    // if (!room.members.includes(user.email) 
+    //     && room.visability === 'private' 
+    //     && !admin) {
+    //     return (<> 
+    //         <p>Unauthorized access</p>
+    //         <Link href="/" className='link'>Go Back</Link>
+    //         <div>
 
-            </div>
-        </>);
-    }
+    //         </div>
+    //     </>);
+    // }
 
     return (<>
         <div style={{
@@ -59,57 +47,9 @@ export default function Room({ roomId }) {
             transform: 'translate(-50%, -50%)',
             fontSize: '15px',
         }}>
-            <h1>{room.name}</h1>
-            <Link href="/" className='link'>Leave room</Link>
+            <h1>{poll.name}</h1>
+            <Link href="/" className='link'>Leave Poll</Link>
             
-            <RoomContext.Provider value={{room, user, date}}>
-                <div className='layout'>
-                    
-                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                        <div className='date'><input type='date' 
-                            defaultValue={today.toLocaleDateString('en-CA')}
-                            onInput={(e) => {
-                                let date = e.target.valueAsDate;
-                                date = new Date(
-                                    date.getUTCFullYear(),
-                                    date.getUTCMonth(),
-                                    date.getUTCDate());
-                                setDate(date.getTime());
-                            }}/>
-                        
-                            
-                        </div>
-                         {/* Poll Functionality Beginning */}
-                        {admin && <div> 
-                            <PollForm setMyPolls={setMyPolls}/>
-                       </div>}
-                  
-                       <PollView viewMyPolls={viewMyPolls}/>  
-
-                       {/* Quiz Functionality End */}
-                       
-                        {!admin && <div className='attendanceForm'>
-                            <AttendanceForm disabled={today.getTime() != date} />
-                        </div>}
-                         
-                    </div>
-                    <div className='terminal'>
-                        <MessageFeed />
-                    </div>
-                    {admin && <div className='subTerminal'> 
-                   
-                        <AttendanceChart />
-                        
-                    </div>}
-                    <div className='inputBox'>
-                        <MessageForm 
-                            onSubmit={sendMessage} 
-                            prompt='ask a question...'
-                            disabled={today.getTime() != date}
-                        />
-                    </div>
-                </div>
-            </RoomContext.Provider>
         </div>        
         <style jsx>{`
             .layout {

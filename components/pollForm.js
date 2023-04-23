@@ -1,66 +1,41 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useContext} from 'react'
+import { RoomContext } from '@/lib/roomContext'
 import useUser from "@/lib/useUser"
+import { fetchText, fetchJSON } from '@/lib/fetch';
 import styles from "@/styles/Home.module.css"
 
-export default function RoomForm({setMyRooms}) {
-    const { user } = useUser();
+export default function PollForm({setMyPolls}) {
+    const {room, user, date} = useContext(RoomContext);
     const dialog = useRef();
-    const roomName = useRef();
-    const participants = useRef();
+    const pollName = useRef();
+    const pollNumOptions = useRef();
+    const options = useRef();
     const [state, setState] = useState('typing');
-
-    const [schedule, setSchedule] = useState({
-        mon: { start: '', end: '' },
-        tue: { start: '', end: '' },
-        wed: { start: '', end: '' },
-        thu: { start: '', end: '' },
-        fri: { start: '', end: '' },
-        sat: { start: '', end: '' },
-        sun: { start: '', end: '' }
-    });
-
-    function handleScheduleChange(time, day, bound) {
-        setSchedule(schedule => ({
-            ...schedule,
-            [day]: {
-                ...schedule[day],
-                [bound]: time
-            },
-        }));
-    }
 
     async function handleSubmit(e) {
         e.preventDefault();
         setState('submitting');
-
-        let emails = participants.current.value.toLowerCase().split(/[,\s]+/);
-        emails = emails.reduce((emails, email) => {
-            if (!email.match(/^[\s]*$/)) {
-                return emails.concat([email]);
-            } else {
-                return emails;
-            }
-        }, []);
-
-        let  visability = 'public'
-        if(emails.length === 0) visability = 'private';
-
-        let room = {
-            name: roomName.current.value,
+        // options represents all text
+        //choices represents options split up
+        const choices = options.current.value.toLowerCase().split(/[,\s]+/);
+        if (choices[choices.length] === '') choices.pop();
+        // 
+        let poll = {
+            name: pollName.current.value,
+            roomPoll:room._id,
             owner: user.email,
-            members: emails,
-            schedule: schedule,
-            polls:[],
-            visability: visability,
+            numOfOptions: pollNumOptions.current.value,
+            choices: choices,
+            voters: [],
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         }
 
-        await fetch('/api/createRoom', {
+        await fetch('/api/createPoll', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(room),
+            body: JSON.stringify(poll),
         });
-        setMyRooms(null);
+        setMyPolls(null); 
         setState('typing');
 
         dialog.current.close();
@@ -74,34 +49,49 @@ export default function RoomForm({setMyRooms}) {
     }
 
     return (<>
-        <button className={styles.plswork} onClick={e => dialog.current.showModal()}>
-            + create room
+        <button onClick={e => dialog.current.showModal()}>
+            + create poll
         </button>
         <dialog ref={dialog}>
             {state === 'submitting' ? 
-                <p>creating room...</p>
+                <p>creating poll...</p>
             :
             <form method='dialog' onSubmit={e => handleSubmit(e)}>
                 <h2 style={{display: 'inline'}}>
-                    <span style={{color: 'red'}}>*</span> Room Name:
+                    <span style={{color: 'red'}}>*</span> Poll Question
                     <input 
                         type='text' 
-                        placeholder='Enter a room name'
+                        placeholder='Enter a poll question'
                         style={{
                             marginLeft: '10px'
                         }}
                         onKeyDown={ignoreEnter}
-                        ref={roomName}
+                        ref={pollName}
                         required
                     />
                 </h2>
-                <br/><br/>
-                <div className='participants'>
+                <br/>
+                <h2 style={{display: 'inline'}}>
+                    <span style={{color: 'red'}}>*</span> Number of Options:
+                    <input 
+                        type='number' 
+                        placeholder=''
+                        style={{
+                            marginLeft: '10px'
+                        }}
+                        onKeyDown={ignoreEnter}
+                        ref={pollNumOptions}
+                        required
+                    />
+                </h2>
+                <br/>
+                {/* Options */}
+                <div className='options'>
                     <div>
-                        <h2>Participants:</h2>
+                        <h2>Options:</h2>
                         <br/>
-                        <textarea ref={participants}
-                            placeholder='Enter email addresses separated by commas'
+                        <textarea ref={options}
+                            placeholder='Enter options separated by commas'
                         ></textarea>
                     </div>
                 </div>
@@ -120,11 +110,11 @@ export default function RoomForm({setMyRooms}) {
             </form>}
         </dialog>
         <style jsx>{`
-            .participants {
+            .options {
                 width: 80%;
             }
 
-            .participants textarea {
+            .options textarea {
                 width: 100%;
                 height: 10em;
             }

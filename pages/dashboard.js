@@ -11,15 +11,16 @@ export default function Dashboard() {
     const router = useRouter();
 
     const deleteRoom = async (roomId) =>{
-    //add check to confirm room delete 
-    const response = await fetch("/api/room", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-            room: roomId,
-            user: user
-        }),
-    });
+    if (confirm("Press a button!")) {
+        const response = await fetch("/api/room", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                room: roomId,
+                user: user
+            }),
+        });
+    } 
           
     return router.push("/dashboard");
    
@@ -43,9 +44,9 @@ export default function Dashboard() {
             border: '1px solid black',
             padding: '0px 20px 0px',
             backgroundColor: '#CCDBDC',
-            borderRadius: '5px'
+            borderRadius: '5px',
+          
            
-        
         }}>
             <div>
                 <h1>Welcome, { user?.name }</h1>
@@ -57,11 +58,12 @@ export default function Dashboard() {
                     <RoomForm setMyRooms={setMyRooms}/>
                     <br/><br/>
                     <p>{myRooms ? '' : 'loading rooms...'}</p>
+                    <div className={styles.viewBorder}>
                     <ul>
-          
+        
                         {myRooms?.map(room => (
                             <li key={room._id}>
-                                <div className={styles.container}>
+                                <div className={styles.classBorder}>
                                     
                                 <div >
                                     <h3>{room.name}</h3>
@@ -83,6 +85,7 @@ export default function Dashboard() {
 
                         ))}
                     </ul>
+                    </div>
                 </div>
             </div>
             <br/>
