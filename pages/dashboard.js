@@ -11,15 +11,16 @@ export default function Dashboard() {
     const router = useRouter();
 
     const deleteRoom = async (roomId) =>{
-    //add check to confirm room delete 
-    const response = await fetch("/api/room", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-            room: roomId,
-            user: user
-        }),
-    });
+    if (confirm("Press a button!")) {
+        const response = await fetch("/api/room", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                room: roomId,
+                user: user
+            }),
+        });
+    } 
           
     return router.push("/dashboard");
    
