@@ -33,11 +33,17 @@ export default function RoomForm({setMyRooms}) {
         e.preventDefault();
         setState('submitting');
 
-        const emails = participants.current.value.toLowerCase().split(/[,\s]+/);
-        if (emails[emails.length] === '') emails.pop();
+        let emails = participants.current.value.toLowerCase().split(/[,\s]+/);
+        emails = emails.reduce((emails, email) => {
+            if (!email.match(/^[\s]*$/)) {
+                return emails.concat([email]);
+            } else {
+                return emails;
+            }
+        }, []);
 
         let  visability = 'public'
-        if(emails[0].email != '') visability = 'private';
+        if(emails.length === 0) visability = 'private';
 
         let room = {
             name: roomName.current.value,
