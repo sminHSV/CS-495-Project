@@ -4,38 +4,31 @@ import useUser from "@/lib/useUser"
 import { fetchText, fetchJSON } from '@/lib/fetch';
 import styles from "@/styles/Home.module.css"
 
-export default function PollForm({setMyPolls}) {
+export default function PollForm() {
     const {room, user, date} = useContext(RoomContext);
     const dialog = useRef();
     const pollName = useRef();
-    const pollNumOptions = useRef();
-    const options = useRef();
+    const [choices, setChoices] = useState(['']);
     const [state, setState] = useState('typing');
 
     async function handleSubmit(e) {
         e.preventDefault();
         setState('submitting');
-        // options represents all text
-        //choices represents options split up
-        const choices = options.current.value.toLowerCase().split(/[,\s]+/);
-        if (choices[choices.length] === '') choices.pop();
-        // 
+
         let poll = {
             name: pollName.current.value,
-            roomPoll:room._id,
+            roomId:room._id,
             owner: user.email,
-            numOfOptions: pollNumOptions.current.value,
             choices: choices,
             voters: [],
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            time: Date.now(),
         }
 
-        await fetch('/api/createPoll', {
+        await fetch('/api/polls?' + new URLSearchParams({roomId: room._id, date: date}), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(poll),
         });
-        setMyPolls(null); 
         setState('typing');
 
         dialog.current.close();
@@ -71,28 +64,47 @@ export default function PollForm({setMyPolls}) {
                     />
                 </h2>
                 <br/>
-                <h2 style={{display: 'inline'}}>
-                    <span style={{color: 'red'}}>*</span> Number of Options:
-                    <input 
-                        type='number' 
-                        placeholder=''
-                        style={{
-                            marginLeft: '10px'
-                        }}
-                        onKeyDown={ignoreEnter}
-                        ref={pollNumOptions}
-                        required
-                    />
-                </h2>
-                <br/>
                 {/* Options */}
                 <div className='options'>
                     <div>
                         <h2>Options:</h2>
                         <br/>
-                        <textarea ref={options}
-                            placeholder='Enter options separated by commas'
-                        ></textarea>
+                        <ul>
+                            {choices.map((choice, index) => {
+                                return (
+                                    <li key={index}>
+                                        <div style={{display: 'flex'}}>
+                                        <input
+                                            type='text'
+                                            placeholder='Enter an option'
+                                            onKeyDown={ignoreEnter}
+                                            onChange={e => {
+                                                let newChoices = [...choices];
+                                                newChoices[index] = e.target.value;
+                                                setChoices(newChoices);
+                                            }}
+                                            value={choice}
+                                            required
+                                        />
+                                        <button onClick={() => {
+                                            let newChoices = [...choices];
+                                            newChoices.splice(index, 1);
+                                            setChoices(newChoices);
+                                        }}>
+                                            remove
+                                        </button>
+                                        </div>
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                        <button onClick={() => {
+                            let newChoices = [...choices];
+                            newChoices.push('');
+                            setChoices(newChoices);
+                        }}>
+                           + add option
+                        </button>
                     </div>
                 </div>
                 <br />
