@@ -49,7 +49,7 @@ export default function PollForm({setMyPolls}) {
     }
 
     return (<>
-        <button onClick={e => dialog.current.showModal()}>
+        <button className={styles.button} onClick={e => dialog.current.showModal()}>
             + create poll
         </button>
         <dialog ref={dialog}>
@@ -97,10 +97,10 @@ export default function PollForm({setMyPolls}) {
                 </div>
                 <br />
                 <div className='buttons'>
-                    <button type='button' onClick={() => dialog.current.close()}>
+                    <button className={styles.button} type='button' onClick={() => dialog.current.close()}>
                         cancel
                     </button>
-                    <button    
+                    <button className={styles.button}   
                         type='submit'
                         disabled={state === 'submitting'}
                     >

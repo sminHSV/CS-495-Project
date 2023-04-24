@@ -41,7 +41,7 @@ export default function PollView({viewMyPolls}) {
     }
 
     return (<>
-        <button onClick={e => dialog.current.showModal()}>
+        <button className={styles.button} onClick={e => dialog.current.showModal()}>
             + View Polls
         </button>
         <dialog ref={dialog}>
@@ -109,7 +109,7 @@ export default function PollView({viewMyPolls}) {
         }
 
   
-            <button type='button' onClick={() => {
+            <button className={styles.button}type='button' onClick={() => {
                 setCurrPoll(null);
                 dialog.current.close()
             }}>
