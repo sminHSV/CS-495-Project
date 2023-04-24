@@ -35,7 +35,7 @@ export default async function createRoom(req, res) {
         // license is very short). I modified the for loop to prevent this
         // from happening, but I haven't tested it yet.
         for (let member of room.members) {
-            const email = member.email;
+            const email = member;
             users.updateOne(
                 { email: email }, 
                 { $push: { rooms: room._id }}
