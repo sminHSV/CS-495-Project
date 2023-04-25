@@ -158,3 +158,11 @@ body {
     margin-right: auto;
     
   } 
+  .alignleft {
+    float: left;
+    border: 10px solid black;
+  }
+  .alignright {
+    float: right;
+    border: 10px solid #0049d1;
+  }

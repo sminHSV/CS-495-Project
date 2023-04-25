@@ -51,27 +51,30 @@
             <div class="drop-content">
               <h3>High level features</h3>
               <ul>
-                <li>Website and PWA Application:
+                <li>Website Application:
                   <ul>
-                    <li>Sign-in/up: Users should be able to sign in with email/password</li>
+                    <li>Sign-in/up: Users should be able to sign in with email/password.</li>=
                     <li>Dashboard: Confirms successful log on. Name displayed at the top of the web page.</li>
-                    <li>Activity Feed: Users should be able to view other students questions.</li>
-                    <li>Question Resolvement: Users should be able to indicate if a question has been resolved.</li>
+                    <li>Activity Feed: Users should be able to view other people's questions.</li>
+                    <li>Password Resetting: Users should be able to reset their password.</li>
+                    <li>Removing Rooms: Users should be able to remove rooms on their dashboard.</li>
                   </ul>
                 </li>
                 <li>Host Dashboard
                   <ul>
-                    <li>Quiz Deployment: non-host participants should be able to take quizzes and host(s) should be able to send quizzes.</li>
-                    <li>Reminders: host(s) should receive a visual and/or auditory cue for questions asked by non-host participants.</li>
+                    <li>Room Creations: Hosts should be able to create public and private rooms that other users may join</li>
+                    <li>Question Indication: Host(s) and question senders should be able to indicate if a question is important or has been resolved.</li>
+                    <li>Poll Deployment: Non-host participants should be able to take polls and host(s) should be able to send polls.</li>
                     <li>Attendance Tracking: host(s) should be able to see current non-host participants in class and view a report on attendance after the end of class.</li>
-                    <li>Exportation of Questions: host(s) should be able to export a report of questions asked during class.</li>
+                    
                   </ul>
                 </li>
                 <li>Participant Dashboard
                   <ul>
                     <li>Conversation Threads on Questions: non-host participants should be able to respond to questions with threads.</li>
-                    <li>Upvote: non-host participants should be able to upvote questions asked by other non-host participants.</li>
                     <li>Question: non-host participants should be able to send questions to activity feeds anonymously or non-anonymously.</li>
+                    <li>Upvote: non-host participants should be able to upvote questions asked by other non-host participants.</li>
+                    <li>Attendance Marking: non-host participants should be able to mark their attendance with a daily code produced by a host.</li>
                   </ul>
                 </li>
                 </ul>
@@ -83,8 +86,8 @@
             <div class="heading" id="tools"><h2>Tools Used</h2></div>
             <div class="drop-content">
                 <p><ul>
-                    <li> Next.js framework: An open-source web development framework providing React-based web applications </li>
-                    <li> CSS, HTML, Javascript: Languages used to develop the frontend for the web application. </li>
+                    <li>Next.js framework: An open-source web development framework providing React-based web applications </li>
+                    <li>CSS, HTML, Javascript: Languages used to develop the frontend for the web application. </li>
                     <li>MongoDB: Database to store questions asked, user profiles, room information, etc.</li>
                     <li>Vercel: Cloud platform used to deploy the website</li>
                     <li>Pusher: Used to maintain real-time communication between the users. </li>
@@ -93,40 +96,177 @@
                     </p>
            </div>
         </div>
-
         <div class="item">      
-            <div class="heading" id="sprint2"><h2>Overall description of the user experience</h2></div>
+          <div class="heading" id="sprint3"><h2>Our web application</h2></div>
+          <div class="drop-content">
+                <p><a href="https://cs-495-project.vercel.app/">Visit UnMute!</a></p>
+                <p><a href=https://www.youtube.com/watch?v=L4ERKWZFdlk">Demo Link!</a></p>
+          </div>
+      </div>  
+        <div class="item">      
+            <div class="heading" id="Sprint 3"><h2>UnMute User Experience</h2></div>
             <div class="drop-content">
+              <!-- Homepage/Intro -->
+              <h2>Homepage</h2>
                 <p>Welcome to the homepage of unMute - the ultimate platform for hosting town-hall type meetings or classes. As a user, you will be presented with various options upon landing on the homepage. You can either log in to your existing account, create a new account or use a guest login for a one-time access.</p>
-                <img src="./1.png"" alt="Image 1"   width="970" height="500" class="center"/>
+                <img src="./1_homepage.PNG" alt="Image 1"   width="970" height="500" class="center"/>
+                <h2>Registering An Account</h2>
+                <p>If you decide to create a new account, you will be directed to a page where you can provide your name, email address, and password to register. </p>
+                <img src="./1_2_Register.PNG" alt="Image 2" class="center"/>
+              <!-- Log In -->
+                <h2>Logging In</h2>
+                <p>Once you submit these details, you will be taken to the login page.</p>
+                <img src="./1_2_Login.PNG" alt="Image 2"  width="970" height="560"  class="center"/>
+                <p>Logged in users will have the option to Logout, Join a Public Room, or View Dashboard of Rooms.</p>
+                <img src="./1_3_Login_Effect.PNG" alt="Image 2"  width="970" height="560"  class="center"/>
+              <!-- Dashboard -->
+                <h2>Dashboard</h2>
+                <p>After clicking "Dashboard", host(s) will have the option to create public or private rooms by clicking the "create room" button.</p>
+                <img src="./1_4_Host_Dashboard.PNG" alt="Image 2"  width="970" height="560"  class="center"/>
+              <!-- Room Creation -->
+                <h2>Creating Rooms</h2>
+                <h3>Private Room Creation</h3>
+                <p>To create a private room, e-mails of users need to be added to the "Participants" box. 
+                  The e-mails entered are used to automatically add the room to the added user's dashboard.</p>
+                <img src="./1_4_PrivateRoomCreation.PNG" alt="Image 2"  width="970" height="560"  class="center"/>
+                <p>Images with blue borders below show the participant's point of view of accessing the room created by the host. 
+                  The partipant will log in and navigate to the dashboard to </p>
+                <img src="./StudentLogin.PNG" style ="border: 10px solid #0049d1;" alt="Image 2"  width="970" height="560"  class="center"/>
+                </br>
+                <img src="./StudentRoomShown.PNG" alt="Image 2" style ="border: 10px solid #0049d1;"   width="970" height="560"  class="center"/>
+                </br>
+                <img src="./StudentAttendance_1.PNG" alt="Image 2"style ="border: 10px solid #0049d1;"   width="860" height="560"  class="center"/>
+                </br>
+              
+                <h2>Public Room Creation</h2>  
+                <p> To create a public room, the "Participants" box will be empty. 
+                  This room will be appropriate for town halls and contain the same functionalities as a private room.</p>
+                <img src="./PublicRoom_1.PNG" alt="Image 2"  width="860"" height="560"   class="center"/>
+                <h3>Attendance Tracking</h3>
+                <p>After both the host and the participant have entered the room, the host can track the attendance of the partipant invited by having the 
+                partipant enter the daily attendance code displayed at the top of the host's dashboard. Host view is in left alignment with black boarders. 
+                Partipant View is in right alignment with blue borders.</p>
+                <h2 class="alignleft">Host View</h2>
+                <h2 class="alignright">Participant View</h2>
+                <div style="clear: both;"></div>
+                <img src="./1_5_PrivRoomView.PNG" alt="Image 2"  width="860" height="560"   style="float: left;border: 10px solid black;"/>
+                <img src="./StudentAttendance_1.PNG" alt="Image 2"   width="860" height="560"   style="float: right;border: 10px solid #0049d1;"/>
+                <img src="./1_6_Student_Question_1.PNG" alt="Image 2"   width="860" height="560"   style="float: right;border: 10px solid #0049d1;"/>
+                <div style="clear: both;"></div>
+                <img src="./1_5_PrivRoomAttendance.PNG" alt="Image 2" width="860" height="560"  style="float: left;border: 10px solid black;"/>
+                <div style="clear: both;"></div>
+              <!-- Messaging Features -->
+                <h2>Messaging Features</h2> 
+                <h3>Anonymously Sending Questions</h3> 
+                <p>Within the rooms, messages can be sent to the room to ask questions. 
+                  Messages can be sent anonymously by clicking the "anonymous" check mark before sending a question. </p> 
+                <h3>Sending Questions with Name</h3> 
+                <img src="./1_6_Student_Question_1.PNG" alt="Image 2"  width="970" height="560"  class="center"/>
+                </br>
+                <img src="./1_6_Student_Question_2.PNG" alt="Image 2"  width="970" height="560"  class="center"/>
+                <h3>Sending Questions Anonymously</h3> 
+                <img src="./1_6_Anon_Q_1.PNG" alt="Image 2"  width="970" height="560"  class="center"/>
+               </br>
+               <img src="./1_6_Anon_Q_2.PNG" alt="Image 2"  width="970" height="560"  class="center"/>
+              </br>
+            <!-- EXPORT -->
+                <h3>Exporting Attendance</h3>
+                <p>Host(s) may export attandance list with .csv file by click "Export Attandance."</p>
+                <img src="./export_1.png" alt="Image 2"  width="970" height="560"  class="center"/>
+            </br>
+            <img src="./export_2.png" alt="Image 2"  width="970" height="560"  class="center"/>
+            </br>
+            <img src="./export_3.png" alt="Image 2"  width="970" height="560"  class="center"/>
+            </br>
+            <!-- Question Indicators -->
+                <h2>Questions Options Indicators</h2> 
+                <p>When questions are sent to the room, they are defaulted to a "?" mark that indicates that it is unanswered. 
+                  Questions have three states: unanswered, important, and answered. </p>
+                  <img src="./1_6_Options.png" alt="Image 2"  width="970" height="560"  class="center"/>
+                  <h3>Important Indicator "!"</h3> 
+                  <p>When questions are set to important by clicking the "!" option. That question is placed at the top of the queue to highlight its importance.</p>
+                  <img src="./1_6_Important.PNG" alt="Image 2"  width="970" height="560"  class="center"/>
+                  <h3>Answered Indicator "Check Mark"</h3> 
+                  <p>When questions are marked answered by the host or the question submitter, it is sent to the botton of the queue.</p>
+                  <img src="./1_6_Answered_1.png" alt="Image 2"  width="970" height="560"  class="center"/>
+                  </br>
+                  <img src="./1_6_Answered_2.png" alt="Image 2"  width="970" height="560"  class="center"/>
+                  </br>
+                <!-- Upvotes and Message Threads -->
+                  <h2>Question Interaction</h2>  
+                  <p>Submitted Questions can be upvoted by other users and replied to in message threads.</p>
+                  <h3>Upvoting</h3>  
+                  <p>Questions submitted can be upvoted by other members of the room to push it to the top. 
+                    The questions with the most upvotes are placed at the top.</p>
+                    <img src="./upvote_button.PNG" alt="Image 2"    class="center"/>
+                    <p style="text-align: center;">Upvote Button</p>
+                    </br>
+                    <img src="./1_6_Upvote_2.png" alt="Image 2"  width="900" height="560"  class="center"/>
+                  </br>
+                  <img src="./1_6_Upvote_3.png" alt="Image 2"  width="900" height="560"  class="center"/>
+                </br>
+                  <h3>Message Thread Replies</h3>  
+                  <p>Users of the same room can reply to message threads by clicking on the reply button.</p>
+                  <img src="./comment_button.PNG" alt="Image 2"    class="center"/>
+                  <p style="text-align: center;">Reply Button</p>
+                    </br>
+                    <img src="./reply1.PNG" width="1080" height="560"  class="center"/>
+                  </br>
+                  <img src="./reply2.PNG" width="1080" height="560"  class="center"/>
+                  </br>
+                <!-- Viewing Messages by Date -->
+                  <h3>Viewing Messages By Date</h3>
+                  <p>All users may view all messages sent on a specific date by clicking the date button on the top left corner of the dashboard.</p>
+                  <img src="./calendar_message_view.png" width="920" height="560"  class="center"/>
+                <!-- POLL -->
+                  <h2>Polls</h2>  
+                  <p>Host(s) will be able to  make polls and partipants will be able to vote on the polls. </p>
+                  <h3>Poll Creation</h3>
+                  <p>Hosts are able to customize the name of the post and the options that will be voted on.</p> 
+                  <img src="./create_poll_1.png"  width="960" height="560"  class="center"/>
+                  </br>
+                  <img src="./create_poll_2.png"  width="960" height="560" class="center"/>
+                  <h3>Poll Voting</h3>
+                  <p>Participants are able to vote on polls given to a room by clicking on "View Polls" and clicking their choice.
+                    Host(s) and participants are able to view results on polls by looking at "votes:_".
+                  </p> 
+                  <img src="./View_Poll_1.png" width="960" height="560"  class="center"/>
+                  <img src="./View_Poll_2.png"  width="960" height="560" class="center"/>
+                  <img src="./View_Poll_3.png" width="960" height="560"  class="center"/>
+                  <img src="./View_Poll_4.png"  width="960" height="560" class="center"/>
 
-                <p>If you decide to create a new account, you will be directed to a page where you can provide your name, email address, and password to register. Once you submit these details, you will be taken to your profile page where you can create or join a room. Alternatively, you can log in to your existing account using the login button.</p>
-                <img src="./2.png"" alt="Image 2"   width="350" height="500" class="center"/>
-                    
-                <p> On your profile page, you will have the option to create a room and set class timings for your participants. You can add all the participants to the room and once it is created, they will be automatically added to the room. If you prefer to join an existing room, simply enter the provided code to join. Once you are in the room, you can take advantage of the real-time question asking feature, track attendance for all participants, and enjoy other interactive features. With unMute, you can upvote questions, change priority of your questions, and even send your question anonymously!</p>
-                <div class = "center">
-                <div class="row" >
-                    <div class="column">
-                       
-                            <img src="./3.png" alt="Image 3" style="width:100%">
-                            <img src="./5.png" alt="Image 5" style="width:100%" >
-                        </div>
-                        <div class="column">
-                          <img src="./7.png" alt="Image 4" style="width:100%" >
-                          <img src="./6.png" alt="Image 6" style="width:100%" >
-                        </div>
+                <!-- Guest Functionality-->
+                  <h2>Guest Functionality</h2>
+                  <p>Guests will be able to join public rooms by clicking "Guest Login" and entering a public room name after clicking the "Join" Button. 
+                    The guest will be able to use all the functionalities of a registered user. 
+                  </p>
+                  <h3>Guest Login</h3>
+                  <img src="./Guest Register.PNG"  width="960" height="560" class="center"/>
+                </br>
+               <img src="./Guest View.PNG"  width="960" height="560" class="center"/>
+                 </br>
+               <img src="./Guest_Public_View.PNG"  width="960" height="560" class="center"/>
+               </br>
+                <img src="./Guest_Public_View_Result.PNG"  width="700" height="560" class="center"/>
 
-                        </div>
-                <p>   Once you are done with your session, you can simply log out from your profile page. Overall, unMute provides a user-friendly and convenient experience for hosting town-hall type meetings or classes. </p>
-            </div>
+                <!-- Resetting Password -->
+                  <h2>Resetting Password</h2>
+                  <p>Users will be able to reset passwords by clicking the "Reset Password" button and following the instructions given on the screen.</p>
+                  <img src="./Password_Reset_1.PNG"  width="1100" height="560" class="center"/>
+                  </br>
+                  <img src="./Password_Reset_2.PNG"  width="1100" height="560" class="center"/>
+                  </br>
+                  <img src="./Password_Reset_3.PNG"  class="center"/>
+                  </br>
+                  <img src="./Password_Reset_4.PNG"  width="1100" height="560" class="center"/>
+                  </br>
+                  <img src="./Password_Reset_5.PNG"  width="1100" height="560" class="center"/>
+
+              </div>
         </div>    
+        <!-- https://www.youtube.com/watch?v=L4ERKWZFdlk -->
 
-        <div class="item">      
-            <div class="heading" id="sprint3"><h2>Our web application</h2></div>
-            <div class="drop-content">
-                  <p><a href="https://cs-495-project.vercel.app/">Visit UnMute!</a></p>
-            </div>
-        </div>   
+        
 
         <div class="item last">      
             <div class="heading" id="members"><h2>Team Members</h2></div>
